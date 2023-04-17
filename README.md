@@ -21,6 +21,5 @@
 |:sparkles::|새 기능|
 |:white_check_mark::|테스트 추가/수정|
 |:recycle::|코드 리팩토링|
-|:poop::|똥싼 코드|
 |:loud_sound::|로그 추가/수정|
 |:pencil2::|오타 수정|
