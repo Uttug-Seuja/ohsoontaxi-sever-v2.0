@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ohsoontaxi.backend.domain.participation.exception.NotHostException;
 import ohsoontaxi.backend.global.common.participation.SeatPosition;
 import ohsoontaxi.backend.domain.participation.domain.vo.ParticipationInfoVo;
 import ohsoontaxi.backend.domain.reservation.domain.Reservation;
@@ -38,8 +39,7 @@ public class Participation {
     public Participation(User user, Reservation reservation, SeatPosition seatPosition) {
         this.user = user;
         this.reservation = reservation;
-        // TODO: 2023/04/18
-        //reservation.getParticipations().add(this);
+        reservation.getParticipations().add(this);
         this.seatPosition = seatPosition;
     }
 
@@ -60,8 +60,7 @@ public class Participation {
 
     public void validUserIsHost(Long id) {
         if (!checkUserIsHost(id)) {
-            // TODO: 2023/04/18
-            //throw NotHostException.EXCEPTION;
+            throw NotHostException.EXCEPTION;
         }
     }
 
@@ -69,7 +68,6 @@ public class Participation {
         return user.getId().equals(id);
     }
     public void subParticipation(Reservation reservation) {
-        // TODO: 2023/04/18
-        //reservation.getParticipations.remove(this);
+        reservation.getParticipations().remove(this);
     }
 }

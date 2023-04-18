@@ -1,5 +1,5 @@
 package ohsoontaxi.backend.global.common.user;
 
 public enum Gender {
-    MAN, WOMAN, All
+    MAN, WOMAN, ALL
 }
