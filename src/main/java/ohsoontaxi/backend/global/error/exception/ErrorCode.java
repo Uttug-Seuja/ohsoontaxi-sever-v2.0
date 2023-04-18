@@ -19,8 +19,8 @@ public enum ErrorCode {
     /* 404 NOT_FOUND : Resource를 찾을 수 없음 */
     USER_NOT_FOUND(404, "해당하는 정보의 사용자를 찾을 수 없습니다."),
     USER_EXISTED(404, "이미 존재하는 회원입니다"),
-    BOOK_NOT_HOST(400,  "책의 주인이 아닙니다"),
-    BOOK_MARK_NOT_HOST(400,  "책 갈피 주인이 아닙니다"),
+    RESERVATION_NOT_HOST(400,  "방 주인이 아닙니다"),
+    PARTICIPATION_NOT_HOST(400,  "참여 주인이 아닙니다"),
     OUT_OF_PAGE(400,  "책 페이지 범위를 초과했습니다"),
 
     REFRESH_TOKEN_NOT_FOUND(404, "로그아웃 된 사용자입니다"),
