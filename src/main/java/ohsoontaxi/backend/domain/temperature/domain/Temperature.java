@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,4 +20,42 @@ public class Temperature {
     @Column(name = "temperature_id")
     private Long id;
 
+    private Double currentTemperature;
+    private Integer reportedNum;
+    private Integer participationNum;
+
+    @Builder
+    public Temperature(Double currentTemperature, Integer reportedNum, Integer participationNum) {
+        this.currentTemperature = currentTemperature;
+        this.reportedNum = reportedNum;
+        this.participationNum = participationNum;
+    }
+
+    public static Temperature createTemperature() {
+        return builder()
+                .currentTemperature(36.5)
+                .reportedNum(0)
+                .participationNum(0)
+                .build();
+    }
+
+    public void updateTemperature(Double temperature) {
+        this.currentTemperature = temperature;
+    }
+
+    public void addReportNum() {
+        this.reportedNum++;
+    }
+
+    public void subReportNum() {
+        this.reportedNum--;
+    }
+
+    public void addParticipationNum() {
+        this.participationNum++;
+    }
+
+    public void subParticipationNum() {
+        this.participationNum--;
+    }
 }
