@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ohsoontaxi.backend.domain.temperature.domain.Temperature;
+import ohsoontaxi.backend.domain.user.domain.vo.UserInfoVO;
 import ohsoontaxi.backend.global.common.user.Gender;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -37,6 +38,10 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "temperature_id")
     private Temperature temperature;
+
+    public UserInfoVO getUserInfo() {
+        return new UserInfoVO(id, name, schoolNum, gender);
+    }
 
     @Builder
     public User(
