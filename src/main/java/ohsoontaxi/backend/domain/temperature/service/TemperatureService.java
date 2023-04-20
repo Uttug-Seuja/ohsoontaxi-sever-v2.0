@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class temperatureService implements TemperatureUtils{
+public class TemperatureService implements TemperatureUtils{
 
     private final TemperatureRepository temperatureRepository;
 
