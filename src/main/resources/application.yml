@@ -11,6 +11,13 @@ spring:
       hibernate:
         #show_sql: true
         format_sql: ture
+auth:
+  jwt:
+    secretKey: 7JWI64WV7ZWY64uk7KCQ7J6Q7YSM7JqULg==
+    accessExp: 1800
+    refreshExp: 50400
+    header: Authorization
+    prefix: Bearer
 
 logging.level:
   org.hibernate.SQL: debug
