@@ -10,4 +10,5 @@ public class AccessTokenDto {
     public AccessTokenDto(String accessToken){
         this.accessToken = accessToken;
     }
+
 }
