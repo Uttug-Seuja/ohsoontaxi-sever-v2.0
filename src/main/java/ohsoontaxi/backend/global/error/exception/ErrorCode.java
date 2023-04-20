@@ -24,6 +24,8 @@ public enum ErrorCode {
     RESERVATION_NOT_HOST(400,  "방 주인이 아닙니다"),
     PARTICIPATION_NOT_HOST(400,  "참여 주인이 아닙니다"),
     OUT_OF_PAGE(400,  "책 페이지 범위를 초과했습니다"),
+    REPORT_NOT_FOUND(404, "신고 정보를 찾을 수 없습니다."),
+    PARTICIPATION_NOT_FOUND(404, "참여 정보를 찾을 수 없습니다."),
 
     /* 403 */
     REGISTER_EXPIRED_TOKEN(403,"만료된 리프레쉬 토큰입니다."),
