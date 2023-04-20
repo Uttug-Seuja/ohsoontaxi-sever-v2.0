@@ -1,17 +1,15 @@
 package ohsoontaxi.backend.domain.reservation.presentation.dto.response;
 
+
 import lombok.Getter;
-import ohsoontaxi.backend.domain.participation.domain.vo.ParticipationInfoVo;
 import ohsoontaxi.backend.domain.reservation.domain.vo.ReservationBaseInfoVo;
 import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
 import ohsoontaxi.backend.global.common.user.Gender;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
-public class ReservationResponse {
+public class ReservationBriefInfoDto {
 
     private Long reservationId;
 
@@ -31,19 +29,7 @@ public class ReservationResponse {
 
     private Integer currentNum;
 
-    private Double startLatitude;
-
-    private Double startLongitude;
-
-    private Double destinationLatitude;
-
-    private Double destinationLongitude;
-
-
-    private List<ParticipationInfoDto> participations;
-
-    public ReservationResponse(ReservationBaseInfoVo reservationBaseInfoVo,  List<ParticipationInfoVo> participationInfoList) {
-
+    public ReservationBriefInfoDto(ReservationBaseInfoVo reservationBaseInfoVo) {
         reservationId = reservationBaseInfoVo.getReservationId();
         title = reservationBaseInfoVo.getTitle();
         startPoint = reservationBaseInfoVo.getStartPoint();
@@ -53,11 +39,5 @@ public class ReservationResponse {
         gender = reservationBaseInfoVo.getGender();
         passengerNum = reservationBaseInfoVo.getPassengerNum();
         currentNum = reservationBaseInfoVo.getCurrentNum();
-        startLatitude = reservationBaseInfoVo.getStartLatitude();
-        startLongitude = reservationBaseInfoVo.getStartLongitude();
-        destinationLatitude = reservationBaseInfoVo.getDestinationLatitude();
-        destinationLongitude = reservationBaseInfoVo.getDestinationLongitude();
-        participations = participationInfoList.stream().map(ParticipationInfoDto::new).collect(Collectors.toList());
-
     }
 }
