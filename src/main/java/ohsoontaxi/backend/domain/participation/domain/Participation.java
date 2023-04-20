@@ -55,8 +55,10 @@ public class Participation {
         return ParticipationInfoVo.builder()
                 .participationId(id)
                 .participationSeatPosition(seatPosition)
+                .userInfoVO(user.getUserInfo())
                 .build();
     }
+
 
     public void validUserIsHost(Long id) {
         if (!checkUserIsHost(id)) {
