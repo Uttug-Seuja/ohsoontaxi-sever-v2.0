@@ -14,7 +14,9 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_EXIST(400, "리프레시 토큰 정보가 올바르지 않습니다"),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
+    INVALID_TOKEN(401, "토큰이 유효하지 않습니다."),
     UNAUTHORIZED_MEMBER(401, "현재 내 계정 정보가 존재하지 않습니다"),
+    EXPIRED_TOKEN(401, "토큰이 만료되었습니다."),
 
     /* 404 NOT_FOUND : Resource를 찾을 수 없음 */
     USER_NOT_FOUND(404, "해당하는 정보의 사용자를 찾을 수 없습니다."),
@@ -22,6 +24,9 @@ public enum ErrorCode {
     RESERVATION_NOT_HOST(400,  "방 주인이 아닙니다"),
     PARTICIPATION_NOT_HOST(400,  "참여 주인이 아닙니다"),
     OUT_OF_PAGE(400,  "책 페이지 범위를 초과했습니다"),
+
+    /* 403 */
+    REGISTER_EXPIRED_TOKEN(403,"만료된 리프레쉬 토큰입니다."),
 
     REFRESH_TOKEN_NOT_FOUND(404, "로그아웃 된 사용자입니다"),
     NO_ERROR_TYPE(404, "오류 발생"),

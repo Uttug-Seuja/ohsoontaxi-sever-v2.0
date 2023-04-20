@@ -39,6 +39,9 @@ public class User {
     @JoinColumn(name = "temperature_id")
     private Temperature temperature;
 
+    @Enumerated(EnumType.STRING)
+    private AccountRole accountRole = AccountRole.USER;
+
     public UserInfoVO getUserInfo() {
         return new UserInfoVO(id, name, schoolNum, gender);
     }
