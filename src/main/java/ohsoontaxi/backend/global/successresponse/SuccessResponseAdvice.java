@@ -10,7 +10,7 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-@RestControllerAdvice(basePackages = "ohsoontaxi.server")
+@RestControllerAdvice(basePackages = "ohsoontaxi.backend")
 public class SuccessResponseAdvice implements ResponseBodyAdvice {
     @Override
     public Object beforeBodyWrite(

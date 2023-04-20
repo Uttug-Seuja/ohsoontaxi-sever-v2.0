@@ -40,7 +40,7 @@ public class ReservationResponse {
     private Double destinationLongitude;
 
 
-    private List<ParticipationInfoDto> participaions;
+    private List<ParticipationInfoDto> participations;
 
     public ReservationResponse(ReservationBaseInfoVo reservationBaseInfoVo,  List<ParticipationInfoVo> participationInfoList) {
 
@@ -57,8 +57,7 @@ public class ReservationResponse {
         startLongitude = reservationBaseInfoVo.getStartLongitude();
         destinationLatitude = reservationBaseInfoVo.getDestinationLatitude();
         destinationLongitude = reservationBaseInfoVo.getDestinationLongitude();
-
-        participaions = participationInfoList.stream().map(ParticipationInfoDto::new).collect(Collectors.toList());
+        participations = participationInfoList.stream().map(ParticipationInfoDto::new).collect(Collectors.toList());
 
     }
 }

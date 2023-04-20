@@ -8,6 +8,7 @@ import ohsoontaxi.backend.domain.participation.domain.Participation;
 import ohsoontaxi.backend.domain.participation.domain.vo.ParticipationInfoVo;
 import ohsoontaxi.backend.domain.reservation.domain.vo.ReservationBaseInfoVo;
 import ohsoontaxi.backend.domain.reservation.exception.NotHostException;
+import ohsoontaxi.backend.domain.reservation.service.dto.UpdateReservationDto;
 import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.global.common.participation.SeatPosition;
 import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
@@ -46,8 +47,10 @@ public class Reservation {
 
     private LocalDateTime departureDate;
 
+    @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private Integer passengerNum;
@@ -107,6 +110,11 @@ public class Reservation {
                 .destinationLatitude(destinationLatitude)
                 .destinationLongitude(destinationLongitude)
                 .build();
+    }
+
+    public void updateReservation(UpdateReservationDto updateGroupDto) {
+        this.title = updateGroupDto.getTitle();
+
     }
 
     public List<ParticipationInfoVo> getParticipationInfoVOs() {

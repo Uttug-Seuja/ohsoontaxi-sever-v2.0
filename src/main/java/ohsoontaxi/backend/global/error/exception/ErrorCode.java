@@ -33,7 +33,8 @@ public enum ErrorCode {
     PROFILE_IMAGE_NOT_FOUND(404,  "PROFILE Not Found"),
     MOOD_IMAGE_NOT_FOUND(404,  "Mood Not Found"),
     COLOR_IMAGE_NOT_FOUND(404,  "COLOR Not Found"),
-    BOOK_NOT_FOUND(404,  "BOOK Not Found"),
+
+    RESERVATION_NOT_FOUND(404,  "방이 존재하지 않습니다."),
     BOOK_MARK_NOT_FOUND(404,  "BOOKMARK Not Found"),
     BAD_FILE_EXTENSION(404,  "FILE extension error"),
     FILE_EMPTY(404,  "FILE empty"),
