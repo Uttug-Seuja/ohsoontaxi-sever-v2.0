@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ohsoontaxi.backend.domain.temperature.domain.vo.TemperatureInfoVo;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -37,6 +38,10 @@ public class Temperature {
                 .reportedNum(0)
                 .participationNum(0)
                 .build();
+    }
+
+    public TemperatureInfoVo getTemperatureInfoVo() {
+        return new TemperatureInfoVo(id, currentTemperature, reportedNum, participationNum);
     }
 
     public void updateTemperature(Double temperature) {
