@@ -7,7 +7,6 @@ import ohsoontaxi.backend.domain.reservation.presentation.dto.request.UpdateRese
 import ohsoontaxi.backend.domain.reservation.presentation.dto.response.ReservationBriefInfoDto;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.response.ReservationResponse;
 import ohsoontaxi.backend.domain.reservation.service.ReservationService;
-import org.hibernate.annotations.Fetch;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
