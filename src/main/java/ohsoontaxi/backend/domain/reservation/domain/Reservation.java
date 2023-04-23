@@ -13,6 +13,7 @@ import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.global.common.participation.SeatPosition;
 import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
 import ohsoontaxi.backend.global.common.user.Gender;
+import ohsoontaxi.backend.global.database.BaseEntity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class Reservation {
+public class Reservation extends BaseEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "reservation_id")
