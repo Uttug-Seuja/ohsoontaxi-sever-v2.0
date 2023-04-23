@@ -11,6 +11,14 @@ spring:
       hibernate:
         #show_sql: true
         format_sql: ture
+
+aws:
+  access-key:
+  secret-key:
+  s3:
+    bucket: test
+    base-url: test
+
 auth:
   jwt:
     secretKey: 7JWI64WV7ZWY64uk7KCQ7J6Q7YSM7JqULg==

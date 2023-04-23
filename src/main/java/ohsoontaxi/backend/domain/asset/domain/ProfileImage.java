@@ -1,22 +1,22 @@
 package ohsoontaxi.backend.domain.asset.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-@Entity
 @Getter
+@Entity
 @NoArgsConstructor(access = PROTECTED)
-public class Asset {
+public class ProfileImage {
 
     @Id @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "asset_id")
+    @Column(name = "profile_image_id")
     private Long id;
+
+    private String imageUrl;
 
 }

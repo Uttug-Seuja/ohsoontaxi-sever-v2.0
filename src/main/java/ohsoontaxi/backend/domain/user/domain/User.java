@@ -43,7 +43,15 @@ public class User {
     private AccountRole accountRole = AccountRole.USER;
 
     public UserInfoVO getUserInfo() {
-        return new UserInfoVO(id, name, schoolNum, gender);
+        return UserInfoVO.builder()
+                .userId(id)
+                .name(name)
+                .schoolNum(schoolNum)
+                .gender(gender)
+                .email(email)
+                .profilePath(profilePath)
+                .temperatureInfoVo(temperature.getTemperatureInfoVo())
+                .build();
     }
 
     @Builder
@@ -79,6 +87,10 @@ public class User {
                 .gender(gender)
                 .temperature(temperature)
                 .build();
+    }
+
+    public void changeProfilePath(String profilePath){
+        this.profilePath = profilePath;
     }
 
 

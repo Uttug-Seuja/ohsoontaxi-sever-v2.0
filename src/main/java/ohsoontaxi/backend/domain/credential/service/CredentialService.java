@@ -24,5 +24,8 @@ public class CredentialService {
         return new AccessTokenDto(accessToken);
     }
 
+    // TODO: 2023/04/23 회원가입 떄 온도 넣기 로직
+    // TODO: 2023/04/23 회원가입 떄 기본 이미지 가져오기 로직
+
 }
 
