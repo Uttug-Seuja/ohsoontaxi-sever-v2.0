@@ -7,5 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CreateReportRequest {
 
+    private final Long participationId;
     private final String reportReason;
 }

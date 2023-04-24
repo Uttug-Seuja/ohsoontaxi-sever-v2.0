@@ -28,19 +28,19 @@ public class ReportService implements ReportUtils{
     private final UserUtils userUtils;
 
     @Transactional
-    public ReportResponse createReport(Long participationId, CreateReportRequest createReportRequest) {
-        Participation participation = participationUtils.queryParticipation(participationId);
+    public Long createReport(CreateReportRequest createReportRequest) {
+        Participation participation = participationUtils.queryParticipation(createReportRequest.getParticipationId());
         User currentUser = userUtils.getUserFromSecurityContext();
 
         Report report = Report.createReport(currentUser, participation, createReportRequest.getReportReason());
 
-        reportRepository.save(report);
+        Long reportId = reportRepository.save(report).getId();
 
-        return  ReportResponse.from(report);
+        return reportId;
     }
 
-    public void updateProcessingStatus(UpdateProcessingStatusRequest request) {
-        Report report = queryReport(request.getReportId());
+    public void updateProcessingStatus(Long reportId, UpdateProcessingStatusRequest request) {
+        Report report = queryReport(reportId);
         ProcessingStatus processingStatus = request.getProcessingStatus();
 
         if (processingStatus == ProcessingStatus.HANDLING) {
@@ -52,8 +52,6 @@ public class ReportService implements ReportUtils{
 
         report.updateProcessingStatus(processingStatus);
     }
-
-
 
     @Override
     public Report queryReport(Long reportId) {

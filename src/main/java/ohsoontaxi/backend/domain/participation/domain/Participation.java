@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ohsoontaxi.backend.domain.participation.exception.DuplicatedParticipationException;
 import ohsoontaxi.backend.domain.participation.exception.NotHostException;
 import ohsoontaxi.backend.global.common.participation.SeatPosition;
 import ohsoontaxi.backend.domain.participation.domain.vo.ParticipationInfoVo;
@@ -69,6 +70,11 @@ public class Participation {
     public boolean checkUserIsHost(Long id) {
         return user.getId().equals(id);
     }
+
+    public void updateSeatPosition(SeatPosition seatPosition) {
+        this.seatPosition = seatPosition;
+    }
+
     public void subParticipation(Reservation reservation) {
         reservation.getParticipations().remove(this);
     }
