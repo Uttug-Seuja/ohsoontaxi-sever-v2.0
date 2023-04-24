@@ -2,12 +2,12 @@ package ohsoontaxi.backend.domain.reservation.presentation.dto.response;
 
 import lombok.Getter;
 import ohsoontaxi.backend.domain.reservation.domain.vo.ReservationBaseInfoVo;
+import ohsoontaxi.backend.domain.user.domain.vo.UserInfoVO;
 import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
 import ohsoontaxi.backend.global.common.user.Gender;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class ReservationResponse {
@@ -40,10 +40,9 @@ public class ReservationResponse {
 
     private Boolean iHost;
 
+    private HostInfoDto hostInfo;
 
-    //private List<ParticipationInfoDto> participations;  파라미터 List<ParticipationInfoVo> participationInfoList
-
-    public ReservationResponse(ReservationBaseInfoVo reservationBaseInfoVo,boolean iHost) {
+    public ReservationResponse(ReservationBaseInfoVo reservationBaseInfoVo, UserInfoVO userInfoVO, boolean iHost) {
 
         reservationId = reservationBaseInfoVo.getReservationId();
         title = reservationBaseInfoVo.getTitle();
@@ -59,7 +58,7 @@ public class ReservationResponse {
         destinationLatitude = reservationBaseInfoVo.getDestinationLatitude();
         destinationLongitude = reservationBaseInfoVo.getDestinationLongitude();
         this.iHost = iHost;
-        //participations = participationInfoList.stream().map(ParticipationInfoDto::new).collect(Collectors.toList());
+        hostInfo = new HostInfoDto(userInfoVO);
 
     }
 }

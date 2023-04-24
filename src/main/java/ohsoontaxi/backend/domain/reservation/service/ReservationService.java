@@ -124,6 +124,7 @@ public class ReservationService implements ReservationUtils {
     private ReservationResponse getReservationResponse(Reservation reservation,Long currentUserId) {
         return new ReservationResponse(
                 reservation.getReservationBaseInfoVo(),
+                reservation.getUser().getUserInfo(),
                 reservation.checkUserIsHost(currentUserId));
     }
 

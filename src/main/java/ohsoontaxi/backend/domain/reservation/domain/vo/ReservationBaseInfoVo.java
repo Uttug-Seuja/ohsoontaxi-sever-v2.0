@@ -3,6 +3,7 @@ package ohsoontaxi.backend.domain.reservation.domain.vo;
 
 import lombok.Builder;
 import lombok.Getter;
+import ohsoontaxi.backend.domain.user.domain.vo.UserInfoVO;
 import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
 import ohsoontaxi.backend.global.common.user.Gender;
 
@@ -37,5 +38,7 @@ public class ReservationBaseInfoVo {
     private final Double destinationLatitude;
 
     private final Double destinationLongitude;
+
+    private final UserInfoVO hostInfoVO;
 
 }
