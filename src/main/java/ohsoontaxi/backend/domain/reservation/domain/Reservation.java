@@ -110,6 +110,7 @@ public class Reservation extends BaseEntity {
                 .startLongitude(startLongitude)
                 .destinationLatitude(destinationLatitude)
                 .destinationLongitude(destinationLongitude)
+                .hostInfoVO(user.getUserInfo())
                 .build();
     }
 

@@ -3,6 +3,7 @@ package ohsoontaxi.backend.global.init;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import ohsoontaxi.backend.domain.temperature.domain.Temperature;
 import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.global.common.user.Gender;
 import org.springframework.stereotype.Component;
@@ -28,16 +29,33 @@ public class InitDb {
 
         public void dbInit1() {
 
+
+
+
+            Temperature temper = Temperature.builder()
+                    .currentTemperature(36.5)
+                    .reportedNum(12)
+                    .participationNum(34).build();
+
+            Temperature temper1 = Temperature.builder()
+                    .currentTemperature(36.5)
+                    .reportedNum(1)
+                    .participationNum(4).build();
+
+            em.persist(temper);
+            em.persist(temper1);
+
             User member1 = User.createUser("KAKAO","12312412423","이훈일", "20181543",
-                    "hunil12978@gmail.com","ajsk", Gender.MAN, null);
+                    "hunil12978@gmail.com","ajsk", Gender.MAN, temper1);
             User member2 = User.createUser("KAKAO","1231123123","김찬우", "20181666",
-                    "hunil92348@gmail.com","ajsk", Gender.WOMAN, null);
+                    "hunil92348@gmail.com","ajsk", Gender.WOMAN, temper);
             User member3 = User.createUser("KAKAO","12316346523","조준장", "20184545",
                     "hunil9923@gmail.com","ajsk", Gender.MAN, null);
             User member4 = User.createUser("KAKAO","12316346523","이건희", "20184545",
                     "hunil9923@gmail.com","ajsk", Gender.WOMAN, null);
             User member5 = User.createUser("KAKAO","12316346523","김세준", "20184545",
                     "hunil9923@gmail.com","ajsk", Gender.MAN, null);
+
 
             em.persist(member1);
             em.persist(member2);
