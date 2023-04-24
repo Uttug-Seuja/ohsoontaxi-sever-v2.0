@@ -35,7 +35,7 @@ public class ReservationService implements ReservationUtils {
 
         reservationRepository.save(reservation);
 
-        return getReservationResponse(reservation);
+        return getReservationResponse(reservation, user.getId());
     }
 
     @Transactional
@@ -53,9 +53,11 @@ public class ReservationService implements ReservationUtils {
     //방 상세정보
     public ReservationResponse getReservationDetailById(Long reservationId) {
 
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+
         Reservation reservation = queryReservation(reservationId);
 
-        return getReservationResponse(reservation);
+        return getReservationResponse(reservation,currentUserId);
     }
 
     @Transactional
@@ -69,17 +71,9 @@ public class ReservationService implements ReservationUtils {
 
         reservation.updateReservation(updateReservationRequest.toUpdateReservationDto());
 
-        return getReservationResponse(reservation);
+        return getReservationResponse(reservation,currentUserId);
     }
 
-
-    //모든 리스트
-
-//    public Slice<Group> findSliceOpenGroups(PageRequest pageRequest) {
-//        Slice<Group> groupList = groupRepository.findSliceByGroupType(GroupType.OPEN, pageRequest);
-//
-//        return groupList;
-//    }
 
 
 
@@ -127,10 +121,10 @@ public class ReservationService implements ReservationUtils {
     }
 
     // TODO: 2023/04/19 방주인 확인 로직 상황에 따라 추가
-    private ReservationResponse getReservationResponse(Reservation reservation) {
+    private ReservationResponse getReservationResponse(Reservation reservation,Long currentUserId) {
         return new ReservationResponse(
                 reservation.getReservationBaseInfoVo(),
-                reservation.getParticipationInfoVOs());
+                reservation.checkUserIsHost(currentUserId));
     }
 
     @Override
