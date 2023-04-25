@@ -69,6 +69,11 @@ public class Participation {
     public boolean checkUserIsHost(Long id) {
         return user.getId().equals(id);
     }
+
+    public void updateSeatPosition(SeatPosition seatPosition) {
+        this.seatPosition = seatPosition;
+    }
+
     public void subParticipation(Reservation reservation) {
         reservation.getParticipations().remove(this);
     }

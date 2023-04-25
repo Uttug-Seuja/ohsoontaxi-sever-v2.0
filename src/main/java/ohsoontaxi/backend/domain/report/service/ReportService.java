@@ -39,8 +39,8 @@ public class ReportService implements ReportUtils{
         return  ReportResponse.from(report);
     }
 
-    public void updateProcessingStatus(UpdateProcessingStatusRequest request) {
-        Report report = queryReport(request.getReportId());
+    public void updateProcessingStatus(Long reportId, UpdateProcessingStatusRequest request) {
+        Report report = queryReport(reportId);
         ProcessingStatus processingStatus = request.getProcessingStatus();
 
         if (processingStatus == ProcessingStatus.HANDLING) {
