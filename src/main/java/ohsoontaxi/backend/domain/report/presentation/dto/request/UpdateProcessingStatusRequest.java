@@ -7,7 +7,6 @@ import ohsoontaxi.backend.global.common.report.ProcessingStatus;
 @Getter
 @AllArgsConstructor
 public class UpdateProcessingStatusRequest {
-
-    private final Long reportId;
+    
     private final ProcessingStatus processingStatus;
 }

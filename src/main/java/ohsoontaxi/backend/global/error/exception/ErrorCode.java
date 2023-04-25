@@ -12,6 +12,10 @@ public enum ErrorCode {
     INVALID_ACCESS_TOKEN(400, "Access 토큰이 유효하지 않습니다"),
     MISMATCH_REFRESH_TOKEN(400, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
     REFRESH_TOKEN_NOT_EXIST(400, "리프레시 토큰 정보가 올바르지 않습니다"),
+    DUPLICATED_PARTICIPATION(400, "중복된 참여입니다."),
+    DUPLICATED_SEATPOSITION(400, "중복된 좌석입니다."),
+    GENDER_NOT_EQUAL(400, "잘못된 성별입니다."),
+    RESERVATION_STATUS_EXCEPTION(400, "이미 마감된 게시글 입니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_TOKEN(401, "토큰이 유효하지 않습니다."),
