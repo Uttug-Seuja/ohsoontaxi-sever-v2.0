@@ -22,12 +22,14 @@ public class Temperature {
     private Long id;
 
     private Double currentTemperature;
+    private String temperatureImage;
     private Integer reportedNum;
     private Integer participationNum;
 
     @Builder
-    public Temperature(Double currentTemperature, Integer reportedNum, Integer participationNum) {
+    public Temperature(Double currentTemperature, String temperatureImage, Integer reportedNum, Integer participationNum) {
         this.currentTemperature = currentTemperature;
+        this.temperatureImage = temperatureImage;
         this.reportedNum = reportedNum;
         this.participationNum = participationNum;
     }
@@ -35,13 +37,14 @@ public class Temperature {
     public static Temperature createTemperature() {
         return builder()
                 .currentTemperature(36.5)
+                .temperatureImage("image")
                 .reportedNum(0)
                 .participationNum(0)
                 .build();
     }
 
     public TemperatureInfoVo getTemperatureInfoVo() {
-        return new TemperatureInfoVo(id, currentTemperature, reportedNum, participationNum);
+        return new TemperatureInfoVo(id, currentTemperature, temperatureImage, reportedNum, participationNum);
     }
 
     public void updateTemperature(Double temperature) {
