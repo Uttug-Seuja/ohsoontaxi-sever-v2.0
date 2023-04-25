@@ -1,16 +1,15 @@
 package ohsoontaxi.backend.domain.reservation.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ohsoontaxi.backend.domain.participation.domain.Participation;
-import ohsoontaxi.backend.domain.participation.domain.vo.ParticipationInfoVo;
 import ohsoontaxi.backend.domain.reservation.domain.vo.ReservationBaseInfoVo;
 import ohsoontaxi.backend.domain.reservation.exception.NotHostException;
 import ohsoontaxi.backend.domain.reservation.service.dto.UpdateReservationDto;
 import ohsoontaxi.backend.domain.user.domain.User;
-import ohsoontaxi.backend.global.common.participation.SeatPosition;
 import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
 import ohsoontaxi.backend.global.common.user.Gender;
 import ohsoontaxi.backend.global.database.BaseEntity;
@@ -119,10 +118,6 @@ public class Reservation extends BaseEntity {
 
     }
 
-    public List<ParticipationInfoVo> getParticipationInfoVOs() {
-        return participations.stream().map(Participation::getParticipationInfoVo).collect(Collectors.toList());
-    }
-
 
     public void validUserIsHost(Long id) {
         if (!checkUserIsHost(id)) {
@@ -134,11 +129,29 @@ public class Reservation extends BaseEntity {
         return user.getId().equals(id);
     }
 
-    public void addCurrentNum(){
-        this.currentNum++;}
+    public void addCurrentNum(){this.currentNum++;}
 
-    public void subtractCurrentNum(){
-        this.currentNum--;
+    public void subtractCurrentNum(){this.currentNum--;}
+
+    public void changeReservationStatus(){
+
+        if(departureDate.isBefore(LocalDateTime.now())){
+            reservationStatus = ReservationStatus.DEADLINE;
+            return;
+        }
+
+        switch (currentNum){
+            case 1, 2:
+                reservationStatus = ReservationStatus.POSSIBLE;
+                break;
+            case 3:
+                reservationStatus = ReservationStatus.IMMINENT;
+                break;
+            case 4:
+                reservationStatus = ReservationStatus.DEADLINE;
+        }
+
     }
+
 
 }
