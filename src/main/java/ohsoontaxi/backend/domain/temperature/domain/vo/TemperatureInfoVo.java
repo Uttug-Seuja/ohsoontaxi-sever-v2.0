@@ -9,6 +9,7 @@ public class TemperatureInfoVo {
 
     private final Long temperatureId;
     private final Double currentTemperature;
+    private final String temperatureImage;
     private final Integer reportedNum;
     private final Integer participationNum;
 }
