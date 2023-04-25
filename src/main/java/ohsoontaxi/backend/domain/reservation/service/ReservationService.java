@@ -7,6 +7,7 @@ import ohsoontaxi.backend.domain.reservation.domain.repository.ReservationReposi
 import ohsoontaxi.backend.domain.reservation.exception.ReservationNotFoundException;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.request.CreateReservationRequest;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.request.UpdateReservationRequest;
+import ohsoontaxi.backend.domain.reservation.presentation.dto.response.KeywordDto;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.response.ReservationBriefInfoDto;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.response.ReservationResponse;
 import ohsoontaxi.backend.domain.user.domain.User;
@@ -14,9 +15,13 @@ import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
 import ohsoontaxi.backend.global.utils.security.SecurityUtils;
 import ohsoontaxi.backend.global.utils.user.UserUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -76,7 +81,6 @@ public class ReservationService implements ReservationUtils {
 
 
 
-
     // 가까운 순서대로 페이징 해서 가져오기
     public Slice<ReservationBriefInfoDto> findAllReservation(PageRequest pageRequest) {
 
@@ -87,14 +91,47 @@ public class ReservationService implements ReservationUtils {
     }
 
     // 내가 만든방
-    public Slice<ReservationBriefInfoDto> findMyReservation(PageRequest pageRequest) {
+    public List<ReservationBriefInfoDto> reservedByMe() {
 
         Long currentUserId = SecurityUtils.getCurrentUserId();
 
-        Slice<Reservation> sliceReservation =
-                reservationRepository.findAllByUserId(pageRequest,currentUserId);
+        List<Reservation> myReservation = reservationRepository.findReservedByMe(currentUserId);
 
-        return sliceReservation.map(reservation -> new ReservationBriefInfoDto(reservation.getReservationBaseInfoVo()));
+        return myReservation.stream().map(reservation -> new ReservationBriefInfoDto(reservation.getReservationBaseInfoVo())).collect(Collectors.toList());
+    }
+
+    // 내가 참여한방
+
+    public List<ReservationBriefInfoDto> participatedReservation() {
+
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+
+        List<Reservation> myReservation = reservationRepository.findParticipatedReservation(currentUserId);
+
+        return myReservation.stream().map(reservation -> new ReservationBriefInfoDto(reservation.getReservationBaseInfoVo())).collect(Collectors.toList());
+    }
+
+    public Slice<KeywordDto> getKeyword(String keyword, Pageable pageable){
+
+        Slice<Reservation> reservations = reservationRepository.keywordBySlice(keyword, pageable);
+
+        return reservations.map(reservation -> new KeywordDto(reservation.getReservationBaseInfoVo()));
+    }
+
+
+    public Slice<ReservationBriefInfoDto> search(String keyword, Pageable pageable){
+
+        Slice<Reservation> reservations = reservationRepository.searchBySlice(keyword, pageable);
+
+        return reservations.map(reservation -> new ReservationBriefInfoDto(reservation.getReservationBaseInfoVo()));
+    }
+
+
+    public List<KeywordDto> getRecommendWord(){
+
+        List<Reservation> reservations = reservationRepository.findTop5ByOrderByIdDesc();
+
+        return reservations.stream().map(reservation -> new KeywordDto(reservation.getReservationBaseInfoVo())).collect(Collectors.toList());
     }
 
 
@@ -120,7 +157,6 @@ public class ReservationService implements ReservationUtils {
         return reservation;
     }
 
-    // TODO: 2023/04/19 방주인 확인 로직 상황에 따라 추가
     private ReservationResponse getReservationResponse(Reservation reservation,Long currentUserId) {
         return new ReservationResponse(
                 reservation.getReservationBaseInfoVo(),
