@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import ohsoontaxi.backend.domain.temperature.domain.Temperature;
 import ohsoontaxi.backend.domain.user.domain.vo.UserInfoVO;
 import ohsoontaxi.backend.global.common.user.Gender;
+import ohsoontaxi.backend.global.database.BaseEntity;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -14,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class User {
+public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "user_id")

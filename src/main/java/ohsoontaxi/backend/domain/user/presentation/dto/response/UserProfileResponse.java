@@ -15,6 +15,7 @@ public class UserProfileResponse {
     private final String email;
     private final String profilePath;
     private final Double currentTemperature;
+    private final String temperatureImage;
 
 
     public UserProfileResponse(UserInfoVO userInfo) {
@@ -25,5 +26,6 @@ public class UserProfileResponse {
         this.email = userInfo.getEmail();
         this.profilePath = userInfo.getProfilePath();
         this.currentTemperature = userInfo.getTemperatureInfoVo().getCurrentTemperature();
+        this.temperatureImage = userInfo.getTemperatureInfoVo().getTemperatureImage();
     }
 }

@@ -16,7 +16,7 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    @PostMapping
+    @PostMapping("/upload")
     public UploadImageResponse uploadImage(@RequestPart MultipartFile file) {
         return imageService.uploadImage(file);
     }

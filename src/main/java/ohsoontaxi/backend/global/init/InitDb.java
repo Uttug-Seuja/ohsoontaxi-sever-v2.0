@@ -3,6 +3,7 @@ package ohsoontaxi.backend.global.init;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import ohsoontaxi.backend.domain.asset.domain.ProfileImage;
 import ohsoontaxi.backend.domain.temperature.domain.Temperature;
 import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.global.common.user.Gender;
@@ -29,8 +30,11 @@ public class InitDb {
 
         public void dbInit1() {
 
+            ProfileImage image1 = ProfileImage.createProfileImage("image1");
+            ProfileImage image2 = ProfileImage.createProfileImage("image2");
 
-
+            em.persist(image1);
+            em.persist(image2);
 
             Temperature temper = Temperature.builder()
                     .currentTemperature(36.5)
@@ -60,6 +64,10 @@ public class InitDb {
             em.persist(member1);
             em.persist(member2);
             em.persist(member3);
+            em.persist(member4);
+            em.persist(member5);
+
+
 
             em.flush();
 

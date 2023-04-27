@@ -19,8 +19,13 @@ public class UserController {
         return userService.changeProfilePath(changeProfileRequest);
     }
 
+    @GetMapping("/other-profile/{userId}")
+    public UserProfileResponse getOtherProfile(@PathVariable Long userId){
+        return userService.getOtherProfile(userId);
+    }
+
     @GetMapping("/profile")
-    public UserProfileResponse getProfile() {
+    public UserProfileResponse getProfile(){
         return userService.getProfile();
     }
-}
+ }
