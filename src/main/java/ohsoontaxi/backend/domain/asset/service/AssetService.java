@@ -17,16 +17,10 @@ public class AssetService implements AssetUtils{
 
     @Override
     public ProfileImageDto getRandomProfileImage() {
-        ProfileImage profileImage = findProfileImage();
-        return new ProfileImageDto(profileImage);
-    }
-
-    @Override
-    public ProfileImage findProfileImage() {
         ProfileImage profileImage =
                 profileImageRepository
                         .findRandomProfileImage()
                         .orElseThrow(() -> ProfileImageNotFoundException.EXCEPTION);
-        return profileImage;
+        return new ProfileImageDto(profileImage);
     }
 }

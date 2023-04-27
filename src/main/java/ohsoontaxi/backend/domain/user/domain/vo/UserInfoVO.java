@@ -16,4 +16,5 @@ public class UserInfoVO {
     private final String email;
     private final String profilePath;
     private final TemperatureInfoVo temperatureInfoVo;
+    private final String temperatureImage;
 }

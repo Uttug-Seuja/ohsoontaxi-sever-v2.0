@@ -6,6 +6,4 @@ import ohsoontaxi.backend.domain.asset.presentation.dto.ProfileImageDto;
 public interface AssetUtils {
 
     ProfileImageDto getRandomProfileImage();
-
-    ProfileImage findProfileImage();
 }
