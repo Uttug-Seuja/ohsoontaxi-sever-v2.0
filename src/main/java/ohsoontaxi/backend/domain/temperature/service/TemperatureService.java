@@ -37,6 +37,8 @@ public class TemperatureService implements TemperatureUtils{
         double patchTemperature = temperatureCalculation(reportedNum, participationNum);
 
         currentUserTemperature.updateTemperature(patchTemperature);
+
+        updateTemperatureImage(currentUserTemperature);
     }
 
     private static double temperatureCalculation(Integer reportedNum, Integer participationNum) {
@@ -46,5 +48,30 @@ public class TemperatureService implements TemperatureUtils{
         double modifiedTemperature = BASE_TEMPERATURE - ((double) (penalty * reportedNum) / 10) + ((double) (bonus * participationNum) / 10);
 
         return modifiedTemperature;
+    }
+
+    private static void updateTemperatureImage(Temperature temperature) {
+        Double currentTemperature = temperature.getCurrentTemperature();
+        String image;
+
+        switch((int) (currentTemperature / 20)) {
+            case 4:
+                image = "이미지5";
+                break;
+            case 3:
+                image = "이미지4";
+                break;
+            case 2:
+                image = "이미지3";
+                break;
+            case 1:
+                image = "이미지2";
+                break;
+            default:
+                image = "이미지1";
+                break;
+        }
+
+        temperature.updateTemperatureImage(image);
     }
 }

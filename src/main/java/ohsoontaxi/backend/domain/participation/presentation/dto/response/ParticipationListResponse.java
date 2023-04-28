@@ -1,17 +1,21 @@
 package ohsoontaxi.backend.domain.participation.presentation.dto.response;
 
 import lombok.Getter;
+import ohsoontaxi.backend.domain.participation.domain.Participation;
 import ohsoontaxi.backend.domain.user.domain.vo.UserInfoVO;
+import ohsoontaxi.backend.global.common.participation.SeatPosition;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class ParticipationListResponse {
 
-    private List<UserInfoVO> users;
     private boolean iParticipation;
+    private List<ParticipationInfoDto> participationInfoList;
 
-    public ParticipationListResponse(List<UserInfoVO> participationList) {
-
+    public ParticipationListResponse(List<Participation> participationList, boolean result) {
+        iParticipation = result;
+        participationInfoList = participationList.stream().map(participation -> new ParticipationInfoDto(participation)).collect(Collectors.toList());
     }
 }

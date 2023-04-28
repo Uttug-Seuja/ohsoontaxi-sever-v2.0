@@ -50,6 +50,9 @@ public class Temperature {
     public void updateTemperature(Double temperature) {
         this.currentTemperature = temperature;
     }
+    public void updateTemperatureImage(String temperatureImage) {
+        this.temperatureImage = temperatureImage;
+    }
 
     public void addReportNum() {
         this.reportedNum++;
