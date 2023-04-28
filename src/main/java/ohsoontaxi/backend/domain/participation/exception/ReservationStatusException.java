@@ -7,6 +7,6 @@ public class ReservationStatusException extends OhSoonException {
 
     public static final OhSoonException EXCEPTION = new ReservationStatusException();
     private ReservationStatusException() {
-        super(ErrorCode.RESERVATION_STATUS_EXCEPTION);
+        super(ErrorCode.FULL_PARTICIPATION_EXCEPTION);
     }
 }

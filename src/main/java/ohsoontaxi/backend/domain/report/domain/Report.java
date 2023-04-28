@@ -8,6 +8,7 @@ import ohsoontaxi.backend.domain.participation.domain.Participation;
 import ohsoontaxi.backend.domain.report.domain.vo.ReportInfoVo;
 import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.global.common.report.ProcessingStatus;
+import ohsoontaxi.backend.global.common.report.ReportType;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -29,6 +30,9 @@ public class Report {
     @Enumerated(STRING)
     private ProcessingStatus processingStatus;
 
+    @Enumerated(STRING)
+    private ReportType reportType;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -38,19 +42,21 @@ public class Report {
     private Participation participation;
 
     @Builder
-    public Report(User user, Participation participation, String reportReason, ProcessingStatus processingStatus) {
+    public Report(User user, Participation participation, String reportReason, ProcessingStatus processingStatus, ReportType reportType) {
         this.user = user;
         this.participation = participation;
         this.reportReason = reportReason;
         this.processingStatus = processingStatus;
+        this.reportType = reportType;
     }
 
-    public static Report createReport(User user, Participation participation, String reportReason) {
+    public static Report createReport(User user, Participation participation, String reportReason, ReportType reportType) {
         return builder()
                 .user(user)
                 .participation(participation)
                 .reportReason(reportReason)
                 .processingStatus(RECEIPT)
+                .reportType(reportType)
                 .build();
     }
 

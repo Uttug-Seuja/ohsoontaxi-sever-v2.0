@@ -8,6 +8,5 @@ import ohsoontaxi.backend.global.common.participation.SeatPosition;
 @AllArgsConstructor
 public class CreateParticipationRequest {
 
-    private Long reservationId;
     private SeatPosition seatPosition;
 }

@@ -15,7 +15,8 @@ public enum ErrorCode {
     DUPLICATED_PARTICIPATION(400, "중복된 참여입니다."),
     DUPLICATED_SEATPOSITION(400, "중복된 좌석입니다."),
     GENDER_NOT_EQUAL(400, "잘못된 성별입니다."),
-    RESERVATION_STATUS_EXCEPTION(400, "이미 마감된 게시글 입니다."),
+    FULL_PARTICIPATION_EXCEPTION(400, "참여자가 만석인 게시글 입니다."),
+    RESERVATION_STATUS_EXCEPTION(400, "마감인 게시글 입니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_TOKEN(401, "토큰이 유효하지 않습니다."),

@@ -7,16 +7,21 @@ import ohsoontaxi.backend.domain.participation.domain.repository.ParticipationRe
 import ohsoontaxi.backend.domain.participation.exception.*;
 import ohsoontaxi.backend.domain.participation.presentation.dto.request.CreateParticipationRequest;
 import ohsoontaxi.backend.domain.participation.presentation.dto.request.UpdateSeatPositionRequest;
+import ohsoontaxi.backend.domain.participation.presentation.dto.response.ParticipationListResponse;
 import ohsoontaxi.backend.domain.participation.presentation.dto.response.ParticipationResponse;
 import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.reservation.service.ReservationUtils;
+import ohsoontaxi.backend.domain.temperature.service.TemperatureUtils;
 import ohsoontaxi.backend.domain.user.domain.User;
+import ohsoontaxi.backend.domain.user.domain.vo.UserInfoVO;
 import ohsoontaxi.backend.global.common.participation.SeatPosition;
+import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
 import ohsoontaxi.backend.global.common.user.Gender;
 import ohsoontaxi.backend.global.utils.user.UserUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -28,16 +33,22 @@ public class ParticipationService implements ParticipationUtils{
     private final ParticipationRepository participationRepository;
     private final UserUtils userUtils;
     private final ReservationUtils reservationUtils;
+    private final TemperatureUtils temperatureUtils;
 
     @Transactional
-    public Long createParticipation(CreateParticipationRequest createParticipationRequest) {
+    public void createParticipation(Long reservationId, CreateParticipationRequest createParticipationRequest) {
         User currentUser = userUtils.getUserFromSecurityContext();
-        Reservation currentReservation = reservationUtils.queryReservation(createParticipationRequest.getReservationId());
+        Reservation currentReservation = reservationUtils.queryReservation(reservationId);
+
+        validMethod(currentReservation, currentUser, createParticipationRequest.getSeatPosition());
 
         Participation participation = Participation.createParticipation(currentUser, currentReservation, createParticipationRequest.getSeatPosition());
-        Long participationId = participationRepository.save(participation).getId();
+        participationRepository.save(participation);
+        currentReservation.addCurrentNum();
+        currentReservation.changeReservationStatus();
 
-        return participationId;
+        currentUser.getTemperature().addParticipationNum();
+        temperatureUtils.temperaturePatch(currentUser.getId());
     }
 
     @Transactional
@@ -47,6 +58,7 @@ public class ParticipationService implements ParticipationUtils{
         Participation participation = queryParticipation(participationId);
 
         participation.validUserIsHost(currentUser.getId());
+        validDuplicatedSeatPosition(participation.getReservation(), updateSeatPositionRequest.getSeatPosition());
 
         participation.updateSeatPosition(updateSeatPositionRequest.getSeatPosition());
     }
@@ -59,24 +71,35 @@ public class ParticipationService implements ParticipationUtils{
 
         currentParticipation.validUserIsHost(currentUser.getId());
 
+        currentUser.getTemperature().subParticipationNum();
+
         participationRepository.delete(currentParticipation);
+
+        Reservation reservation = currentParticipation.getReservation();
+        reservation.subtractCurrentNum();
+        reservation.changeReservationStatus();
+
+        temperatureUtils.temperaturePatch(currentUser.getId());
     }
 
-    public void getParticipationList(Long reservationId) {
+    public ParticipationListResponse getParticipationList(Long reservationId) {
+        User currentUser = userUtils.getUserFromSecurityContext();
         Reservation currentReservation = reservationUtils.queryReservation(reservationId);
         List<Participation> participationList = participationRepository.findAllByReservation(currentReservation);
 
+        boolean result = participationRepository.existsByReservationAndUser(currentReservation, currentUser);
 
+        return new ParticipationListResponse(participationList, result);
     }
 
-    public void validDuplicatedParticipation(Long participationId) {
+    private void validDuplicatedParticipation(Long participationId) {
         boolean result = participationRepository.existsById(participationId);
         if (result == true) {
             throw DuplicatedParticipationException.EXCEPTION;
         }
     }
 
-    public void validEqualGender(Reservation reservation, User user) {
+    private void validEqualGender(Reservation reservation, User user) {
         Gender userGender = user.getGender();
         Gender reservationGender = reservation.getGender();
         if (reservationGender != Gender.ALL && userGender != reservationGender) {
@@ -84,17 +107,31 @@ public class ParticipationService implements ParticipationUtils{
         }
     }
 
-    public void validDuplicatedSeatPosition(Reservation reservation, SeatPosition seatPosition) {
+    private void validDuplicatedSeatPosition(Reservation reservation, SeatPosition seatPosition) {
         boolean result = participationRepository.existsByReservationAndSeatPosition(reservation, seatPosition);
         if (result == true) {
             throw DuplicatedSeatPositionException.EXCEPTION;
         }
     }
 
-    public void validReservationStatus(Reservation reservation) {
+    private void validReservationStatus(Reservation reservation) {
         if (reservation.getCurrentNum().equals(4)) {
             throw ReservationStatusException.EXCEPTION;
         }
+    }
+
+    private void validDeadLine(Reservation reservation) {
+        if (reservation.getReservationStatus().equals(ReservationStatus.DEADLINE)) {
+            throw ReservationDeadLineException.EXCEPTION;
+        }
+    }
+
+    private void validMethod(Reservation reservation, User user, SeatPosition seatPosition) {
+        validEqualGender(reservation, user);
+        validDeadLine(reservation);
+        validReservationStatus(reservation);
+        validDuplicatedParticipation(reservation.getId());
+        validDuplicatedSeatPosition(reservation, seatPosition);
     }
 
     private ParticipationResponse getParticipationResponse(Participation participation) {
