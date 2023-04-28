@@ -44,6 +44,9 @@ public class ParticipationService implements ParticipationUtils{
 
         Participation participation = Participation.createParticipation(currentUser, currentReservation, createParticipationRequest.getSeatPosition());
         participationRepository.save(participation);
+        currentReservation.addCurrentNum();
+        currentReservation.changeReservationStatus();
+
         currentUser.getTemperature().addParticipationNum();
         temperatureUtils.temperaturePatch(currentUser.getId());
     }
@@ -71,6 +74,10 @@ public class ParticipationService implements ParticipationUtils{
         currentUser.getTemperature().subParticipationNum();
 
         participationRepository.delete(currentParticipation);
+
+        Reservation reservation = currentParticipation.getReservation();
+        reservation.subtractCurrentNum();
+        reservation.changeReservationStatus();
 
         temperatureUtils.temperaturePatch(currentUser.getId());
     }
