@@ -15,15 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TemperatureService implements TemperatureUtils{
 
+    private final TemperatureRepository temperatureRepository;
     private final UserUtils userUtils;
 
     public static final double BASE_TEMPERATURE = 36.5;
 
     @Override
-    public Temperature createTemperature() {
+    public void createTemperature() {
         Temperature temperature = Temperature.createTemperature();
 
-        return temperature;
+        temperatureRepository.save(temperature);
     }
 
     @Override
