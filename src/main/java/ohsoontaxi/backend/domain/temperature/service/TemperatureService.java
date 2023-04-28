@@ -21,10 +21,12 @@ public class TemperatureService implements TemperatureUtils{
     public static final double BASE_TEMPERATURE = 36.5;
 
     @Override
-    public void createTemperature() {
+    public Temperature createTemperature() {
         Temperature temperature = Temperature.createTemperature();
 
         temperatureRepository.save(temperature);
+
+        return temperature;
     }
 
     @Override
