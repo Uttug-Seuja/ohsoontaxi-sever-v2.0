@@ -30,11 +30,19 @@ public class InitDb {
 
         public void dbInit1() {
 
-            ProfileImage image1 = ProfileImage.createProfileImage("image1");
-            ProfileImage image2 = ProfileImage.createProfileImage("image2");
+            ProfileImage image1 = ProfileImage.createProfileImage(
+                    "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7C098f3311-eae2-4f51-8ae7-90b4fa0887fc.jpeg");
+            ProfileImage image2 = ProfileImage.createProfileImage(
+                    "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7Cea98a33e-8cda-49e9-ae0a-5ec66f935cea.jpeg");
+            ProfileImage image3 = ProfileImage.createProfileImage(
+                    "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7Ceedc049d-b84e-427b-abb2-003f454af16d.jpeg");
+            ProfileImage image4 = ProfileImage.createProfileImage(
+                    "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7Cf6e4f790-665e-42c1-a013-0185f31672e0.jpeg");
 
             em.persist(image1);
             em.persist(image2);
+            em.persist(image3);
+            em.persist(image4);
 
             Temperature temper = Temperature.builder()
                     .currentTemperature(36.5)
