@@ -17,13 +17,8 @@ public class UserService {
 
     public UserProfileResponse changeProfilePath(ChangeProfileRequest changeProfileRequest){
         User user = userUtils.getUserFromSecurityContext();
-        String changeUrl;
-        if (changeProfileRequest.getProfilePath().equals("basicImage")){
-            changeUrl = assetUtils.getRandomProfileImage().getUrl();
-        } else{
-            changeUrl = changeProfileRequest.getProfilePath();
-        }
-        user.changeProfilePath(changeUrl);
+        String imageUrl = assetUtils.getImageUrl(changeProfileRequest.getProfilePath());
+        user.changeProfilePath(imageUrl);
         return new UserProfileResponse(user.getUserInfo());
     }
 
