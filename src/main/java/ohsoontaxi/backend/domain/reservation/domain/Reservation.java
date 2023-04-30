@@ -118,7 +118,6 @@ public class Reservation extends BaseEntity {
 
     }
 
-
     public void validUserIsHost(Long id) {
         if (!checkUserIsHost(id)) {
             throw NotHostException.EXCEPTION;
@@ -153,7 +152,6 @@ public class Reservation extends BaseEntity {
 
     }
 
-    //test
 
 
 }
