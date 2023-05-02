@@ -54,19 +54,78 @@ public class InitDb {
                     .reportedNum(1)
                     .participationNum(4).build();
 
+            Temperature temper2 = Temperature.builder()
+                    .currentTemperature(36.5)
+                    .reportedNum(0)
+                    .participationNum(9).build();
+
+            Temperature temper3 = Temperature.builder()
+                    .currentTemperature(36.5)
+                    .reportedNum(1)
+                    .participationNum(4).build();
+
+            Temperature temper4 = Temperature.builder()
+                    .currentTemperature(36.5)
+                    .reportedNum(1)
+                    .participationNum(9).build();
+
+            Temperature temper5 = Temperature.builder()
+                    .currentTemperature(36.5)
+                    .reportedNum(1)
+                    .participationNum(9).build();
+
+            Temperature temper6 = Temperature.builder()
+                    .currentTemperature(36.5)
+                    .reportedNum(1)
+                    .participationNum(9).build();
+
+            Temperature temper7 = Temperature.builder()
+                    .currentTemperature(36.5)
+                    .reportedNum(1)
+                    .participationNum(9).build();
+
+            Temperature temper8 = Temperature.builder()
+                    .currentTemperature(36.5)
+                    .reportedNum(1)
+                    .participationNum(9).build();
+
+            Temperature temper9 = Temperature.builder()
+                    .currentTemperature(36.5)
+                    .reportedNum(1)
+                    .participationNum(9).build();
+
             em.persist(temper);
             em.persist(temper1);
+            em.persist(temper2);
+            em.persist(temper3);
+            em.persist(temper4);
+            em.persist(temper5);
+            em.persist(temper6);
+            em.persist(temper7);
+            em.persist(temper8);
+            em.persist(temper9);
 
             User member1 = User.createUser("KAKAO","12312412423","이훈일", "20181543",
                     "hunil12978@gmail.com","ajsk", Gender.MAN, temper1);
             User member2 = User.createUser("KAKAO","1231123123","김찬우", "20181666",
                     "hunil92348@gmail.com","ajsk", Gender.WOMAN, temper);
             User member3 = User.createUser("KAKAO","12316346523","조준장", "20184545",
-                    "hunil9923@gmail.com","ajsk", Gender.MAN, null);
+                    "hunil9923@gmail.com","ajsk", Gender.MAN, temper2);
             User member4 = User.createUser("KAKAO","12316346523","이건희", "20184545",
-                    "hunil9923@gmail.com","ajsk", Gender.WOMAN, null);
+                    "hunil9923@gmail.com","ajsk", Gender.WOMAN, temper3);
             User member5 = User.createUser("KAKAO","12316346523","김세준", "20184545",
-                    "hunil9923@gmail.com","ajsk", Gender.MAN, null);
+                    "hunil9923@gmail.com","ajsk", Gender.MAN, temper4);
+            User member6 = User.createUser("KAKAO","12316346523","김은지", "20184545",
+                    "hunil9923@gmail.com","ajsk", Gender.WOMAN, temper5);
+            User member7 = User.createUser("KAKAO","12316346523","이은혜", "20184545",
+                    "hunil9923@gmail.com","ajsk", Gender.MAN, temper6);
+            User member8 = User.createUser("KAKAO","12316346523","하재은", "20184545",
+                    "hunil9923@gmail.com","ajsk", Gender.WOMAN, temper7);
+            User member9 = User.createUser("KAKAO","12316346523","김해나", "20184545",
+                    "hunil9923@gmail.com","ajsk", Gender.MAN, temper8);
+            User member10 = User.createUser("KAKAO","12316346523","최유진", "20184545",
+                    "hunil9923@gmail.com","ajsk", Gender.WOMAN, temper9);
+
 
 
             em.persist(member1);
@@ -74,6 +133,11 @@ public class InitDb {
             em.persist(member3);
             em.persist(member4);
             em.persist(member5);
+            em.persist(member6);
+            em.persist(member7);
+            em.persist(member8);
+            em.persist(member9);
+            em.persist(member10);
 
 
 
