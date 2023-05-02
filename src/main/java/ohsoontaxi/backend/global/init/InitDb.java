@@ -166,7 +166,7 @@ public class InitDb {
                         .title("순대 갈사람"+etr)
                         .startPoint("신창역"+etr)
                         .destination("후문"+etr)
-                        .departureDate(LocalDateTime.now())
+                        .departureDate(LocalDateTime.of(2024,1,12,11,30,1,3))
                         .reservationStatus(ReservationStatus.POSSIBLE)
                         .gender(gender)
                         .passengerNum(4)
