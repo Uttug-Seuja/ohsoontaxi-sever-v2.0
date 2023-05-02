@@ -81,7 +81,7 @@ public class ReservationController {
 
     @GetMapping("/search/keyword")
     public Slice<KeywordDto> searchKeyword(
-            @PathVariable(value = "word") String word,
+            @RequestParam(value = "word") String word,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
