@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface ReservationRepositoryCustom {
 
-    Slice<Reservation> keywordBySlice(String keyword, Pageable pageable);
-    Slice<Reservation> searchBySlice(String keyword, Pageable pageable);
+    Slice<Reservation> keywordBySlice(String word, Pageable pageable);
+    Slice<Reservation> searchBySlice(String word, Pageable pageable);
 
 
 

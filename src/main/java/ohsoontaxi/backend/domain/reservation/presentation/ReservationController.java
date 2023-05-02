@@ -68,26 +68,26 @@ public class ReservationController {
         return reservationService.participatedReservation();
     }
 
-    @GetMapping("/search/{keyword}")
+    @GetMapping("/search")
     public Slice<ReservationBriefInfoDto> searchReservation(
-            @PathVariable(value = "keyword") String keyword,
+            @RequestParam(value = "word") String word,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        return reservationService.search(keyword,pageRequest);
+        return reservationService.search(word,pageRequest);
     }
 
-    @GetMapping("/search/keyword/{keyword}")
+    @GetMapping("/search/keyword")
     public Slice<KeywordDto> searchKeyword(
-            @PathVariable(value = "keyword") String keyword,
+            @PathVariable(value = "word") String word,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        return reservationService.getKeyword(keyword,pageRequest);
+        return reservationService.getKeyword(word,pageRequest);
     }
 
     @GetMapping("/search/recommend")
