@@ -92,7 +92,6 @@ public class CredentialService {
                         .oauthId(oidcDecodePayload.getSub())
                         .email(oidcDecodePayload.getEmail())
                         .name(registerUserRequest.getName())
-                        .schoolNum(registerUserRequest.getSchoolNum())
                         .gender(registerUserRequest.getGender())
                         .profilePath(imageUrl)
                         .temperature(temperature)

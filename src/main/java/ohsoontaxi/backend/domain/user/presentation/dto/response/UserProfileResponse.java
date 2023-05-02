@@ -10,7 +10,6 @@ import ohsoontaxi.backend.global.common.user.Gender;
 public class UserProfileResponse {
     private final Long id;
     private final String name;
-    private final String schoolNum;
     private final Gender gender;
     private final String email;
     private final String profilePath;
@@ -21,7 +20,6 @@ public class UserProfileResponse {
     public UserProfileResponse(UserInfoVO userInfo) {
         this.id = userInfo.getUserId();
         this.name = userInfo.getName();
-        this.schoolNum = userInfo.getSchoolNum();
         this.gender = userInfo.getGender();
         this.email = userInfo.getEmail();
         this.profilePath = userInfo.getProfilePath();
