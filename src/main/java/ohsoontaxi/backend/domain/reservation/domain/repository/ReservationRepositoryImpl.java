@@ -20,12 +20,12 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Slice<Reservation> keywordBySlice(String keyword,Pageable pageable) {
+    public Slice<Reservation> keywordBySlice(String word,Pageable pageable) {
         List<Reservation> reservations = queryFactory
                 .selectDistinct(reservation)
                 .from(reservation)
                 .where(
-                        titleContain(keyword)
+                        titleContain(word)
                 )
                 .orderBy(reservation.title.length().asc())
                 .offset(pageable.getOffset())
@@ -36,14 +36,14 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
     }
 
     @Override
-    public Slice<Reservation> searchBySlice(String keyword, Pageable pageable) {
+    public Slice<Reservation> searchBySlice(String word, Pageable pageable) {
 
         List<Reservation> reservations = queryFactory.selectFrom(reservation)
                 .where(
                         // 기타 조건들
-                        titleContain(keyword).
-                                or(startContain(keyword)).
-                                or(destinationContain(keyword))
+                        titleContain(word).
+                                or(startContain(word)).
+                                or(destinationContain(word))
                 )
                 .orderBy(reservation.createdDate.desc())
                 .offset(pageable.getOffset())
@@ -71,15 +71,15 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
         return hasNext;
     }
 
-    private BooleanExpression titleContain(String keyword) {
-        return isEmpty(keyword) ? null : reservation.title.contains(keyword);
+    private BooleanExpression titleContain(String word) {
+        return isEmpty(word) ? null : reservation.title.contains(word);
     }
 
-    private BooleanExpression startContain(String keyword) {
-        return isEmpty(keyword) ? null : reservation.startPoint.contains(keyword);
+    private BooleanExpression startContain(String word) {
+        return isEmpty(word) ? null : reservation.startPoint.contains(word);
     }
 
-    private BooleanExpression destinationContain(String keyword) {
-        return isEmpty(keyword) ? null : reservation.destination.contains(keyword);
+    private BooleanExpression destinationContain(String word) {
+        return isEmpty(word) ? null : reservation.destination.contains(word);
     }
 }

@@ -111,17 +111,17 @@ public class ReservationService implements ReservationUtils {
         return myReservation.stream().map(reservation -> new ReservationBriefInfoDto(reservation.getReservationBaseInfoVo())).collect(Collectors.toList());
     }
 
-    public Slice<KeywordDto> getKeyword(String keyword, Pageable pageable){
+    public Slice<KeywordDto> getKeyword(String word, Pageable pageable){
 
-        Slice<Reservation> reservations = reservationRepository.keywordBySlice(keyword, pageable);
+        Slice<Reservation> reservations = reservationRepository.keywordBySlice(word, pageable);
 
         return reservations.map(reservation -> new KeywordDto(reservation.getReservationBaseInfoVo()));
     }
 
 
-    public Slice<ReservationBriefInfoDto> search(String keyword, Pageable pageable){
+    public Slice<ReservationBriefInfoDto> search(String word, Pageable pageable){
 
-        Slice<Reservation> reservations = reservationRepository.searchBySlice(keyword, pageable);
+        Slice<Reservation> reservations = reservationRepository.searchBySlice(word, pageable);
 
         return reservations.map(reservation -> new ReservationBriefInfoDto(reservation.getReservationBaseInfoVo()));
     }

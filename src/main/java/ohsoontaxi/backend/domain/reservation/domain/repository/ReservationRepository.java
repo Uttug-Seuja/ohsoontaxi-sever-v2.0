@@ -16,18 +16,15 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     Optional<Reservation> findById(Long id);
     Slice<Reservation> findSliceBy(Pageable pageable);
 
-    //Slice<Reservation> findAllByUserId(Pageable pageable,Long userId);
-    //List<Reservation> findAllByUserIdOrderByCreatedDate(Long userId);
-
     List<Reservation> findTop5ByOrderByIdDesc();
 
     @Query("select distinct r from Reservation r"+
             " join fetch r.participations p"+
-            " where p.user.id = :userId order by r.createdDate")
+            " where p.user.id = :userId order by r.createdDate desc")
     List<Reservation> findParticipatedReservation(@Param("userId") Long userId);
 
     @Query("select distinct r from Reservation r"+
-            " where r.user.id = :userId order by r.createdDate")
+            " where r.user.id = :userId order by r.createdDate desc")
     List<Reservation> findReservedByMe(@Param("userId") Long userId);
 
 
