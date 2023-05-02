@@ -4,11 +4,15 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import ohsoontaxi.backend.domain.asset.domain.ProfileImage;
+import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.temperature.domain.Temperature;
 import ohsoontaxi.backend.domain.user.domain.User;
+import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
 import ohsoontaxi.backend.global.common.user.Gender;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Component  // 스프링빈 등록
 @RequiredArgsConstructor
@@ -141,10 +145,39 @@ public class InitDb {
 
 
 
+            makeReservation(member1,Gender.MAN,"A");
+
+            makeReservation(member2,Gender.WOMAN,"B");
+
+            makeReservation(member3,Gender.ALL,"C");
+
             em.flush();
 
             em.clear();
 
+
+        }
+
+        private void makeReservation(User member1,Gender gender, String etr) {
+            for(int i =0; i<20; i++){
+
+                Reservation reservation = Reservation.builder()
+                        .user(member1)
+                        .title("순대 갈사람"+etr)
+                        .startPoint("신창역"+etr)
+                        .destination("후문"+etr)
+                        .departureDate(LocalDateTime.now())
+                        .reservationStatus(ReservationStatus.POSSIBLE)
+                        .gender(gender)
+                        .passengerNum(4)
+                        .currentNum(0)
+                        .startLatitude(123.1)
+                        .startLongitude(123.1)
+                        .destinationLatitude(123.1)
+                        .destinationLongitude(123.1).build();
+
+                em.persist(reservation);
+            }
         }
 
     }
