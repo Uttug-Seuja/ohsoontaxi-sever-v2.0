@@ -27,8 +27,6 @@ public class User extends BaseEntity {
 
     private String name;
 
-    private String schoolNum;
-
     private String email;
 
     private String profilePath;
@@ -47,7 +45,6 @@ public class User extends BaseEntity {
         return UserInfoVO.builder()
                 .userId(id)
                 .name(name)
-                .schoolNum(schoolNum)
                 .gender(gender)
                 .email(email)
                 .profilePath(profilePath)
@@ -60,7 +57,6 @@ public class User extends BaseEntity {
             String oauthProvider,
             String oauthId,
             String name,
-            String schoolNum,
             String email,
             String profilePath,
             Gender gender,
@@ -68,7 +64,6 @@ public class User extends BaseEntity {
         this.oauthProvider = oauthProvider;
         this.oauthId = oauthId;
         this.name = name;
-        this.schoolNum = schoolNum;
         this.email = email;
         this.profilePath = profilePath;
         this.gender = gender;
@@ -76,13 +71,11 @@ public class User extends BaseEntity {
     }
 
     public static User createUser(String oauthProvider, String oauthId, String name,
-                                  String schoolNum, String email, String profilePath,
-                                  Gender gender, Temperature temperature) {
+                                  String email, String profilePath, Gender gender, Temperature temperature) {
         return builder()
                 .oauthProvider(oauthProvider)
                 .oauthId(oauthId)
                 .name(name)
-                .schoolNum(schoolNum)
                 .email(email)
                 .profilePath(profilePath)
                 .gender(gender)

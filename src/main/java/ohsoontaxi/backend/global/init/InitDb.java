@@ -109,25 +109,25 @@ public class InitDb {
             em.persist(temper8);
             em.persist(temper9);
 
-            User member1 = User.createUser("KAKAO","12312412423","이훈일", "20181543",
+            User member1 = User.createUser("KAKAO","12312412423","이훈일",
                     "hunil12978@gmail.com","ajsk", Gender.MAN, temper1);
-            User member2 = User.createUser("KAKAO","1231123123","김찬우", "20181666",
+            User member2 = User.createUser("KAKAO","1231123123","김찬우",
                     "hunil92348@gmail.com","ajsk", Gender.WOMAN, temper);
-            User member3 = User.createUser("KAKAO","12316346523","조준장", "20184545",
+            User member3 = User.createUser("KAKAO","12316346523","조준장",
                     "hunil9923@gmail.com","ajsk", Gender.MAN, temper2);
-            User member4 = User.createUser("KAKAO","12316346523","이건희", "20184545",
+            User member4 = User.createUser("KAKAO","12316346523","이건희",
                     "hunil9923@gmail.com","ajsk", Gender.WOMAN, temper3);
-            User member5 = User.createUser("KAKAO","12316346523","김세준", "20184545",
+            User member5 = User.createUser("KAKAO","12316346523","김세준",
                     "hunil9923@gmail.com","ajsk", Gender.MAN, temper4);
-            User member6 = User.createUser("KAKAO","12316346523","김은지", "20184545",
+            User member6 = User.createUser("KAKAO","12316346523","김은지",
                     "hunil9923@gmail.com","ajsk", Gender.WOMAN, temper5);
-            User member7 = User.createUser("KAKAO","12316346523","이은혜", "20184545",
+            User member7 = User.createUser("KAKAO","12316346523","이은혜",
                     "hunil9923@gmail.com","ajsk", Gender.MAN, temper6);
-            User member8 = User.createUser("KAKAO","12316346523","하재은", "20184545",
+            User member8 = User.createUser("KAKAO","12316346523","하재은",
                     "hunil9923@gmail.com","ajsk", Gender.WOMAN, temper7);
-            User member9 = User.createUser("KAKAO","12316346523","김해나", "20184545",
+            User member9 = User.createUser("KAKAO","12316346523","김해나",
                     "hunil9923@gmail.com","ajsk", Gender.MAN, temper8);
-            User member10 = User.createUser("KAKAO","12316346523","최유진", "20184545",
+            User member10 = User.createUser("KAKAO","12316346523","최유진",
                     "hunil9923@gmail.com","ajsk", Gender.WOMAN, temper9);
 
 

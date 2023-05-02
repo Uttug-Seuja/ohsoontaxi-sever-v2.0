@@ -12,7 +12,5 @@ public class RegisterRequest {
 
     private Gender gender;
 
-    private String schoolNum;
-
     private String profilePath;
 }
