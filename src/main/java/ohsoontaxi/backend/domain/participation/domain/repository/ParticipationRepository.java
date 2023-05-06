@@ -15,6 +15,5 @@ public interface ParticipationRepository extends JpaRepository<Participation, Lo
     List<Participation> findAllByReservation(Reservation reservation);
 
     boolean existsByReservationAndSeatPosition(Reservation reservation, SeatPosition seatPosition);
-    @Override
-    boolean existsById(Long participationId);
+    boolean existsByUserAndReservation(User user, Reservation reservation);
 }

@@ -13,7 +13,6 @@ import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.reservation.service.ReservationUtils;
 import ohsoontaxi.backend.domain.temperature.service.TemperatureUtils;
 import ohsoontaxi.backend.domain.user.domain.User;
-import ohsoontaxi.backend.domain.user.domain.vo.UserInfoVO;
 import ohsoontaxi.backend.global.common.participation.SeatPosition;
 import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
 import ohsoontaxi.backend.global.common.user.Gender;
@@ -21,7 +20,6 @@ import ohsoontaxi.backend.global.utils.user.UserUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -57,6 +55,7 @@ public class ParticipationService implements ParticipationUtils{
 
         Participation participation = queryParticipation(participationId);
 
+        validDeadLine(participation.getReservation());
         participation.validUserIsHost(currentUser.getId());
         validDuplicatedSeatPosition(participation.getReservation(), updateSeatPositionRequest.getSeatPosition());
 
@@ -69,7 +68,9 @@ public class ParticipationService implements ParticipationUtils{
 
         Participation currentParticipation = queryParticipation(participationId);
 
+        validDeadLine(currentParticipation.getReservation());
         currentParticipation.validUserIsHost(currentUser.getId());
+        validIsHost(currentUser, currentParticipation.getReservation());
 
         currentUser.getTemperature().subParticipationNum();
 
@@ -89,11 +90,16 @@ public class ParticipationService implements ParticipationUtils{
 
         boolean result = participationRepository.existsByReservationAndUser(currentReservation, currentUser);
 
-        return new ParticipationListResponse(participationList, result);
+        return new ParticipationListResponse(result, participationList);
     }
 
-    private void validDuplicatedParticipation(Long participationId) {
-        boolean result = participationRepository.existsById(participationId);
+    private void validIsHost(User user, Reservation reservation) {
+        if (reservation.getUser() == user) {
+            throw IsHostParticipation.EXCEPTION;
+        }
+    }
+    private void validDuplicatedParticipation(User user, Reservation reservation) {
+        boolean result = participationRepository.existsByUserAndReservation(user, reservation);
         if (result == true) {
             throw DuplicatedParticipationException.EXCEPTION;
         }
@@ -128,9 +134,9 @@ public class ParticipationService implements ParticipationUtils{
 
     private void validMethod(Reservation reservation, User user, SeatPosition seatPosition) {
         validEqualGender(reservation, user);
-        validDeadLine(reservation);
         validReservationStatus(reservation);
-        validDuplicatedParticipation(reservation.getId());
+        validDeadLine(reservation);
+        validDuplicatedParticipation(user, reservation);
         validDuplicatedSeatPosition(reservation, seatPosition);
     }
 
