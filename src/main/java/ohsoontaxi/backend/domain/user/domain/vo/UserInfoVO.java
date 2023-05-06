@@ -11,7 +11,7 @@ public class UserInfoVO {
 
     private final Long userId;
     private final String name;
-    private final String schoolNum;
+    //private final String schoolNum;
     private final Gender gender;
     private final String email;
     private final String profilePath;
