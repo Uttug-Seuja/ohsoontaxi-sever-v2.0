@@ -9,6 +9,7 @@ import ohsoontaxi.backend.global.common.participation.SeatPosition;
 import ohsoontaxi.backend.domain.participation.domain.vo.ParticipationInfoVo;
 import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.user.domain.User;
+import ohsoontaxi.backend.global.database.BaseEntity;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -18,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class Participation {
+public class Participation extends BaseEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "participation_id")

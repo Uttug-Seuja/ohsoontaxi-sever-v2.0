@@ -14,7 +14,7 @@ public class ParticipationListResponse {
     private boolean iParticipation;
     private List<ParticipationInfoDto> participationInfoList;
 
-    public ParticipationListResponse(List<Participation> participationList, boolean result) {
+    public ParticipationListResponse(boolean result, List<Participation> participationList) {
         iParticipation = result;
         participationInfoList = participationList.stream().map(participation -> new ParticipationInfoDto(participation)).collect(Collectors.toList());
     }

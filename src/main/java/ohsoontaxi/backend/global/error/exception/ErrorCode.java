@@ -17,6 +17,7 @@ public enum ErrorCode {
     GENDER_NOT_EQUAL(400, "잘못된 성별입니다."),
     FULL_PARTICIPATION_EXCEPTION(400, "참여자가 만석인 게시글 입니다."),
     RESERVATION_STATUS_EXCEPTION(400, "마감인 게시글 입니다."),
+    IS_HOST_EXCEPTION(400, "방장입니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_TOKEN(401, "토큰이 유효하지 않습니다."),
