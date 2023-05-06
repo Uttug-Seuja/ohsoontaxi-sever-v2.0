@@ -17,9 +17,9 @@ public class ReportController {
 
     @PostMapping("/create/{participationId}")
     public ReportResponse createReport(
-            @PathVariable("reservationId") Long reservationId,
+            @PathVariable("participationId") Long participationId,
             @Valid @RequestBody CreateReportRequest createReportRequest) {
-        return reportService.createReport(reservationId, createReportRequest);
+        return reportService.createReport(participationId, createReportRequest);
     }
 
     @PatchMapping("/process/{reportId}")
