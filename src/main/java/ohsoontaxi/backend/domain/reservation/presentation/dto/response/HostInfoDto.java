@@ -10,7 +10,6 @@ public class HostInfoDto {
 
     private Long userId;
     private String name;
-    private String schoolNum;
     private Gender gender;
     private String email;
     private String profilePath;
@@ -19,7 +18,6 @@ public class HostInfoDto {
 
         userId = userInfoVO.getUserId();
         name = userInfoVO.getName();
-        schoolNum = userInfoVO.getSchoolNum();
         gender = userInfoVO.getGender();
         email = userInfoVO.getEmail();
         profilePath = userInfoVO.getProfilePath();
