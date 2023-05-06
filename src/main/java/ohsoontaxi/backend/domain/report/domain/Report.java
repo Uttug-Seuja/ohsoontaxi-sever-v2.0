@@ -9,6 +9,7 @@ import ohsoontaxi.backend.domain.report.domain.vo.ReportInfoVo;
 import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.global.common.report.ProcessingStatus;
 import ohsoontaxi.backend.global.common.report.ReportType;
+import ohsoontaxi.backend.global.database.BaseEntity;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -19,7 +20,7 @@ import static ohsoontaxi.backend.global.common.report.ProcessingStatus.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class Report {
+public class Report extends BaseEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "report_id")
