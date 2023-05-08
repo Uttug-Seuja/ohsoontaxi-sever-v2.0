@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ohsoontaxi.backend.domain.participation.domain.Participation;
+import ohsoontaxi.backend.domain.participation.exception.GenderException;
 import ohsoontaxi.backend.domain.reservation.domain.vo.ReservationBaseInfoVo;
 import ohsoontaxi.backend.domain.reservation.exception.NotHostException;
 import ohsoontaxi.backend.domain.reservation.service.dto.UpdateReservationDto;
@@ -148,6 +149,14 @@ public class Reservation extends BaseEntity {
                 break;
             case 4:
                 reservationStatus = ReservationStatus.DEADLINE;
+        }
+
+    }
+
+    public void checkReservationGender(){
+
+        if(!user.getGender().equals(gender) || gender.equals(Gender.ALL)){
+            throw GenderException.EXCEPTION;
         }
 
     }

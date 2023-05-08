@@ -38,6 +38,8 @@ public class ReservationService implements ReservationUtils {
 
         Reservation reservation = makeReservation(createReservationRequest, user);
 
+        reservation.changeReservationStatus();
+
         reservationRepository.save(reservation);
 
         return getReservationResponse(reservation, user.getId());
