@@ -22,6 +22,6 @@ public class ParticipationUserInfoDto {
         email = userInfoVO.getEmail();
         profilePath = userInfoVO.getProfilePath();
         temperature = userInfoVO.getTemperatureInfoVo().getCurrentTemperature();
-        temperatureImage = userInfoVO.getTemperatureImage();
+        temperatureImage = userInfoVO.getTemperatureInfoVo().getTemperatureImage();
     }
 }

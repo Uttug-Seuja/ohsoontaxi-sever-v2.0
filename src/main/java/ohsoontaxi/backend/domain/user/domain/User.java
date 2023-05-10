@@ -34,7 +34,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "temperature_id")
     private Temperature temperature;
 
