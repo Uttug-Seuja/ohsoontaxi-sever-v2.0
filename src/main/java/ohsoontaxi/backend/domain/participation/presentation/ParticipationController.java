@@ -22,16 +22,16 @@ public class ParticipationController {
         participationService.createParticipation(reservationId, createParticipationRequest);
     }
 
-    @PatchMapping("/update/{participationId}")
+    @PatchMapping("/update/{reservationId}")
     public void updateParticipation(
-            @PathVariable("participationId") Long participation,
+            @PathVariable("reservationId") Long reservationId,
             @Valid @RequestBody UpdateSeatPositionRequest updateSeatPositionRequest) {
-        participationService.updateSeatPosition(participation, updateSeatPositionRequest);
+        participationService.updateSeatPosition(reservationId, updateSeatPositionRequest);
     }
 
-    @DeleteMapping("/delete/{participationId}")
-    public void deleteParticipation(@PathVariable("participationId") Long participationId) {
-        participationService.deleteParticipation(participationId);
+    @DeleteMapping("/delete/{reservationId}")
+    public void deleteParticipation(@PathVariable("reservationId") Long reservationId) {
+        participationService.deleteParticipation(reservationId);
     }
 
     @GetMapping("/getParticipationList/{reservationId}")

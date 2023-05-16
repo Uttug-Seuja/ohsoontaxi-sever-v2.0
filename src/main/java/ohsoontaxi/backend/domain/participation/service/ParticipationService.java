@@ -50,23 +50,25 @@ public class ParticipationService implements ParticipationUtils{
     }
 
     @Transactional
-    public void updateSeatPosition(Long participationId, UpdateSeatPositionRequest updateSeatPositionRequest) {
+    public void updateSeatPosition(Long reservationId, UpdateSeatPositionRequest updateSeatPositionRequest) {
         User currentUser = userUtils.getUserFromSecurityContext();
+        Reservation currentReservation = reservationUtils.queryReservation(reservationId);
 
-        Participation participation = queryParticipation(participationId);
+        Participation participation = participationRepository.findByUserAndReservation(currentUser, currentReservation);
 
-        validDeadLine(participation.getReservation());
+        validDeadLine(currentReservation);
         participation.validUserIsHost(currentUser.getId());
-        validDuplicatedSeatPosition(participation.getReservation(), updateSeatPositionRequest.getSeatPosition());
+        validDuplicatedSeatPosition(currentReservation, updateSeatPositionRequest.getSeatPosition());
 
         participation.updateSeatPosition(updateSeatPositionRequest.getSeatPosition());
     }
 
     @Transactional
-    public void deleteParticipation(Long participationId) {
+    public void deleteParticipation(Long reservationId) {
         User currentUser = userUtils.getUserFromSecurityContext();
+        Reservation currentReservation = reservationUtils.queryReservation(reservationId);
 
-        Participation currentParticipation = queryParticipation(participationId);
+        Participation currentParticipation = participationRepository.findByUserAndReservation(currentUser, currentReservation);
 
         validDeadLine(currentParticipation.getReservation());
         currentParticipation.validUserIsHost(currentUser.getId());
@@ -138,10 +140,6 @@ public class ParticipationService implements ParticipationUtils{
         validDeadLine(reservation);
         validDuplicatedParticipation(user, reservation);
         validDuplicatedSeatPosition(reservation, seatPosition);
-    }
-
-    private ParticipationResponse getParticipationResponse(Participation participation) {
-        return new ParticipationResponse(participation.getParticipationInfoVo());
     }
 
     @Override
