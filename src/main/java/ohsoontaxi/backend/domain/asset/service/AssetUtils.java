@@ -7,5 +7,5 @@ public interface AssetUtils {
 
     ProfileImageDto getRandomProfileImage();
 
-    String getImageUrl(String url);
+    Boolean checkIsBasicProfile(String profileUrl);
 }

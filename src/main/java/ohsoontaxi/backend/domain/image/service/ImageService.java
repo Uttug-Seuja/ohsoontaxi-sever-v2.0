@@ -20,9 +20,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-public class ImageService {
-
-    // TODO: 2023/04/23 사진 업로드 테스트
+public class ImageService implements ImageUtils{
 
     @Value("${aws.s3.bucket}")
     private String bucket;
@@ -70,6 +68,7 @@ public class ImageService {
         return baseUrl + "/" + fileName;
     }
 
+    @Override
     public void delete(String objectName) {
         amazonS3.deleteObject(bucket, objectName);
     }
