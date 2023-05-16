@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface ParticipationRepository extends JpaRepository<Participation, Long> {
 
+    Participation findByUserAndReservation(User user, Reservation reservation);
     boolean existsByReservationAndUser(Reservation reservation, User user);
     List<Participation> findAllByReservation(Reservation reservation);
 
