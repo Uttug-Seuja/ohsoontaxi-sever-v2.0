@@ -84,8 +84,6 @@ public class CredentialService {
 
         Temperature temperature = temperatureUtils.createTemperature();
 
-        String imageUrl = assetUtils.getImageUrl(registerUserRequest.getProfilePath());
-
         User newUser =
                 User.builder()
                         .oauthProvider(oauthProvider.getValue())
@@ -93,7 +91,7 @@ public class CredentialService {
                         .email(oidcDecodePayload.getEmail())
                         .name(registerUserRequest.getName())
                         .gender(registerUserRequest.getGender())
-                        .profilePath(imageUrl)
+                        .profilePath(registerUserRequest.getProfilePath())
                         .temperature(temperature)
                         .build();
         userRepository.save(newUser);

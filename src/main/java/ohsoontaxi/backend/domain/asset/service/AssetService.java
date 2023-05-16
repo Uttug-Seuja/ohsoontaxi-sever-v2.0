@@ -27,12 +27,8 @@ public class AssetService implements AssetUtils{
     }
 
     @Override
-    public String getImageUrl(String url) {
-        if (url.equals("basicProfile")){
-            return getRandomProfileImage().getUrl();
-        } else {
-            return url;
-        }
+    public Boolean checkIsBasicProfile(String profileUrl){
+        return profileImageRepository.existsByImageUrl(profileUrl);
     }
 
     @Transactional
