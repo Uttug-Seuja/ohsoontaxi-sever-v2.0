@@ -39,6 +39,10 @@ public class ReservationBaseInfoVo {
 
     private final Double destinationLongitude;
 
+    private LocalDateTime createDate;
+
+    private LocalDateTime lastModifyDate;
+
     private final UserInfoVO hostInfoVO;
 
 }
