@@ -38,7 +38,7 @@ public class ReservationService implements ReservationUtils {
 
         Reservation reservation = makeReservation(createReservationRequest, user);
 
-        reservation.changeReservationStatus();
+        reservation.checkReservationGender();
 
         reservationRepository.save(reservation);
 

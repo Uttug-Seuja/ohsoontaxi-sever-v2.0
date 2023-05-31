@@ -38,9 +38,15 @@ public class ReservationResponse {
 
     private Double destinationLongitude;
 
-    private Boolean iHost;
+    private LocalDateTime createDate;
+
+    private LocalDateTime lastModifyDate;
 
     private HostInfoDto hostInfo;
+
+    private Boolean iHost;
+
+
 
     public ReservationResponse(ReservationBaseInfoVo reservationBaseInfoVo, UserInfoVO userInfoVO, boolean iHost) {
 
@@ -57,8 +63,11 @@ public class ReservationResponse {
         startLongitude = reservationBaseInfoVo.getStartLongitude();
         destinationLatitude = reservationBaseInfoVo.getDestinationLatitude();
         destinationLongitude = reservationBaseInfoVo.getDestinationLongitude();
-        this.iHost = iHost;
+        createDate = reservationBaseInfoVo.getCreateDate();
+        lastModifyDate = reservationBaseInfoVo.getLastModifyDate();
         hostInfo = new HostInfoDto(userInfoVO);
+        this.iHost = iHost;
+
 
     }
 }

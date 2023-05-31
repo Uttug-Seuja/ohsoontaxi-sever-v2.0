@@ -110,6 +110,8 @@ public class Reservation extends BaseEntity {
                 .startLongitude(startLongitude)
                 .destinationLatitude(destinationLatitude)
                 .destinationLongitude(destinationLongitude)
+                .createDate(getCreatedDate())
+                .lastModifyDate(getLastModifyDate())
                 .hostInfoVO(user.getUserInfo())
                 .build();
     }
@@ -155,11 +157,13 @@ public class Reservation extends BaseEntity {
 
     public void checkReservationGender(){
 
-        if(!user.getGender().equals(gender) || gender.equals(Gender.ALL)){
+        if(!(user.getGender().equals(gender) || gender.equals(Gender.ALL))){
             throw GenderException.EXCEPTION;
         }
 
     }
+
+    // 날짜 예외 추가
 
 
 
