@@ -15,11 +15,11 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    @PostMapping("/create/{participationId}")
+    @PostMapping("/create/{userId}")
     public ReportResponse createReport(
-            @PathVariable("participationId") Long participationId,
+            @PathVariable("userId") Long userId,
             @Valid @RequestBody CreateReportRequest createReportRequest) {
-        return reportService.createReport(participationId, createReportRequest);
+        return reportService.createReport(userId, createReportRequest);
     }
 
     @PatchMapping("/process/{reportId}")
