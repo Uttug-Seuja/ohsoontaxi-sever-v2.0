@@ -38,23 +38,17 @@ public class Report extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "participation_id")
-    private Participation participation;
-
     @Builder
-    public Report(User user, Participation participation, String reportReason, ProcessingStatus processingStatus, ReportType reportType) {
+    public Report(User user, String reportReason, ProcessingStatus processingStatus, ReportType reportType) {
         this.user = user;
-        this.participation = participation;
         this.reportReason = reportReason;
         this.processingStatus = processingStatus;
         this.reportType = reportType;
     }
 
-    public static Report createReport(User user, Participation participation, String reportReason, ReportType reportType) {
+    public static Report createReport(User user, String reportReason, ReportType reportType) {
         return builder()
                 .user(user)
-                .participation(participation)
                 .reportReason(reportReason)
                 .processingStatus(RECEIPT)
                 .reportType(reportType)

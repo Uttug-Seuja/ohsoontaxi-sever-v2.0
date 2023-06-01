@@ -30,11 +30,11 @@ public class ReportService implements ReportUtils{
     private final TemperatureUtils temperatureUtils;
 
     @Transactional
-    public ReportResponse createReport(Long participationId, CreateReportRequest createReportRequest) {
-        Participation participation = participationUtils.queryParticipation(participationId);
+    public ReportResponse createReport(Long userId, CreateReportRequest createReportRequest) {
+        User createdUser = userUtils.getUserById(userId);
         User currentUser = userUtils.getUserFromSecurityContext();
 
-        Report report = Report.createReport(currentUser, participation, createReportRequest.getReportReason(), createReportRequest.getReportType());
+        Report report = Report.createReport(createdUser, createReportRequest.getReportReason(), createReportRequest.getReportType());
 
         reportRepository.save(report);
 
@@ -47,14 +47,14 @@ public class ReportService implements ReportUtils{
         ProcessingStatus processingStatus = request.getProcessingStatus();
 
         if (processingStatus == ProcessingStatus.HANDLING) {
-            Temperature temperature = report.getParticipation().getUser().getTemperature();
+            Temperature temperature = report.getUser().getTemperature();
             temperature.addReportNum();
             temperature.subParticipationNum();
-            temperatureUtils.temperaturePatch(report.getParticipation().getUser().getId());
+            temperatureUtils.temperaturePatch(report.getUser().getId());
         } else if (processingStatus == ProcessingStatus.RETURN) {
-            Temperature temperature = report.getParticipation().getUser().getTemperature();
+            Temperature temperature = report.getUser().getTemperature();
             temperature.subReportNum();
-            temperatureUtils.temperaturePatch(report.getParticipation().getUser().getId());
+            temperatureUtils.temperaturePatch(report.getUser().getId());
         }
 
         report.updateProcessingStatus(processingStatus);

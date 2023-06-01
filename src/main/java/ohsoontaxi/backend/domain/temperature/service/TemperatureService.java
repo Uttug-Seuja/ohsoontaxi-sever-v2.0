@@ -58,20 +58,20 @@ public class TemperatureService implements TemperatureUtils{
         String image;
 
         switch((int) (currentTemperature / 20)) {
-            case 4:
-                image = "이미지5";
+            case 5, 4:
+                image = "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7C7491b506-606c-40de-9053-84c86b3b1f5b.png";
                 break;
             case 3:
-                image = "이미지4";
+                image = "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7C1685e865-278c-4e74-8f2e-8c6d5daf2fa1.png";
                 break;
             case 2:
-                image = "이미지3";
+                image = "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7C3a0f6539-4467-48c3-b4b6-2b27d0126be6.png";
                 break;
             case 1:
-                image = "이미지2";
+                image = "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7C31d30651-c9a3-4d77-a2d1-8f21c95ce400.png";
                 break;
             default:
-                image = "이미지1";
+                image = "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7Ca6caee77-23c3-46b7-80d6-49b56d76a8f2.png";
                 break;
         }
 

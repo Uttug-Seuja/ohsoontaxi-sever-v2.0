@@ -78,9 +78,8 @@ public class ParticipationService implements ParticipationUtils{
 
         participationRepository.delete(currentParticipation);
 
-        Reservation reservation = currentParticipation.getReservation();
-        reservation.subtractCurrentNum();
-        reservation.changeReservationStatus();
+        currentReservation.subtractCurrentNum();
+        currentReservation.changeReservationStatus();
 
         temperatureUtils.temperaturePatch(currentUser.getId());
     }

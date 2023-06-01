@@ -19,7 +19,7 @@ public class ReportResponse {
     public static ReportResponse from(Report report) {
         return new ReportResponse(
                 report.getId(),
-                report.getParticipation().getId(),
+                report.getUser().getId(),
                 report.getReportReason(),
                 report.getProcessingStatus(),
                 report.getReportType());
