@@ -24,4 +24,8 @@ public class UserUtilsImpl implements UserUtils{
         User user = getUserById(currentUserId);
         return user;
     }
+
+    @Override
+    public User getUserEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> UserNotFoundException.EXCEPTION);}
 }

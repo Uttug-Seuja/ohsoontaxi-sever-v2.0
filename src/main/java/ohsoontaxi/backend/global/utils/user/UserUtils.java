@@ -7,4 +7,6 @@ public interface UserUtils {
     User getUserById(Long id);
 
     User getUserFromSecurityContext();
+
+    User getUserEmail(String email);
 }
