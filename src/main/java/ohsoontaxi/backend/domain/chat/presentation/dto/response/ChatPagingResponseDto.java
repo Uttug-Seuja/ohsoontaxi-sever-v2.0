@@ -1,4 +1,4 @@
-package ohsoontaxi.backend.domain.chat.presentation.dto;
+package ohsoontaxi.backend.domain.chat.presentation.dto.response;
 
 
 
