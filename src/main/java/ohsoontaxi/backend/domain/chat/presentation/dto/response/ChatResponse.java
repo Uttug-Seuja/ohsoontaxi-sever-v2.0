@@ -1,11 +1,8 @@
-package ohsoontaxi.backend.domain.chat.presentation.dto;
+package ohsoontaxi.backend.domain.chat.presentation.dto.response;
 
 import lombok.Getter;
-import ohsoontaxi.backend.domain.participation.domain.Participation;
-import ohsoontaxi.backend.domain.participation.presentation.dto.response.ParticipationInfoDto;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class ChatResponse {
