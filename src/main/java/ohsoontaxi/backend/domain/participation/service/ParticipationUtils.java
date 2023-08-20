@@ -6,4 +6,5 @@ public interface ParticipationUtils {
 
     Participation queryParticipation(Long id);
 
+    Participation findParticipation(Long userId,Long reservationId);
 }

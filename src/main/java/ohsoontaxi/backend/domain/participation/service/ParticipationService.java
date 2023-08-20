@@ -2,13 +2,13 @@ package ohsoontaxi.backend.domain.participation.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import ohsoontaxi.backend.domain.participation.domain.Participation;
 import ohsoontaxi.backend.domain.participation.domain.repository.ParticipationRepository;
 import ohsoontaxi.backend.domain.participation.exception.*;
 import ohsoontaxi.backend.domain.participation.presentation.dto.request.CreateParticipationRequest;
 import ohsoontaxi.backend.domain.participation.presentation.dto.request.UpdateSeatPositionRequest;
 import ohsoontaxi.backend.domain.participation.presentation.dto.response.ParticipationListResponse;
-import ohsoontaxi.backend.domain.participation.presentation.dto.response.ParticipationResponse;
 import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.reservation.service.ReservationUtils;
 import ohsoontaxi.backend.domain.temperature.service.TemperatureUtils;
@@ -33,6 +33,7 @@ public class ParticipationService implements ParticipationUtils{
     private final ReservationUtils reservationUtils;
     private final TemperatureUtils temperatureUtils;
 
+
     @Transactional
     public void createParticipation(Long reservationId, CreateParticipationRequest createParticipationRequest) {
         User currentUser = userUtils.getUserFromSecurityContext();
@@ -46,6 +47,7 @@ public class ParticipationService implements ParticipationUtils{
         currentReservation.changeReservationStatus();
 
         currentUser.getTemperature().addParticipationNum();
+
         temperatureUtils.temperaturePatch(currentUser.getId());
     }
 
@@ -141,8 +143,16 @@ public class ParticipationService implements ParticipationUtils{
         validDuplicatedSeatPosition(reservation, seatPosition);
     }
 
+
     @Override
     public Participation queryParticipation(Long id) {
         return participationRepository.findById(id).orElseThrow(() -> ParticipationNotFoundException.EXCEPTION);
+    }
+
+    @Override
+    public Participation findParticipation(Long userId, Long reservationId) {
+        User user = userUtils.getUserById(userId);
+        Reservation reservation = reservationUtils.queryReservation(reservationId);
+        return participationRepository.findByReservationAndUser(reservation, user).orElseThrow(() -> ParticipationNotFoundException.EXCEPTION);
     }
 }
