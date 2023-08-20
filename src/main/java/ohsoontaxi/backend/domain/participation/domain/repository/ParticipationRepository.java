@@ -8,6 +8,7 @@ import ohsoontaxi.backend.global.common.participation.SeatPosition;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ParticipationRepository extends JpaRepository<Participation, Long> {
 
@@ -17,4 +18,6 @@ public interface ParticipationRepository extends JpaRepository<Participation, Lo
 
     boolean existsByReservationAndSeatPosition(Reservation reservation, SeatPosition seatPosition);
     boolean existsByUserAndReservation(User user, Reservation reservation);
+
+    Optional<Participation> findByReservationAndUser(Reservation reservation, User user);
 }
