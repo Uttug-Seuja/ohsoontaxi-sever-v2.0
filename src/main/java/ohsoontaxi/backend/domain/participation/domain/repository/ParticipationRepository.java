@@ -6,6 +6,7 @@ import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.global.common.participation.SeatPosition;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +21,10 @@ public interface ParticipationRepository extends JpaRepository<Participation, Lo
     boolean existsByUserAndReservation(User user, Reservation reservation);
 
     Optional<Participation> findByReservationAndUser(Reservation reservation, User user);
+
+    List<Participation> findByUserId(Long userId);
+
+
+
+
 }
