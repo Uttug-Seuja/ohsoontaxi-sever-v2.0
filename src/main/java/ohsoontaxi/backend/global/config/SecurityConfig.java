@@ -26,7 +26,8 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/credentials/**", "/api/v1/asset/random").permitAll()
+                .requestMatchers("/api/v1/credentials/**", "/api/v1/email/**", "/api/v1/asset/save",
+                        "/api/v1/user/save", "/api/v1/asset/random", "/stomp/chat").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic().disable()

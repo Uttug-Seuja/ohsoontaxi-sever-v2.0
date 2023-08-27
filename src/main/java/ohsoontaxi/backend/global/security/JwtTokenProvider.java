@@ -1,20 +1,17 @@
 package ohsoontaxi.backend.global.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import ohsoontaxi.backend.domain.credential.exception.RefreshTokenExpiredException;
 import ohsoontaxi.backend.domain.user.domain.AccountRole;
-import org.springframework.security.core.Authentication;
 import ohsoontaxi.backend.global.exception.ExpiredTokenException;
 import ohsoontaxi.backend.global.exception.InvalidTokenException;
 import ohsoontaxi.backend.global.property.JwtProperties;
 import ohsoontaxi.backend.global.security.auth.AuthDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +30,18 @@ public class JwtTokenProvider {
     private final String ROLE = "role";
     private final String TYPE = "type";
 
-    private final String ISSUER = "knockknock";
+    private final String ISSUER = "ohsoontaxi";
+
+
+    public String resolveTokenWeb(String token) {
+
+        if (token != null
+                && token.length() > jwtProperties.getPrefix().length()
+                && token.startsWith(jwtProperties.getPrefix())) {
+            return token.substring(jwtProperties.getPrefix().length() + 1);
+        }
+        return null;
+    }
 
     public String resolveToken(HttpServletRequest request) {
         String rawHeader = request.getHeader(jwtProperties.getHeader());
@@ -52,6 +60,25 @@ public class JwtTokenProvider {
         UserDetails userDetails = new AuthDetails(id, role);
         return new UsernamePasswordAuthenticationToken(
                 userDetails, "", userDetails.getAuthorities());
+    }
+
+    // 웹소켓에서 토큰 인증 기능
+    public void validateToken(final String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token);
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            throw InvalidTokenException.EXCEPTION;
+        } catch (ExpiredJwtException e) {
+            throw ExpiredTokenException.EXCEPTION;
+        } catch (UnsupportedJwtException e) {
+            throw InvalidTokenException.EXCEPTION;
+        } catch (IllegalArgumentException e) {
+            throw InvalidTokenException.EXCEPTION;
+        }
+    }
+
+    public String getUserId(String token){
+        return getJws(token).getBody().getSubject();
     }
 
     private Jws<Claims> getJws(String token) {
