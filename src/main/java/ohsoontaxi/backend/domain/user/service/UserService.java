@@ -2,6 +2,7 @@ package ohsoontaxi.backend.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import ohsoontaxi.backend.domain.asset.service.AssetUtils;
+import ohsoontaxi.backend.domain.chat.service.ChatRedisCacheService;
 import ohsoontaxi.backend.domain.image.service.ImageUtils;
 import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.domain.user.presentation.dto.request.ChangeProfileRequest;
@@ -17,6 +18,7 @@ public class UserService {
     private final UserUtils userUtils;
     private final AssetUtils assetUtils;
     private final ImageUtils imageUtils;
+    private final ChatRedisCacheService chatRedisCacheService;
 
     @Transactional
     public UserProfileResponse changeProfilePath(ChangeProfileRequest changeProfileRequest){
@@ -24,6 +26,7 @@ public class UserService {
         deleteUserProfilePath(user.getProfilePath());
         String imageUrl = changeProfileRequest.getProfilePath();
         user.changeProfilePath(imageUrl);
+        chatRedisCacheService.changeUserCachingProfile(String.valueOf(user.getId()),imageUrl);
         return new UserProfileResponse(user.getUserInfo());
     }
 
