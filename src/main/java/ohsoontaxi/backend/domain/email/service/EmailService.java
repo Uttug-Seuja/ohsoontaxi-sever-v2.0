@@ -86,8 +86,6 @@ public class EmailService{
             return emailMessageRepository.save(EmailMessage.builder()
                     .email(emailRequestDto.getEmail())
                     .code(code)
-//                    .oauthProvider(emailRequestDto.getOauthProvider())
-//                    .isApproved(false)
                     .build());
         }
     }
