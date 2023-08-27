@@ -17,6 +17,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 @Slf4j
@@ -125,6 +126,20 @@ public class EmailService{
         if (lastModifiedDate.plusMinutes(5).isBefore(LocalDateTime.now())){
             throw CodeExpiredException.EXCEPTION;
         }
+    }
+
+    //11시 55분 전에 만든 email은 삭제
+    @Transactional
+    public void deleteEmailMessages(){
+        List<EmailMessage> emailMessages = retrieveEmailMessage();
+        emailMessages.forEach(
+                emailMessage ->
+                        emailMessageRepository.delete(emailMessage));
+    }
+
+    //11시 55분전에 만든 emailMessage 가져오기
+    private List<EmailMessage>  retrieveEmailMessage() {
+        return emailMessageRepository.findByLastModifyDateLessThan(LocalDateTime.now().minusMinutes(5));
     }
 
 }
