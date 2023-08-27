@@ -42,6 +42,7 @@ public enum ErrorCode {
     PROFILE_IMAGE_NOT_FOUND(404,  "PROFILE Not Found"),
     MOOD_IMAGE_NOT_FOUND(404,  "Mood Not Found"),
     COLOR_IMAGE_NOT_FOUND(404,  "COLOR Not Found"),
+    EXPIRED_CODE(404, "코드가 만료되었습니다."),
 
     RESERVATION_NOT_FOUND(404,  "방이 존재하지 않습니다."),
     BOOK_MARK_NOT_FOUND(404,  "BOOKMARK Not Found"),
@@ -51,6 +52,7 @@ public enum ErrorCode {
     CHARACTER_NOT_FOUND(404,  "Character Not Found"),
     EMAIL_SEND_FAIL(404,"Email 전송을 실패하였습니다."),
     BAD_EMAIL_ADDRESS(404, "학교 이메일 형식에 맞지 않습니다."),
+    CODE_NOT_MATCHED(404, "코드가 동일하지 않습니다."),
 
     /* 409 : CONFLICT : Resource의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(409, "데이터가 이미 존재합니다."),
