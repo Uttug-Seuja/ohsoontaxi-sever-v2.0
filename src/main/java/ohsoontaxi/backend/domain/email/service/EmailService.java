@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import ohsoontaxi.backend.domain.email.domain.EmailMessage;
 import ohsoontaxi.backend.domain.email.domain.repository.EmailMessageRepository;
 import ohsoontaxi.backend.domain.email.exception.*;
+import ohsoontaxi.backend.domain.email.presentation.dto.request.CodeRequestDto;
 import ohsoontaxi.backend.domain.email.presentation.dto.request.EmailRequestDto;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Slf4j
@@ -47,6 +49,16 @@ public class EmailService{
 
         } catch (MessagingException e) {
             throw SendEmailFailException.EXCEPTION;
+        }
+    }
+
+    //code 맞는지 확인
+    @Transactional
+    public void checkCodeCorrect(CodeRequestDto codeRequestDto){
+        EmailMessage emailMessage = findEmailMessage(codeRequestDto.getEmail());
+        checkCodeValid(emailMessage.getLastModifyDate());
+        if (!(emailMessage.getCode().equals(codeRequestDto.getCode()))) {
+            throw CodeNotMatchedException.EXCEPTION;
         }
     }
 
@@ -105,6 +117,13 @@ public class EmailService{
         String ext = email.substring(email.lastIndexOf("@") + 1);
         if (!(ext.equals("sch.ac.kr"))) {
             throw BadEmailAddressException.EXCEPTION;
+        }
+    }
+
+    //code 5분 넘었는지 확인
+    private void checkCodeValid(LocalDateTime lastModifiedDate) {
+        if (lastModifiedDate.plusMinutes(5).isBefore(LocalDateTime.now())){
+            throw CodeExpiredException.EXCEPTION;
         }
     }
 
