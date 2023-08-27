@@ -2,11 +2,16 @@ package ohsoontaxi.backend.domain.reservation.service;
 
 
 import lombok.RequiredArgsConstructor;
+import ohsoontaxi.backend.domain.chat.presentation.dto.request.ChatMessageSaveDto;
+import ohsoontaxi.backend.domain.chat.presentation.dto.response.ChatPagingResponseDto;
+import ohsoontaxi.backend.domain.participation.domain.Participation;
+import ohsoontaxi.backend.domain.participation.domain.repository.ParticipationRepository;
 import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.reservation.domain.repository.ReservationRepository;
 import ohsoontaxi.backend.domain.reservation.exception.ReservationNotFoundException;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.request.CreateReservationRequest;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.request.UpdateReservationRequest;
+import ohsoontaxi.backend.domain.reservation.presentation.dto.response.ChatRoomBriefInfoDto;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.response.KeywordDto;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.response.ReservationBriefInfoDto;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.response.ReservationResponse;
@@ -17,11 +22,17 @@ import ohsoontaxi.backend.global.utils.user.UserUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static ohsoontaxi.backend.domain.chat.domain.repository.ChatRoomRepository.CHAT_SORTED_SET_;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +41,8 @@ public class ReservationService implements ReservationUtils {
 
     private final ReservationRepository reservationRepository;
     private final UserUtils userUtils;
+    private final ParticipationRepository participationRepository;
+    private ZSetOperations<String, ChatMessageSaveDto> zSetOperations;
 
     @Transactional
     public ReservationResponse createReservation(CreateReservationRequest createReservationRequest){
@@ -166,10 +179,55 @@ public class ReservationService implements ReservationUtils {
                 reservation.checkUserIsHost(currentUserId));
     }
 
+//    private ChatRoomBriefInfoDto getChatRoomResponse(Participation participation) {
+//        return new ChatRoomBriefInfoDto(
+//                participation.getReservation().getReservationBaseInfoVo(), participation);
+//    }
+
     @Override
     public Reservation queryReservation(Long id) {
         return reservationRepository
                 .findById(id)
                 .orElseThrow(()-> ReservationNotFoundException.EXCEPTION);
     }
+
+
+
+    public List<ChatRoomBriefInfoDto> getChatRoom(){
+
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+
+        List<Reservation> reservations = reservationRepository.findParticipatedReservation(currentUserId);
+
+        //List<Participation> participations = participationRepository.findByUserId(currentUserId);
+
+        List<ChatRoomBriefInfoDto> chatRoomBriefInfoDtoList = new ArrayList<>();
+
+
+        for (Reservation reservation : reservations) {
+
+            Set<ChatMessageSaveDto> chatMessageSaveDtos = zSetOperations.reverseRange(CHAT_SORTED_SET_ + reservation.getId(), 0, 1);
+
+
+            List<ChatPagingResponseDto> chatMessageDtoList =
+                    chatMessageSaveDtos
+                            .stream()
+                            .map(ChatPagingResponseDto::byChatMessageDto)
+                            .collect(Collectors.toList());
+
+            ChatPagingResponseDto chatPagingResponseDto = chatMessageDtoList.get(0);
+
+            ChatRoomBriefInfoDto chatRoomBriefInfoDto = new ChatRoomBriefInfoDto(reservation.getReservationBaseInfoVo(), reservation.getParticipations(), chatPagingResponseDto);
+
+            chatRoomBriefInfoDtoList.add(chatRoomBriefInfoDto);
+
+        }
+
+
+        return chatRoomBriefInfoDtoList;
+
+    }
+
+
+
 }

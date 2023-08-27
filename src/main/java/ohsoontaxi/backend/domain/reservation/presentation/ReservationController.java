@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.request.CreateReservationRequest;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.request.UpdateReservationRequest;
+import ohsoontaxi.backend.domain.reservation.presentation.dto.response.ChatRoomBriefInfoDto;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.response.KeywordDto;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.response.ReservationBriefInfoDto;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.response.ReservationResponse;
@@ -94,6 +95,11 @@ public class ReservationController {
     public List<KeywordDto> recommendKeyword() {
 
         return reservationService.getRecommendWord();
+    }
+
+    @GetMapping("/chat/room")
+    public List<ChatRoomBriefInfoDto> getChatRoom(){
+        return reservationService.getChatRoom();
     }
 
 
