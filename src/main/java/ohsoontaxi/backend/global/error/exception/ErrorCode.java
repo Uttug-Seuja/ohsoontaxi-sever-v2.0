@@ -32,6 +32,7 @@ public enum ErrorCode {
     OUT_OF_PAGE(400,  "책 페이지 범위를 초과했습니다"),
     REPORT_NOT_FOUND(404, "신고 정보를 찾을 수 없습니다."),
     PARTICIPATION_NOT_FOUND(404, "참여 정보를 찾을 수 없습니다."),
+    EMAIL_MESSAGE_NOT_FOUND(404,"해당 메세지를 찾을 수 없습니다."),
 
     /* 403 */
     REGISTER_EXPIRED_TOKEN(403,"만료된 리프레쉬 토큰입니다."),
@@ -48,6 +49,8 @@ public enum ErrorCode {
     FILE_EMPTY(404,  "FILE empty"),
     FILE_UPLOAD_FAIL(404,  "FILE upload fail"),
     CHARACTER_NOT_FOUND(404,  "Character Not Found"),
+    EMAIL_SEND_FAIL(404,"Email 전송을 실패하였습니다."),
+    BAD_EMAIL_ADDRESS(404, "학교 이메일 형식에 맞지 않습니다."),
 
     /* 409 : CONFLICT : Resource의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(409, "데이터가 이미 존재합니다."),
