@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -89,12 +90,21 @@ public class ParticipationService implements ParticipationUtils{
     public ParticipationListResponse getParticipationList(Long reservationId) {
         User currentUser = userUtils.getUserFromSecurityContext();
         Reservation currentReservation = reservationUtils.queryReservation(reservationId);
-        List<Participation> participationList = participationRepository.findAllByReservation(currentReservation);
 
         boolean result = participationRepository.existsByReservationAndUser(currentReservation, currentUser);
 
-        return new ParticipationListResponse(result, participationList);
+        List<Participation> participationList = participationRepository.findAllByReservation(currentReservation);
+
+        Optional<Participation> myParticipation = result ?
+                participationRepository.findByReservationAndUser(currentReservation, currentUser) : Optional.empty();
+
+        return new ParticipationListResponse(
+                result,
+                myParticipation.map(participation -> participation.getId()).orElse(null),
+                participationList
+        );
     }
+
 
     private void validIsHost(User user, Reservation reservation) {
         if (reservation.getUser() == user) {
