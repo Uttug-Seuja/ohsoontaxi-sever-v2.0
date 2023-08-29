@@ -1,7 +1,10 @@
 package ohsoontaxi.backend.domain.reservation.service;
 
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import ohsoontaxi.backend.domain.chat.domain.repository.ChatRepository;
 import ohsoontaxi.backend.domain.chat.presentation.dto.request.ChatMessageSaveDto;
 import ohsoontaxi.backend.domain.chat.presentation.dto.response.ChatPagingResponseDto;
 import ohsoontaxi.backend.domain.participation.domain.Participation;
@@ -22,11 +25,14 @@ import ohsoontaxi.backend.global.utils.user.UserUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -37,12 +43,20 @@ import static ohsoontaxi.backend.domain.chat.domain.repository.ChatRoomRepositor
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class ReservationService implements ReservationUtils {
 
     private final ReservationRepository reservationRepository;
     private final UserUtils userUtils;
     private final ParticipationRepository participationRepository;
+    private final RedisTemplate<String, ChatMessageSaveDto> chatRedisTemplate;
     private ZSetOperations<String, ChatMessageSaveDto> zSetOperations;
+    private final ChatRepository chatRepository;
+
+    @PostConstruct
+    private void init() {
+        zSetOperations = chatRedisTemplate.opsForZSet();
+    }
 
     @Transactional
     public ReservationResponse createReservation(CreateReservationRequest createReservationRequest){
@@ -66,6 +80,8 @@ public class ReservationService implements ReservationUtils {
         Reservation reservation = queryReservation(reservationId);
 
         reservation.validUserIsHost(user.getId());
+
+        chatRepository.updateReservationNull(reservationId);
 
         reservationRepository.delete(reservation);
     }
@@ -199,27 +215,51 @@ public class ReservationService implements ReservationUtils {
 
         List<Reservation> reservations = reservationRepository.findParticipatedReservation(currentUserId);
 
+
+        log.info("currentUserId={}",currentUserId);
+
+        log.info("participation length={}");
+
         //List<Participation> participations = participationRepository.findByUserId(currentUserId);
 
         List<ChatRoomBriefInfoDto> chatRoomBriefInfoDtoList = new ArrayList<>();
 
-
         for (Reservation reservation : reservations) {
 
-            Set<ChatMessageSaveDto> chatMessageSaveDtos = zSetOperations.reverseRange(CHAT_SORTED_SET_ + reservation.getId(), 0, 1);
+            log.info("------start----------");
 
+            Set<ChatMessageSaveDto> chatMessageSaveDtos = zSetOperations.reverseRange(CHAT_SORTED_SET_ + reservation.getId(), 0, 0);
 
-            List<ChatPagingResponseDto> chatMessageDtoList =
-                    chatMessageSaveDtos
-                            .stream()
-                            .map(ChatPagingResponseDto::byChatMessageDto)
-                            .collect(Collectors.toList());
+            if(!chatMessageSaveDtos.isEmpty()){
 
-            ChatPagingResponseDto chatPagingResponseDto = chatMessageDtoList.get(0);
+                List<ChatPagingResponseDto> chatMessageDtoList =
+                        chatMessageSaveDtos
+                                .stream()
+                                .map(ChatPagingResponseDto::byChatMessageDto)
+                                .collect(Collectors.toList());
 
-            ChatRoomBriefInfoDto chatRoomBriefInfoDto = new ChatRoomBriefInfoDto(reservation.getReservationBaseInfoVo(), reservation.getParticipations(), chatPagingResponseDto);
+                log.info("len={}",chatMessageDtoList.size());
 
-            chatRoomBriefInfoDtoList.add(chatRoomBriefInfoDto);
+                ChatPagingResponseDto chatPagingResponseDto = chatMessageDtoList.get(0);
+
+                log.info("participation num={}",reservation.getParticipations().size());
+
+                ChatRoomBriefInfoDto chatRoomBriefInfoDto = new ChatRoomBriefInfoDto(reservation.getReservationBaseInfoVo(), chatPagingResponseDto);
+
+                chatRoomBriefInfoDtoList.add(chatRoomBriefInfoDto);
+
+            }else{
+
+                ChatPagingResponseDto message = ChatPagingResponseDto.builder()
+                        .message("채팅내역이 없습니다")
+                        .createdAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS"))).build();
+
+                ChatRoomBriefInfoDto chatRoomBriefInfoDto = new ChatRoomBriefInfoDto(reservation.getReservationBaseInfoVo(), message);
+
+                chatRoomBriefInfoDtoList.add(chatRoomBriefInfoDto);
+
+            }
+
 
         }
 
