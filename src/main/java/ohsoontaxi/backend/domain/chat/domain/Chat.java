@@ -23,20 +23,22 @@ public class Chat implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "chat_id")
-
     private Long id;
 
     private String message;
 
     private Long userId;
 
-    private String userName;
+    private Long participationId;
 
-    private String createdAt;
+    private String userName;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
+
+    private String createdAt;
+
 
     public static Chat of(ChatMessageSaveDto chatMessageSaveDto, Reservation reservation){
 
@@ -44,6 +46,7 @@ public class Chat implements Serializable {
                 .message(chatMessageSaveDto.getMessage())
                 .createdAt(chatMessageSaveDto.getCreatedAt())
                 .userId(chatMessageSaveDto.getUserId())
+                .participationId(chatMessageSaveDto.getParticipationId())
                 .userName(chatMessageSaveDto.getWriter())
                 .reservation(reservation)
                 .build();

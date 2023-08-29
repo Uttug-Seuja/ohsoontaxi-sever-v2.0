@@ -22,7 +22,7 @@ public class ChatJdbcRepository {
     public void batchInsertRoomInventories(List<Chat> chatList){
 
         String sql = "INSERT INTO chats"
-                +  "(message,user_id,user_name,reservation_id,created_at) VALUE(?,?,?,?,?)";
+                +  "(message,user_id,participation_id,user_name,reservation_id,created_at) VALUE(?,?,?,?,?,?)";
 
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -31,9 +31,11 @@ public class ChatJdbcRepository {
                 Chat chat = chatList.get(i);
                 ps.setString(1,chat.getMessage());
                 ps.setLong(2,chat.getUserId());
-                ps.setString(3,chat.getUserName());
-                ps.setLong(4,chat.getReservation().getId());
-                ps.setString(5,chat.getCreatedAt());
+                ps.setLong(3,chat.getParticipationId());
+                ps.setString(4,chat.getUserName());
+                ps.setLong(5,chat.getReservation().getId());
+                ps.setString(6,chat.getCreatedAt());
+
             }
 
             @Override
