@@ -13,6 +13,8 @@ import java.util.List;
 @Getter
 public class ChatResponse {
 
+    private Long myParticipationId;
+
     private Long reservationId;
 
     private Integer passengerNum;
@@ -25,8 +27,9 @@ public class ChatResponse {
 
     private List<ChatHistoryDto> chatHistoryDtoList;
 
-    public ChatResponse(ReservationBaseInfoVo reservationBaseInfoVo, UserInfoVO userInfoVO, boolean iHost,List<ChatHistoryDto> ChatHistoryDtoList) {
+    public ChatResponse(Long ParticipationId,ReservationBaseInfoVo reservationBaseInfoVo, UserInfoVO userInfoVO, boolean iHost,List<ChatHistoryDto> ChatHistoryDtoList) {
 
+        myParticipationId = ParticipationId;
         reservationId = reservationBaseInfoVo.getReservationId();
         passengerNum = reservationBaseInfoVo.getPassengerNum();
         currentNum = reservationBaseInfoVo.getCurrentNum();

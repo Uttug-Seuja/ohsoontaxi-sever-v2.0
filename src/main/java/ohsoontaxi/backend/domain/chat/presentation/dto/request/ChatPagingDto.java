@@ -15,4 +15,5 @@ public class ChatPagingDto {
     private String  writer;
     private String  cursor;
     private Long userId;
+    private Long participationId;
 }
