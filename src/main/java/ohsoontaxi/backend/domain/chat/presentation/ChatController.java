@@ -67,9 +67,15 @@ public class ChatController {
     @MessageMapping("/chat/message")
     public void message(ChatMessageDto chatMessageDto){
 
+        String token = jwtTokenProvider.resolveTokenWeb(chatMessageDto.getAccessToken());
 
-        Participation participation = participationUtils.findParticipation(Long.valueOf(chatMessageDto.getUid()), Long.valueOf(chatMessageDto.getRoomId()));
+        log.info("token={}",token);
 
+        jwtTokenProvider.validateToken(token);
+
+        String userId = jwtTokenProvider.getUserId(token);
+
+        Participation participation = participationUtils.findParticipation(Long.valueOf(userId), Long.valueOf(chatMessageDto.getRoomId()));
 
         log.info(participation.getUser().getName());
 
@@ -80,7 +86,9 @@ public class ChatController {
                 .roomId(chatMessageDto.getRoomId())
                 .writer(participation.getUser().getName())
                 .createdAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS")))
-                .userId(participation.getUser().getId()).build();
+                .userId(participation.getUser().getId())
+                .participationId(participation.getId())
+                .build();
 
 
         redisPublisher.publish(channelTopic,message);
