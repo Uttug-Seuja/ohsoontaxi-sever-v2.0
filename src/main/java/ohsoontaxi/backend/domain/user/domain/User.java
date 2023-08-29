@@ -54,6 +54,7 @@ public class User extends BaseEntity {
 
     @Builder
     public User(
+            Long id,
             String oauthProvider,
             String oauthId,
             String name,
@@ -61,6 +62,7 @@ public class User extends BaseEntity {
             String profilePath,
             Gender gender,
             Temperature temperature) {
+        this.id = id;
         this.oauthProvider = oauthProvider;
         this.oauthId = oauthId;
         this.name = name;
@@ -85,6 +87,10 @@ public class User extends BaseEntity {
 
     public void changeProfilePath(String profilePath){
         this.profilePath = profilePath;
+    }
+
+    public static User of(Long userId) {
+        return User.builder().id(userId).build();
     }
 
 
