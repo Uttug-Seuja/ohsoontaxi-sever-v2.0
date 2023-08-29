@@ -10,4 +10,5 @@ import java.util.List;
 public interface CustomNotificationRepository {
 
     List<DeviceToken> findTokenByReservationIdNeUserId(Long reservationId, Long userId);
+    List<DeviceToken> findTokenByReservationId(Long reservationId);
 }

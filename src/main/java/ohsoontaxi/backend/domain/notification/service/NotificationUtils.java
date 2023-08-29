@@ -11,4 +11,9 @@ public interface NotificationUtils {
             Reservation reservation,
             TitleMessage titleMessage,
             ContentMessage contentMessage);
+
+    void sendNotificationAll(
+            Reservation reservation,
+            TitleMessage titleMessage,
+            ContentMessage contentMessage);
 }

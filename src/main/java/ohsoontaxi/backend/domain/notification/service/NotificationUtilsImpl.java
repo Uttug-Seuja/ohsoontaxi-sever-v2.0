@@ -68,6 +68,37 @@ public class NotificationUtilsImpl implements NotificationUtils{
         checkFcmResponse(deviceTokens, tokens, batchResponseApiFuture);
     }
 
+    @Override
+    @Transactional
+    public void sendNotificationAll(Reservation reservation, TitleMessage titleMessage,
+                                    ContentMessage contentMessage) {
+        List<DeviceToken> deviceTokens = notificationRepository.findTokenByReservationId(
+                reservation.getId());
+        List<String> tokens = getFcmTokens(deviceTokens);
+        log.info(tokens.get(0).toString());
+
+        String title = getTitle(titleMessage);
+        log.info(title);
+
+        String content = contentMessage.getContent1() +
+                reservation.getTitle() +
+                contentMessage.getContent2();
+        log.info(content);
+
+        recordNotification(
+                deviceTokens,
+                title,
+                content,
+                reservation);
+
+        if (tokens.isEmpty()) {
+            return;
+        }
+        ApiFuture<BatchResponse> batchResponseApiFuture =
+                fcmService.sendGroupMessageAsync(tokens, title, content);
+        checkFcmResponse(deviceTokens, tokens, batchResponseApiFuture);
+    }
+
 
     private List<String> getFcmTokens(List<DeviceToken> deviceTokens) {
         return deviceTokens.stream().map(DeviceToken::getToken).collect(Collectors.toList());

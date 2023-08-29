@@ -38,4 +38,16 @@ public class CustomNotificationRepositoryImpl implements CustomNotificationRepos
                 .fetch();
     }
 
+    @Override
+    public List<DeviceToken> findTokenByReservationId(Long reservationId) {
+        return queryFactory
+                .select(deviceToken)
+                .from(deviceToken)
+                .leftJoin(participation)
+                .on(deviceToken.user.id.eq(participation.user.id))
+                .where(
+                        participation.reservation.id.eq(reservationId))
+                .fetch();
+    }
+
 }
