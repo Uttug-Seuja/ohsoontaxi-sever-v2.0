@@ -24,6 +24,11 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     List<Reservation> findParticipatedReservation(@Param("userId") Long userId);
 
     @Query("select distinct r from Reservation r"+
+            " join fetch r.participations p"+
+            " where p.user.id = :userId order by r.createdDate desc")
+    Slice<Reservation> findParticipatedReservationTest(@Param("userId") Long userId);
+
+    @Query("select distinct r from Reservation r"+
             " where r.user.id = :userId order by r.createdDate desc")
     List<Reservation> findReservedByMe(@Param("userId") Long userId);
 
