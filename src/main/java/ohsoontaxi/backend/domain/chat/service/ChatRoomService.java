@@ -39,12 +39,4 @@ public class ChatRoomService {
         return chatRoomRepository.leaveChatRoom(sessionId);
     }
 
-    public List<String> findUser(String roomId, String sessionId){
-
-        return chatRoomRepository.findUsersInWorkSpace(roomId,sessionId);
-    }
-
-
-
-
 }
