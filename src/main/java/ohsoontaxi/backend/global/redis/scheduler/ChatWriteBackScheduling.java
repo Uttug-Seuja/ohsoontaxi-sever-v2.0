@@ -11,6 +11,7 @@ import ohsoontaxi.backend.domain.chat.domain.repository.ChatRepository;
 import ohsoontaxi.backend.domain.chat.presentation.dto.request.ChatMessageSaveDto;
 import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.reservation.domain.repository.ReservationRepository;
+import ohsoontaxi.backend.domain.reservation.service.ReservationUtils;
 import org.springframework.data.redis.core.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -33,13 +34,14 @@ public class ChatWriteBackScheduling {
     //private final ChatRoomJpaRepository chatRoomJpaRepository;
 
     private final ChatJdbcRepository chatJdbcRepository;
+
     private final ReservationRepository reservationRepository;
 
     //@Scheduled(cron = "0 0 0/1 * * *")
     @Scheduled(cron = "0 0/2 * * * *")
     @Transactional
     public void writeBack(){
-        log.info("Scheduling start");
+        log.info("------Scheduling start------");
         //여기서부터 읽어오는 과정.
         BoundZSetOperations<String, ChatMessageSaveDto> setOperations = chatRedisTemplate.boundZSetOps("NEW_CHAT");
 
@@ -69,6 +71,6 @@ public class ChatWriteBackScheduling {
             e.printStackTrace();
         }
 
-        log.info("Scheduling done");
+        log.info("-----Scheduling done------");
     }
 }
