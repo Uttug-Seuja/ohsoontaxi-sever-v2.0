@@ -29,6 +29,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -82,11 +83,14 @@ public class ChatRedisCacheService {
         Long currentUserId = SecurityUtils.getCurrentUserId();
         Participation participation = participationUtils.findParticipation(currentUserId, workSpaceId);
 
+        log.info("------start--------");
+
         //마지막 채팅을 기준으로 redis의 Sorted set에 몇번째 항목인지 파악
         ChatMessageSaveDto cursorDto = ChatMessageSaveDto.builder()
                 .type(ChatMessageSaveDto.MessageType.TALK)
                 .roomId(workSpaceId.toString())
                 .userId(chatPagingDto.getUserId())
+                .participationId(chatPagingDto.getParticipationId())
                 .createdAt(chatPagingDto.getCursor())
                 .message(chatPagingDto.getMessage())
                 .writer(chatPagingDto.getWriter())
@@ -96,6 +100,7 @@ public class ChatRedisCacheService {
         //마지막 chat_data cursor Rank 조회
         Long rank = zSetOperations.reverseRank(CHAT_SORTED_SET_ + workSpaceId,  cursorDto);
 
+        log.info("rank={}",rank);
 
         //Cursor 없을 경우 -> 최신채팅 조회
         if (rank == null)
@@ -119,32 +124,15 @@ public class ChatRedisCacheService {
         }
 
         for (ChatPagingResponseDto chatPagingResponseDto : chatMessageDtoList) {
-            chatPagingResponseDto.setProfilePath(findProfileByEmail(String.valueOf(chatPagingResponseDto.getUserId())));
+            chatPagingResponseDto.setProfilePath(findProfileById(String.valueOf(chatPagingResponseDto.getUserId())));
         }
 
 
-        // TODO: 2023/08/26 isend
+        List<ChatHistoryDto> chatHistoryList = chatMessageDtoList.stream()
+                .map(dto -> new ChatHistoryDto(dto.getUserId().equals(currentUserId), dto))
+                .collect(Collectors.toList());
 
-        List<ChatHistoryDto> chatHistoryList = new ArrayList<>();
-
-        for (ChatPagingResponseDto chatPagingResponseDto : chatMessageDtoList) {
-
-            ChatHistoryDto chatHistoryDto = new ChatHistoryDto(false, chatPagingResponseDto);
-
-            if(chatPagingResponseDto.getUserId().equals(currentUserId)){
-                chatHistoryDto.setISend(true);
-            }
-            chatHistoryList.add(chatHistoryDto);
-        }
-
-
-
-
-//        for (ChatPagingResponseDto chatPagingResponseDto : chatMessageDtoList) {
-//            chatPagingResponseDto.setProfilePath(findProfileByEmail(String.valueOf(chatPagingResponseDto.getUserId())));
-//        }
-
-        return getChatResponseTest(participation.getReservation(),currentUserId,chatHistoryList);
+        return getChatResponseTest(participation.getId(),participation.getReservation(),currentUserId,chatHistoryList);
     }
 
     public void cachingDBDataToRedis(Chat chat) {
@@ -156,13 +144,9 @@ public class ChatRedisCacheService {
                         chatUtils.changeLocalDateTimeToDouble(chatMessageSaveDto.getCreatedAt()));
     }
 
-    public String findProfileByEmail(String userId) {
-
-        log.info("-------------------");
-
+    public String findProfileById(String userId) {
 
         log.info("userId={}",userId);
-
 
         String profile = (String) roomRedisTemplate.opsForHash().get(USERNAME_PROFILE, userId);
 
@@ -181,8 +165,8 @@ public class ChatRedisCacheService {
     }
 
 
-    public void changeUserCachingProfile(String userId, String changedNickname) {
-        roomRedisTemplate.opsForHash().put(USERNAME_PROFILE, userId, changedNickname);
+    public void changeUserCachingProfile(String userId, String profile) {
+        roomRedisTemplate.opsForHash().put(USERNAME_PROFILE, userId, profile);
     }
 
     public void deleteUserCachingNickname(String username) {
@@ -235,16 +219,9 @@ public class ChatRedisCacheService {
 
     }
 
-//    private ChatResponse getChatResponse(Reservation reservation,Long currentUserId, List<ChatPagingResponseDto> chatPagingResponseDto) {
-//        return new ChatResponse(
-//                reservation.getReservationBaseInfoVo(),
-//                reservation.getUser().getUserInfo(),
-//                reservation.checkUserIsHost(currentUserId),
-//                chatPagingResponseDto);
-//    }
-
-    private ChatResponse getChatResponseTest(Reservation reservation,Long currentUserId, List<ChatHistoryDto> chatHistoryList) {
+    private ChatResponse getChatResponseTest(Long participationId,Reservation reservation,Long currentUserId, List<ChatHistoryDto> chatHistoryList) {
         return new ChatResponse(
+                participationId,
                 reservation.getReservationBaseInfoVo(),
                 reservation.getUser().getUserInfo(),
                 reservation.checkUserIsHost(currentUserId),
