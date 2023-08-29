@@ -18,6 +18,7 @@ public class ChatMessageSaveDto {
     }
 
     private Long userId;
+    private Long participationId;
     private MessageType type;
     private String roomId;
     private String writer;
@@ -29,6 +30,7 @@ public class ChatMessageSaveDto {
     public static ChatMessageSaveDto of (Chat chat){
         return ChatMessageSaveDto.builder()
                 .userId(chat.getUserId())
+                .participationId(chat.getParticipationId())
                 .type(MessageType.TALK)
                 .roomId(chat.getReservation().getId().toString())
                 .writer(chat.getUserName())
@@ -41,6 +43,7 @@ public class ChatMessageSaveDto {
         return ChatMessageSaveDto.builder()
                 .type(MessageType.TALK)
                 .userId(saveDto.getUserId())
+                .participationId(saveDto.participationId)
                 .roomId(saveDto.getRoomId())
                 .writer(saveDto.getWriter())
                 .createdAt(saveDto.getCreatedAt())

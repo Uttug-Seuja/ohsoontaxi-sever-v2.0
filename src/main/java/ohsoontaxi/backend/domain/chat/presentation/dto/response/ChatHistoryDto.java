@@ -15,6 +15,7 @@ public class ChatHistoryDto {
 
     private Long reservationId;
     private Long userId;
+    private Long participationId;
     private String writer;
     private String message;
     private String createdAt;
@@ -25,6 +26,7 @@ public class ChatHistoryDto {
 
         reservationId = Long.valueOf(chatPagingResponseDto.getReservationId());
         userId = chatPagingResponseDto.getUserId();
+        participationId = chatPagingResponseDto.getParticipationId();
         writer = chatPagingResponseDto.getWriter();
         message = chatPagingResponseDto.getMessage();
         createdAt = chatPagingResponseDto.getCreatedAt();

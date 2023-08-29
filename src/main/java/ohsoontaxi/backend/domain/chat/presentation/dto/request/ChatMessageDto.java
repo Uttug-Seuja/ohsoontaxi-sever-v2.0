@@ -10,5 +10,6 @@ public class ChatMessageDto {
 
     private String roomId;
     private String message;
-    private String uid;
+    private String accessToken;
+
 }
