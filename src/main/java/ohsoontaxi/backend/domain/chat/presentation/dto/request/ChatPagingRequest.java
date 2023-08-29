@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class ChatPagingDto {
+public class ChatPagingRequest {
 
     private String  message;
     private String  writer;

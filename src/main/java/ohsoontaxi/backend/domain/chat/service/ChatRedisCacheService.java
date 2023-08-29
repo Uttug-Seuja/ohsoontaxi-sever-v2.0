@@ -8,19 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import ohsoontaxi.backend.domain.chat.domain.Chat;
 import ohsoontaxi.backend.domain.chat.domain.repository.ChatRepository;
 import ohsoontaxi.backend.domain.chat.presentation.dto.request.ChatMessageSaveDto;
-import ohsoontaxi.backend.domain.chat.presentation.dto.request.ChatPagingDto;
+import ohsoontaxi.backend.domain.chat.presentation.dto.request.ChatPagingRequest;
 import ohsoontaxi.backend.domain.chat.presentation.dto.response.ChatHistoryDto;
 import ohsoontaxi.backend.domain.chat.presentation.dto.response.ChatPagingResponseDto;
 import ohsoontaxi.backend.domain.chat.presentation.dto.response.ChatResponse;
 import ohsoontaxi.backend.domain.participation.domain.Participation;
 import ohsoontaxi.backend.domain.participation.service.ParticipationUtils;
 import ohsoontaxi.backend.domain.reservation.domain.Reservation;
-import ohsoontaxi.backend.domain.reservation.domain.vo.ReservationBaseInfoVo;
-import ohsoontaxi.backend.domain.reservation.presentation.dto.response.ReservationResponse;
-import ohsoontaxi.backend.domain.reservation.service.ReservationUtils;
 import ohsoontaxi.backend.domain.user.domain.User;
-import ohsoontaxi.backend.domain.user.domain.repository.UserRepository;
-import ohsoontaxi.backend.domain.user.domain.vo.UserInfoVO;
 import ohsoontaxi.backend.global.utils.chat.ChatUtils;
 import ohsoontaxi.backend.global.utils.security.SecurityUtils;
 import ohsoontaxi.backend.global.utils.user.UserUtils;
@@ -29,11 +24,9 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -78,27 +71,27 @@ public class ChatRedisCacheService {
 
 
     //chat_data 조회
-    public ChatResponse getChatsFromRedis(Long workSpaceId, ChatPagingDto chatPagingDto) {
+    public ChatResponse getChatsFromRedis(Long reservationId, ChatPagingRequest chatPagingRequest) {
 
         Long currentUserId = SecurityUtils.getCurrentUserId();
-        Participation participation = participationUtils.findParticipation(currentUserId, workSpaceId);
+        Participation participation = participationUtils.findParticipation(currentUserId, reservationId);
 
         log.info("------start--------");
 
         //마지막 채팅을 기준으로 redis의 Sorted set에 몇번째 항목인지 파악
         ChatMessageSaveDto cursorDto = ChatMessageSaveDto.builder()
                 .type(ChatMessageSaveDto.MessageType.TALK)
-                .roomId(workSpaceId.toString())
-                .userId(chatPagingDto.getUserId())
-                .participationId(chatPagingDto.getParticipationId())
-                .createdAt(chatPagingDto.getCursor())
-                .message(chatPagingDto.getMessage())
-                .writer(chatPagingDto.getWriter())
+                .roomId(reservationId.toString())
+                .userId(chatPagingRequest.getUserId())
+                .participationId(chatPagingRequest.getParticipationId())
+                .createdAt(chatPagingRequest.getCursor())
+                .message(chatPagingRequest.getMessage())
+                .writer(chatPagingRequest.getWriter())
                 .build();
 
 
         //마지막 chat_data cursor Rank 조회
-        Long rank = zSetOperations.reverseRank(CHAT_SORTED_SET_ + workSpaceId,  cursorDto);
+        Long rank = zSetOperations.reverseRank(CHAT_SORTED_SET_ + reservationId,  cursorDto);
 
         log.info("rank={}",rank);
 
@@ -108,7 +101,7 @@ public class ChatRedisCacheService {
         else rank = rank + 1;
 
         //Redis 로부터 chat_data 조회
-        Set<ChatMessageSaveDto> chatMessageSaveDtoSet = zSetOperations.reverseRange(CHAT_SORTED_SET_ + workSpaceId, rank, rank + 10);
+        Set<ChatMessageSaveDto> chatMessageSaveDtoSet = zSetOperations.reverseRange(CHAT_SORTED_SET_ + reservationId, rank, rank + 10);
 
 
         List<ChatPagingResponseDto> chatMessageDtoList =
@@ -120,7 +113,7 @@ public class ChatRedisCacheService {
 
         //Chat_data 부족할경우 MYSQL 추가 조회
         if (chatMessageDtoList.size() != 10) {
-            findOtherChatDataInMysql(chatMessageDtoList, workSpaceId, chatPagingDto.getCursor());
+            findOtherChatDataInMysql(chatMessageDtoList, reservationId, chatPagingRequest.getCursor());
         }
 
         for (ChatPagingResponseDto chatPagingResponseDto : chatMessageDtoList) {
