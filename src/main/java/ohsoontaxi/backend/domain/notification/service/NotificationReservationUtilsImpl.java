@@ -9,7 +9,10 @@ import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
@@ -17,6 +20,7 @@ import java.time.temporal.ChronoUnit;
 public class NotificationReservationUtilsImpl implements NotificationReservationUtils {
 
     private final NotificationReservationRepository notificationReservationRepository;
+    private final NotificationUtils notificationUtils;
 
     @Transactional
     @Override
@@ -33,5 +37,34 @@ public class NotificationReservationUtilsImpl implements NotificationReservation
                 NotificationReservation.of(
                         reservation.getDepartureDate().truncatedTo(ChronoUnit.MINUTES).minusMinutes(10),
                         reservation));
+    }
+
+    @Transactional
+    @Override
+    public void processScheduledReservation() {
+        List<NotificationReservation> notificationReservations = retrieveReservation();
+
+        if (notificationReservations.isEmpty()) {
+            return;
+        }
+
+        deleteNotificationReservations(
+                notificationReservations.stream().map(NotificationReservation::getId).collect(Collectors.toList()));
+
+        notificationReservations.forEach(
+                notificationReservation ->
+                        notificationUtils.sendNotificationAll(
+                                notificationReservation.getReservation(),
+                                TitleMessage.TIME,
+                                ContentMessage.TIME));
+    }
+
+    private List<NotificationReservation> retrieveReservation() {
+        return notificationReservationRepository.findBySendAt(
+                LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+    }
+
+    private void deleteNotificationReservations(List<Long> notificationReservationIds) {
+        notificationReservationRepository.deleteByIdIn(notificationReservationIds);
     }
 }
