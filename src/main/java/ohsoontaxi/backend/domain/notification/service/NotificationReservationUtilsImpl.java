@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import ohsoontaxi.backend.domain.notification.domain.*;
 import ohsoontaxi.backend.domain.notification.domain.repository.NotificationReservationRepository;
 import ohsoontaxi.backend.domain.notification.exception.NotificationReservationAlreadyExistException;
+import ohsoontaxi.backend.domain.notification.exception.NotificationReservationNotFoundException;
 import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,5 +67,24 @@ public class NotificationReservationUtilsImpl implements NotificationReservation
 
     private void deleteNotificationReservations(List<Long> notificationReservationIds) {
         notificationReservationRepository.deleteByIdIn(notificationReservationIds);
+    }
+
+    @Transactional
+    @Override
+    public void changeSendAtNotificationReservation(Reservation reservation) {
+        NotificationReservation notificationReservation = queryNotificationReservationByReservation(reservation);
+        notificationReservation.changeSendAt(reservation.getDepartureDate());
+    }
+
+    @Transactional
+    @Override
+    public void deleteNotificationReservation(Reservation reservation) {
+        NotificationReservation notificationReservation = queryNotificationReservationByReservation(reservation);
+        notificationReservationRepository.delete(notificationReservation);
+    }
+
+    private NotificationReservation queryNotificationReservationByReservation(Reservation reservation) {
+        return notificationReservationRepository.findByReservation(reservation)
+                .orElseThrow(() -> NotificationReservationNotFoundException.EXCEPTION);
     }
 }

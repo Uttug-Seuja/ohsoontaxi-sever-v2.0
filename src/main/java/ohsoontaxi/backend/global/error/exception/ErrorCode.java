@@ -34,6 +34,7 @@ public enum ErrorCode {
     REPORT_NOT_FOUND(404, "신고 정보를 찾을 수 없습니다."),
     PARTICIPATION_NOT_FOUND(404, "참여 정보를 찾을 수 없습니다."),
     EMAIL_MESSAGE_NOT_FOUND(404,"해당 메세지를 찾을 수 없습니다."),
+    NOTIFICATION_RESERVATION_NOT_FOUND(404, "해당 예약 알림을 찾을 수 없습니다."),
 
     /* 403 */
     REGISTER_EXPIRED_TOKEN(403,"만료된 리프레쉬 토큰입니다."),

@@ -35,4 +35,8 @@ public class NotificationReservation extends BaseEntity {
                 .reservation(reservation)
                 .build();
     }
+
+    public void changeSendAt(LocalDateTime sendAt) {
+        this.sendAt = sendAt;
+    }
 }
