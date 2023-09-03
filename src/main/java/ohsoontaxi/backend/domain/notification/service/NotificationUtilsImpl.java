@@ -36,6 +36,12 @@ public class NotificationUtilsImpl implements NotificationUtils{
 
     @Override
     @Transactional
+    public void changeReservationNull(Long reservationId) {
+        notificationRepository.changeReservationNull(reservationId);
+    }
+
+    @Override
+    @Transactional
     public void sendNotificationNoUser(User user, Reservation reservation, TitleMessage titleMessage,
                                        ContentMessage contentMessage) {
         List<DeviceToken> deviceTokens = notificationRepository.findTokenByReservationIdNeUserId(

@@ -6,12 +6,12 @@ import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.user.domain.User;
 
 public interface NotificationUtils {
+    void changeReservationNull(Long reservationId);
     void sendNotificationNoUser(
             User user,
             Reservation reservation,
             TitleMessage titleMessage,
             ContentMessage contentMessage);
-
     void sendNotificationAll(
             Reservation reservation,
             TitleMessage titleMessage,
