@@ -8,6 +8,10 @@ import ohsoontaxi.backend.domain.asset.service.AssetUtils;
 import ohsoontaxi.backend.domain.chat.domain.repository.ChatRepository;
 import ohsoontaxi.backend.domain.chat.presentation.dto.request.ChatMessageSaveDto;
 import ohsoontaxi.backend.domain.chat.presentation.dto.response.ChatPagingResponseDto;
+import ohsoontaxi.backend.domain.notification.domain.ContentMessage;
+import ohsoontaxi.backend.domain.notification.domain.TitleMessage;
+import ohsoontaxi.backend.domain.notification.service.NotificationReservationUtils;
+import ohsoontaxi.backend.domain.notification.service.NotificationUtils;
 import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.reservation.domain.repository.ReservationRepository;
 import ohsoontaxi.backend.domain.reservation.exception.ReservationNotFoundException;
@@ -53,6 +57,8 @@ public class ReservationService implements ReservationUtils {
     private final ChatRepository chatRepository;
     private final AssetUtils assetUtils;
     private final RedisTemplate<String, String> roomRedisTemplate;
+    private final NotificationReservationUtils notificationReservationUtils;
+    private final NotificationUtils notificationUtils;
 
 
     @PostConstruct
@@ -71,6 +77,8 @@ public class ReservationService implements ReservationUtils {
 
         reservationRepository.save(reservation);
 
+        notificationReservationUtils.recordNotificationReservation(reservation);
+
         return getReservationResponse(reservation, user.getId());
     }
 
@@ -82,6 +90,13 @@ public class ReservationService implements ReservationUtils {
         Reservation reservation = queryReservation(reservationId);
 
         reservation.validUserIsHost(user.getId());
+
+        notificationUtils.sendNotificationNoUser(user, reservation,
+                TitleMessage.RESERVATION_DELETE, ContentMessage.RESERVATION_DELETE);
+
+        notificationUtils.changeReservationNull(reservationId);
+
+        notificationReservationUtils.deleteNotificationReservation(reservation);
 
         chatRepository.updateReservationNull(reservationId);
 
@@ -108,6 +123,11 @@ public class ReservationService implements ReservationUtils {
         reservation.validUserIsHost(currentUserId);
 
         reservation.updateReservation(updateReservationRequest.toUpdateReservationDto());
+
+        notificationReservationUtils.changeSendAtNotificationReservation(reservation);
+
+        notificationUtils.sendNotificationNoUser(userUtils.getUserById(currentUserId), reservation,
+                TitleMessage.RESERVATION_MODIFY, ContentMessage.RESERVATION_MODIFY);
 
         return getReservationResponse(reservation,currentUserId);
     }
