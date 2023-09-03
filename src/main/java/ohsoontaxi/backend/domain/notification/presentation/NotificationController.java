@@ -30,4 +30,9 @@ public class NotificationController {
             @PageableDefault(size = 15, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return notificationService.queryListByUserId(pageable);
     }
+
+    @DeleteMapping("/delete/{notificationId}")
+    public void deleteNotification(@PathVariable("notificationId") Long notificationId) {
+        notificationService.deleteNotification(notificationId);
+    }
 }

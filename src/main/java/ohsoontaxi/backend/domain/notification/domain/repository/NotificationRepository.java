@@ -15,6 +15,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     Optional<Notification> findByReservation(Reservation reservation);
 
+    Optional<Notification> findById(Long notificationId);
+
     @Modifying(flushAutomatically = true)
     @Query("update Notification n set n.reservation = null where n.reservation.id = :reservationId")
     void changeReservationNull(@Param("reservationId") Long reservationId);
