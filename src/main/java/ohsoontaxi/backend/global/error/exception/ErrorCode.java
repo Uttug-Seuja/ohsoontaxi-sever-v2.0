@@ -35,6 +35,8 @@ public enum ErrorCode {
     PARTICIPATION_NOT_FOUND(404, "참여 정보를 찾을 수 없습니다."),
     EMAIL_MESSAGE_NOT_FOUND(404,"해당 메세지를 찾을 수 없습니다."),
     NOTIFICATION_RESERVATION_NOT_FOUND(404, "해당 예약 알림을 찾을 수 없습니다."),
+    NOTIFICATION_NOT_FOUND(404, "해당 알림을 찾을 수 없습니다."),
+    NOTIFICATION_RECEIVER_NOT_FOUND(404, "해당 알림을 받은 사용자가 없습니다."),
 
     /* 403 */
     REGISTER_EXPIRED_TOKEN(403,"만료된 리프레쉬 토큰입니다."),
@@ -56,6 +58,7 @@ public enum ErrorCode {
     BAD_EMAIL_ADDRESS(404, "학교 이메일 형식에 맞지 않습니다."),
     CODE_NOT_MATCHED(404, "코드가 동일하지 않습니다."),
     NOTIFICATION_RESERVATION_ALREADY_EXIST(404, "이미 해당 예약 알림이 있습니다."),
+    NOT_MATCH_NOTIFICATION_RECEIVER(404, "해당 알림을 받은 사용자와 해당 알림을 삭제하려는 사용자가 다릅니다."),
 
     /* 409 : CONFLICT : Resource의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(409, "데이터가 이미 존재합니다."),

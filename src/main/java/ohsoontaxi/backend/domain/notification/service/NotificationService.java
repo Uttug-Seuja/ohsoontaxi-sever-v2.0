@@ -5,8 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ohsoontaxi.backend.domain.notification.domain.DeviceToken;
 import ohsoontaxi.backend.domain.notification.domain.Notification;
+import ohsoontaxi.backend.domain.notification.domain.NotificationReceiver;
 import ohsoontaxi.backend.domain.notification.domain.repository.DeviceTokenRepository;
+import ohsoontaxi.backend.domain.notification.domain.repository.NotificationReceiverRepository;
 import ohsoontaxi.backend.domain.notification.domain.repository.NotificationRepository;
+import ohsoontaxi.backend.domain.notification.exception.NotMatchNotificationReceiver;
+import ohsoontaxi.backend.domain.notification.exception.NotificationNotFoundException;
+import ohsoontaxi.backend.domain.notification.exception.NotificationReceiverNotFoundException;
 import ohsoontaxi.backend.domain.notification.presentation.dto.request.RegisterFcmTokenRequest;
 import ohsoontaxi.backend.domain.notification.presentation.dto.response.QueryNotificationListResponseElement;
 import ohsoontaxi.backend.domain.user.domain.User;
@@ -29,6 +34,7 @@ public class NotificationService {
     private final EntityManager entityManager;
     private final UserUtils userUtils;
     private final NotificationRepository notificationRepository;
+    private final NotificationReceiverRepository notificationReceiverRepository;
 
     @Transactional
     public void registerFcmToken(RegisterFcmTokenRequest request) {
@@ -68,5 +74,27 @@ public class NotificationService {
         Slice<Notification> notifications = notificationRepository.findSliceByUserId(user.getId(), pageable);
         return notifications
                 .map(notification -> new QueryNotificationListResponseElement(notification.getNotificationInfoVo()));
+    }
+
+    @Transactional
+    public void deleteNotification(Long notificationId) {
+        User user = userUtils.getUserFromSecurityContext();
+        Notification notification = queryNotification(notificationId);
+        NotificationReceiver notificationReceiver = queryNotificationReceiver(notification);
+        if(notificationReceiver.getReceiver().equals(user)) {
+            notificationRepository.delete(notification);
+        }else {
+            throw NotMatchNotificationReceiver.EXCEPTION;
+        }
+    }
+
+    private Notification queryNotification(Long notificationId) {
+        return notificationRepository.findById(notificationId).orElseThrow(
+                () -> NotificationNotFoundException.EXCEPTION);
+    }
+
+    private NotificationReceiver queryNotificationReceiver(Notification notification) {
+        return notificationReceiverRepository.findNotificationReceiverByNotification(notification).orElseThrow(
+                () -> NotificationReceiverNotFoundException.EXCEPTION);
     }
 }
