@@ -4,26 +4,19 @@ package ohsoontaxi.backend.domain.chat.presentation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ohsoontaxi.backend.domain.chat.presentation.dto.request.ChatMessageDto;
+import ohsoontaxi.backend.domain.chat.presentation.dto.request.ChatMessageRequest;
 import ohsoontaxi.backend.domain.chat.presentation.dto.request.ChatMessageSaveDto;
 import ohsoontaxi.backend.domain.chat.service.ChatRedisCacheService;
 import ohsoontaxi.backend.domain.participation.domain.Participation;
-import ohsoontaxi.backend.domain.participation.domain.repository.ParticipationRepository;
 import ohsoontaxi.backend.domain.participation.service.ParticipationUtils;
-import ohsoontaxi.backend.domain.reservation.domain.Reservation;
-import ohsoontaxi.backend.domain.reservation.domain.repository.ReservationRepository;
-import ohsoontaxi.backend.domain.user.domain.User;
-import ohsoontaxi.backend.domain.user.domain.repository.UserRepository;
 import ohsoontaxi.backend.global.redis.pub.RedisPublisher;
 import ohsoontaxi.backend.global.security.JwtTokenProvider;
 import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -65,9 +58,9 @@ public class ChatController {
 //    }
 
     @MessageMapping("/chat/message")
-    public void message(ChatMessageDto chatMessageDto){
+    public void message(ChatMessageRequest chatMessageRequest){
 
-        String token = jwtTokenProvider.resolveTokenWeb(chatMessageDto.getAccessToken());
+        String token = jwtTokenProvider.resolveTokenWeb(chatMessageRequest.getAccessToken());
 
         log.info("token={}",token);
 
@@ -75,15 +68,15 @@ public class ChatController {
 
         String userId = jwtTokenProvider.getUserId(token);
 
-        Participation participation = participationUtils.findParticipation(Long.valueOf(userId), Long.valueOf(chatMessageDto.getRoomId()));
+        Participation participation = participationUtils.findParticipation(Long.valueOf(userId), Long.valueOf(chatMessageRequest.getRoomId()));
 
         log.info(participation.getUser().getName());
 
         ChatMessageSaveDto message = ChatMessageSaveDto.builder()
                 .type(ChatMessageSaveDto.MessageType.TALK)
-                .message(chatMessageDto.getMessage())
+                .message(chatMessageRequest.getMessage())
                 .profilePath(participation.getUser().getProfilePath())
-                .roomId(chatMessageDto.getRoomId())
+                .roomId(chatMessageRequest.getRoomId())
                 .writer(participation.getUser().getName())
                 .createdAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS")))
                 .userId(participation.getUser().getId())

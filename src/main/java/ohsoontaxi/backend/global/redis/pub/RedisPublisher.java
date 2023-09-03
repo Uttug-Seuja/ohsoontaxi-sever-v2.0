@@ -14,10 +14,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class RedisPublisher {
 
-    /*
-     * redis 발행 서비스
-     *
-     * */
+    //redis 발행
+
     private final RedisTemplate<String, Object> redisTemplate;
 
     public void publish(ChannelTopic topic, ChatMessageSaveDto messageDto) {
