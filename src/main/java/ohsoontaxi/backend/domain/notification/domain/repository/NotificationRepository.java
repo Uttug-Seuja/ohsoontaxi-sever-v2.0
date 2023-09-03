@@ -14,4 +14,8 @@ import java.util.Optional;
 public interface NotificationRepository extends JpaRepository<Notification, Long>, CustomNotificationRepository{
 
     Optional<Notification> findByReservation(Reservation reservation);
+
+    @Modifying(flushAutomatically = true)
+    @Query("update Notification n set n.reservation = null where n.reservation.id = :reservationId")
+    void changeReservationNull(@Param("reservationId") Long reservationId);
 }
