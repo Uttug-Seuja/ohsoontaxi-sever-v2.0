@@ -4,11 +4,10 @@ package ohsoontaxi.backend.domain.reservation.service;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ohsoontaxi.backend.domain.asset.service.AssetUtils;
 import ohsoontaxi.backend.domain.chat.domain.repository.ChatRepository;
 import ohsoontaxi.backend.domain.chat.presentation.dto.request.ChatMessageSaveDto;
 import ohsoontaxi.backend.domain.chat.presentation.dto.response.ChatPagingResponseDto;
-import ohsoontaxi.backend.domain.participation.domain.Participation;
-import ohsoontaxi.backend.domain.participation.domain.repository.ParticipationRepository;
 import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.reservation.domain.repository.ReservationRepository;
 import ohsoontaxi.backend.domain.reservation.exception.ReservationNotFoundException;
@@ -39,6 +38,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ohsoontaxi.backend.domain.chat.domain.repository.ChatRoomRepository.CHAT_SORTED_SET_;
+import static ohsoontaxi.backend.domain.chat.service.ChatRedisCacheService.USERNAME_PROFILE;
 
 @Service
 @RequiredArgsConstructor
@@ -48,10 +48,12 @@ public class ReservationService implements ReservationUtils {
 
     private final ReservationRepository reservationRepository;
     private final UserUtils userUtils;
-    private final ParticipationRepository participationRepository;
     private final RedisTemplate<String, ChatMessageSaveDto> chatRedisTemplate;
     private ZSetOperations<String, ChatMessageSaveDto> zSetOperations;
     private final ChatRepository chatRepository;
+    private final AssetUtils assetUtils;
+    private final RedisTemplate<String, String> roomRedisTemplate;
+
 
     @PostConstruct
     private void init() {
@@ -216,9 +218,6 @@ public class ReservationService implements ReservationUtils {
         List<Reservation> reservations = reservationRepository.findParticipatedReservation(currentUserId);
 
 
-        log.info("currentUserId={}",currentUserId);
-
-        log.info("participation length={}");
 
         //List<Participation> participations = participationRepository.findByUserId(currentUserId);
 
@@ -242,17 +241,35 @@ public class ReservationService implements ReservationUtils {
 
                 ChatPagingResponseDto chatPagingResponseDto = chatMessageDtoList.get(0);
 
+
+                String profile = (String) roomRedisTemplate.opsForHash().get(USERNAME_PROFILE, chatPagingResponseDto.getUserId());
+
+                User user = userUtils.getUserById(chatPagingResponseDto.getUserId());
+
+                if (profile != null){
+                    chatPagingResponseDto.setProfilePath(profile);
+                }else{
+                    roomRedisTemplate.opsForHash().put(USERNAME_PROFILE, chatPagingResponseDto.getUserId(), user.getProfilePath());
+                }
+
+                chatPagingResponseDto.setProfilePath(user.getProfilePath());
+
                 log.info("participation num={}",reservation.getParticipations().size());
 
                 ChatRoomBriefInfoDto chatRoomBriefInfoDto = new ChatRoomBriefInfoDto(reservation.getReservationBaseInfoVo(), chatPagingResponseDto);
 
                 chatRoomBriefInfoDtoList.add(chatRoomBriefInfoDto);
 
+
+
+
             }else{
 
                 ChatPagingResponseDto message = ChatPagingResponseDto.builder()
+                        .reservationId(reservation.getId())
                         .message("채팅내역이 없습니다")
-                        .createdAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS"))).build();
+                        .profilePath(assetUtils.getRandomProfileImage().getUrl())
+                        .createdAt(reservation.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS"))).build();
 
                 ChatRoomBriefInfoDto chatRoomBriefInfoDto = new ChatRoomBriefInfoDto(reservation.getReservationBaseInfoVo(), message);
 
