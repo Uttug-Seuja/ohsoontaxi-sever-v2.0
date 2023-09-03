@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ChatMessageDto {
+public class ChatMessageRequest {
 
     private String roomId;
     private String message;
