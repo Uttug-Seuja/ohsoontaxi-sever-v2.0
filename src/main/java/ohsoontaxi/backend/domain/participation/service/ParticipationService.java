@@ -3,6 +3,9 @@ package ohsoontaxi.backend.domain.participation.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import ohsoontaxi.backend.domain.notification.domain.ContentMessage;
+import ohsoontaxi.backend.domain.notification.domain.TitleMessage;
+import ohsoontaxi.backend.domain.notification.service.NotificationUtils;
 import ohsoontaxi.backend.domain.participation.domain.Participation;
 import ohsoontaxi.backend.domain.participation.domain.repository.ParticipationRepository;
 import ohsoontaxi.backend.domain.participation.exception.*;
@@ -33,6 +36,7 @@ public class ParticipationService implements ParticipationUtils{
     private final UserUtils userUtils;
     private final ReservationUtils reservationUtils;
     private final TemperatureUtils temperatureUtils;
+    private final NotificationUtils notificationUtils;
 
 
     @Transactional
@@ -48,6 +52,10 @@ public class ParticipationService implements ParticipationUtils{
         currentReservation.changeReservationStatus();
 
         currentUser.getTemperature().addParticipationNum();
+
+        notificationUtils.sendNotificationNoUser(currentUser, currentReservation,
+                TitleMessage.PARTICIPATION, ContentMessage.PARTICIPATION);
+        checkDeadLine(currentReservation);
 
         temperatureUtils.temperaturePatch(currentUser.getId());
     }
@@ -78,6 +86,9 @@ public class ParticipationService implements ParticipationUtils{
         validIsHost(currentUser, currentParticipation.getReservation());
 
         currentUser.getTemperature().subParticipationNum();
+
+        notificationUtils.sendNotificationNoUser(currentUser, currentReservation,
+                TitleMessage.PARTICIPATION_CANCEL, ContentMessage.PARTICIPATION_CANCEL);
 
         participationRepository.delete(currentParticipation);
 
@@ -164,5 +175,11 @@ public class ParticipationService implements ParticipationUtils{
         User user = userUtils.getUserById(userId);
         Reservation reservation = reservationUtils.queryReservation(reservationId);
         return participationRepository.findByReservationAndUser(reservation, user).orElseThrow(() -> ParticipationNotFoundException.EXCEPTION);
+    }
+
+    private void checkDeadLine(Reservation reservation) {
+        if(reservation.getCurrentNum() >= 4) {
+            notificationUtils.sendNotificationAll(reservation,TitleMessage.DEADLINE, ContentMessage.DEADLINE);
+        }
     }
 }
