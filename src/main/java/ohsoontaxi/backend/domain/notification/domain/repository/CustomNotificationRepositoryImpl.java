@@ -25,6 +25,15 @@ public class CustomNotificationRepositoryImpl implements CustomNotificationRepos
 
     private final JPAQueryFactory queryFactory;
 
+    private <T> boolean hasNext(List<T> list, Pageable pageable) {
+        boolean hasNext = false;
+        if (list.size() > pageable.getPageSize()) {
+            list.remove(pageable.getPageSize());
+            hasNext = true;
+        }
+        return hasNext;
+    }
+
     @Override
     public List<DeviceToken> findTokenByReservationIdNeUserId(Long reservationId, Long userId) {
         return queryFactory
@@ -48,6 +57,21 @@ public class CustomNotificationRepositoryImpl implements CustomNotificationRepos
                 .where(
                         participation.reservation.id.eq(reservationId))
                 .fetch();
+    }
+
+    @Override
+    public Slice<Notification> findSliceByUserId(Long receiverId, Pageable pageable) {
+        List<Notification> notifications = queryFactory
+                .selectFrom(notification)
+                .join(notification.receivers, notificationReceiver)
+                .fetchJoin()
+                .where(notificationReceiver.receiver.id.eq(receiverId))
+                .orderBy(notification.createdDate.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new SliceImpl<>(notifications, pageable, hasNext(notifications, pageable));
     }
 
 }

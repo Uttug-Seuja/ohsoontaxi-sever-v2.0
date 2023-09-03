@@ -3,11 +3,13 @@ package ohsoontaxi.backend.domain.notification.presentation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import ohsoontaxi.backend.domain.notification.presentation.dto.request.RegisterFcmTokenRequest;
+import ohsoontaxi.backend.domain.notification.presentation.dto.response.QueryNotificationListResponseElement;
 import ohsoontaxi.backend.domain.notification.service.NotificationService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,5 +22,12 @@ public class NotificationController {
     @PostMapping("/token")
     public void registerFcmToken(@Valid @RequestBody RegisterFcmTokenRequest request) {
         notificationService.registerFcmToken(request);
+    }
+
+    //내가 받은 알림들 가져오기
+    @GetMapping
+    public Slice<QueryNotificationListResponseElement> queryListNotification(
+            @PageableDefault(size = 15, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return notificationService.queryListByUserId(pageable);
     }
 }
