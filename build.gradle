@@ -76,11 +76,3 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-task copyPrivate(type: Copy) {
-	copy {
-		from './submodule-data'
-		include "*.yml"
-		into 'src/main/resources'
-	}
-}
