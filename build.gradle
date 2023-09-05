@@ -77,10 +77,3 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-processResources.dependsOn('copySubmodule')
-
-task copySubmodule(type: Copy) {
-	from './submodule-data'
-	include '*.yml'
-	into './src/main/resources'
-}
