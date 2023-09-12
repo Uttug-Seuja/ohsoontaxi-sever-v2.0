@@ -27,11 +27,11 @@ jobs:
           java-version: 17
           distribution: 'zulu'
 
-#      - name: Checkout
-#        uses: actions/checkout@v1
-#        with:
-#          token: ${{ secrets.ACTION_TOKEN }}
-#          submodules: true
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          token: ${{ secrets.ACTION_TOKEN }}
+          submodules: true
 
 
       - name: Gradle Caching
