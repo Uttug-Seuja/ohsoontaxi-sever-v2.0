@@ -63,7 +63,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
 
@@ -75,5 +74,5 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name cicd-cd-group \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=ohsoonbucket,bundleType=zip,key=ohdeploy/$GITHUB_SHA.zip \
+          --s3-location bucket=ohsoonbucket,bundleType=zip,key=ohsoonTaxi/$GITHUB_SHA.zip \
           --region ap-northeast-2 \
