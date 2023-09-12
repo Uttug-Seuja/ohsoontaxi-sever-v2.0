@@ -1,11 +1,9 @@
 package ohsoontaxi.backend.domain.asset.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ohsoontaxi.backend.domain.temperature.domain.Temperature;
 import ohsoontaxi.backend.global.database.BaseEntity;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
