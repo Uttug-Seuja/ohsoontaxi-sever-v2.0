@@ -15,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/v1/reservation")
 @RequiredArgsConstructor
@@ -62,13 +61,11 @@ public class ReservationController {
         return reservationService.reservedByMe();
     }
 
-
     @GetMapping("/my/participation")
     public List<ReservationBriefInfoDto> getParticipated() {
 
         return reservationService.participatedReservation();
     }
-
     @GetMapping("/search")
     public Slice<ReservationBriefInfoDto> searchReservation(
             @RequestParam(value = "word") String word,
@@ -79,7 +76,6 @@ public class ReservationController {
 
         return reservationService.search(word,pageRequest);
     }
-
     @GetMapping("/search/keyword")
     public Slice<KeywordDto> searchKeyword(
             @RequestParam(value = "word") String word,
@@ -90,7 +86,6 @@ public class ReservationController {
 
         return reservationService.getKeyword(word,pageRequest);
     }
-
     @GetMapping("/search/recommend")
     public List<KeywordDto> recommendKeyword() {
 
@@ -101,6 +96,5 @@ public class ReservationController {
     public List<ChatRoomBriefInfoDto> getChatRoom(){
         return reservationService.getChatRoom();
     }
-
 
 }
