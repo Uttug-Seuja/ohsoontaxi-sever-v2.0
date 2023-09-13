@@ -94,6 +94,11 @@ public class ReservationController {
 
     @Operation(summary = "검색")
     @GetMapping("/search")
+    @Parameters({
+            @Parameter(name = "word", description = "word", example = "text"),
+            @Parameter(name = "page", description = "Page number", example = "0", required = false),
+            @Parameter(name = "size", description = "Page size", example = "10", required = false)
+    })
     public Slice<ReservationBriefInfoDto> searchReservation(
             @RequestParam(value = "word") String word,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -106,6 +111,11 @@ public class ReservationController {
 
     @Operation(summary = "키워드 검색")
     @GetMapping("/search/keyword")
+    @Parameters({
+            @Parameter(name = "word", description = "word", example = "text"),
+            @Parameter(name = "page", description = "Page number", example = "0", required = false),
+            @Parameter(name = "size", description = "Page size", example = "10", required = false)
+    })
     public Slice<KeywordDto> searchKeyword(
             @RequestParam(value = "word") String word,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
