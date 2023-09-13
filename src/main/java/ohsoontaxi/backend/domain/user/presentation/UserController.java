@@ -7,6 +7,7 @@ import ohsoontaxi.backend.domain.asset.domain.ProfileImage;
 import ohsoontaxi.backend.domain.temperature.domain.Temperature;
 import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.domain.user.presentation.dto.request.ChangeProfileRequest;
+import ohsoontaxi.backend.domain.user.presentation.dto.response.DeployTestDto;
 import ohsoontaxi.backend.domain.user.presentation.dto.response.UserProfileResponse;
 import ohsoontaxi.backend.domain.user.service.UserService;
 import ohsoontaxi.backend.global.common.user.Gender;
@@ -38,9 +39,9 @@ public class UserController {
 
 
     @PostMapping("/save")
-    public String initUser(){
+    public DeployTestDto initUser(){
 
-        return "배포가 완료되었습니다";
+        return new DeployTestDto();
 
     }
  }
