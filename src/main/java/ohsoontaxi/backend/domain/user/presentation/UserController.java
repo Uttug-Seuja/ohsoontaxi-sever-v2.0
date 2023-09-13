@@ -36,7 +36,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/init")
+    @PostMapping("/save")
     public void initUser(){
 
 
