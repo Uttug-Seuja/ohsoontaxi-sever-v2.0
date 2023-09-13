@@ -235,10 +235,6 @@ public class ReservationService implements ReservationUtils {
 
         List<Reservation> reservations = reservationRepository.findParticipatedReservation(currentUserId);
 
-
-
-        //List<Participation> participations = participationRepository.findByUserId(currentUserId);
-
         List<ChatRoomBriefInfoDto> chatRoomBriefInfoDtoList = new ArrayList<>();
 
         for (Reservation reservation : reservations) {
@@ -258,7 +254,6 @@ public class ReservationService implements ReservationUtils {
                 log.info("len={}",chatMessageDtoList.size());
 
                 ChatPagingResponseDto chatPagingResponseDto = chatMessageDtoList.get(0);
-
 
                 String profile = (String) roomRedisTemplate.opsForHash().get(USERNAME_PROFILE, chatPagingResponseDto.getUserId());
 
