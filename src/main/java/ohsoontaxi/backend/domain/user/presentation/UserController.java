@@ -10,6 +10,7 @@ import ohsoontaxi.backend.domain.user.presentation.dto.request.ChangeProfileRequ
 import ohsoontaxi.backend.domain.user.presentation.dto.response.UserProfileResponse;
 import ohsoontaxi.backend.domain.user.service.UserService;
 import ohsoontaxi.backend.global.common.user.Gender;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -37,6 +38,7 @@ public class UserController {
 
 
     @PostMapping("/save")
+    @Transactional
     public void initUser(){
 
 
