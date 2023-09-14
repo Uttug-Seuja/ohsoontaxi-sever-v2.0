@@ -26,6 +26,18 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu'
+      
+      - name: Set FcmKey
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.FIREBASE_SERVICE_KEY }}" | base64 --decode > src/main/resources/firebase_service_key.json
+          find src
+
+      - name: Set YML
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > src/main/resources/application.yml
+          find src
 
       - name: Gradle Caching
         uses: actions/cache@v3
