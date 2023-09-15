@@ -18,4 +18,7 @@ public class RegisterRequest {
 
     @NotEmpty
     private String profilePath;
+
+    @NotEmpty
+    private String shcEmail;
 }

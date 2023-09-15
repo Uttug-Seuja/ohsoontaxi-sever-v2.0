@@ -11,5 +11,7 @@ public interface EmailMessageRepository extends JpaRepository<EmailMessage, Long
     Boolean existsByEmail(String email);
     Optional<EmailMessage> findByEmail(String email);
     List<EmailMessage> findByLastModifyDateLessThan(LocalDateTime now);
+    Optional<EmailMessage> findByOauthProviderAndEmail(String oauthProvider, String email);
 }
+
 

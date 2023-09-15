@@ -2,7 +2,6 @@ package ohsoontaxi.backend.domain.credential.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ohsoontaxi.backend.domain.asset.service.AssetUtils;
 import ohsoontaxi.backend.domain.credential.domain.RefreshTokenRedisEntity;
 import ohsoontaxi.backend.domain.credential.domain.repository.RefreshTokenRedisEntityRepository;
 import ohsoontaxi.backend.domain.credential.exception.RefreshTokenExpiredException;
@@ -10,6 +9,9 @@ import ohsoontaxi.backend.domain.credential.presentation.dto.request.RegisterReq
 import ohsoontaxi.backend.domain.credential.presentation.dto.response.AccessTokenDto;
 import ohsoontaxi.backend.domain.credential.presentation.dto.response.AuthTokensResponse;
 import ohsoontaxi.backend.domain.credential.presentation.dto.response.AvailableRegisterResponse;
+import ohsoontaxi.backend.domain.email.domain.EmailMessage;
+import ohsoontaxi.backend.domain.email.exception.NotEmailApprovedException;
+import ohsoontaxi.backend.domain.email.service.EmailUtils;
 import ohsoontaxi.backend.domain.temperature.domain.Temperature;
 import ohsoontaxi.backend.domain.temperature.service.TemperatureUtils;
 import ohsoontaxi.backend.domain.user.domain.User;
@@ -31,14 +33,13 @@ import java.util.Optional;
 @Slf4j
 public class CredentialService {
 
-    private final KaKaoOauthStrategy kaKaoOauthStrategy;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRedisEntityRepository refreshTokenRedisEntityRepository;
     private final OauthFactory oauthFactory;
     private final UserUtils userUtils;
-    private final AssetUtils assetUtils;
     private final TemperatureUtils temperatureUtils;
+    private final EmailUtils emailUtils;
 
     @Transactional
     public AccessTokenDto login(Long userId){
@@ -81,6 +82,8 @@ public class CredentialService {
             String token, RegisterRequest registerUserRequest, OauthProvider oauthProvider) throws NoSuchAlgorithmException, InvalidKeySpecException {
         OauthStrategy oauthStrategy = oauthFactory.getOauthstrategy(oauthProvider);
         OIDCDecodePayload oidcDecodePayload = oauthStrategy.getOIDCDecodePayload(token);
+
+        checkEmailApproved(oauthProvider.getValue(), registerUserRequest.getShcEmail());
 
         Temperature temperature = temperatureUtils.createTemperature();
 
@@ -157,5 +160,13 @@ public class CredentialService {
         User user = userUtils.getUserFromSecurityContext();
         refreshTokenRedisEntityRepository.deleteById(user.getId().toString());
     }
+
+    private void checkEmailApproved(String oauthProvider, String schEmail) {
+        EmailMessage emailMessage = emailUtils.findEmailMessageOauthAndEmail(oauthProvider, schEmail);
+        if(!emailMessage.getIsApproved()) {
+            throw NotEmailApprovedException.EXCEPTION;
+        }
+    }
+
 }
 

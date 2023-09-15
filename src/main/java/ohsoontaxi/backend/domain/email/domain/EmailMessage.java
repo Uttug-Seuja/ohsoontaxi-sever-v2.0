@@ -21,14 +21,23 @@ public class EmailMessage extends BaseEntity {
 
     private String code;
 
+    private String oauthProvider;
+
+    private Boolean isApproved;
+
     @Builder
-    public EmailMessage(String email, String code){
+    public EmailMessage(String email, String code, String oauthProvider, Boolean isApproved){
         this.email = email;
         this.code = code;
+        this.oauthProvider = oauthProvider;
+        this.isApproved = isApproved;
     }
 
     public void changeCode(String code){
         this.code = code;
     }
 
+    public void changeStateTrue() {
+        this.isApproved = true;
+    }
 }
