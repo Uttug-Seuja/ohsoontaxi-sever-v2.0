@@ -85,13 +85,15 @@ public class CredentialService {
 
         checkEmailApproved(oauthProvider.getValue(), registerUserRequest.getShcEmail());
 
+        String email = checkNullEmail(oidcDecodePayload.getEmail(), registerUserRequest.getShcEmail());
+
         Temperature temperature = temperatureUtils.createTemperature();
 
         User newUser =
                 User.builder()
                         .oauthProvider(oauthProvider.getValue())
                         .oauthId(oidcDecodePayload.getSub())
-                        .email(oidcDecodePayload.getEmail())
+                        .email(email)
                         .name(registerUserRequest.getName())
                         .gender(registerUserRequest.getGender())
                         .profilePath(registerUserRequest.getProfilePath())
@@ -166,6 +168,10 @@ public class CredentialService {
         if(!emailMessage.getIsApproved()) {
             throw NotEmailApprovedException.EXCEPTION;
         }
+    }
+
+    private String checkNullEmail(String email, String schEmail) {
+        return email != null ? email : schEmail;
     }
 
 }
