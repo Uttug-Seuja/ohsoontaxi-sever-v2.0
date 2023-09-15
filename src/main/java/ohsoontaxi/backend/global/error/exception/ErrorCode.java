@@ -59,6 +59,7 @@ public enum ErrorCode {
     CODE_NOT_MATCHED(404, "코드가 동일하지 않습니다."),
     NOTIFICATION_RESERVATION_ALREADY_EXIST(404, "이미 해당 예약 알림이 있습니다."),
     NOT_MATCH_NOTIFICATION_RECEIVER(404, "해당 알림을 받은 사용자와 해당 알림을 삭제하려는 사용자가 다릅니다."),
+    NOT_EMAIL_APPROVED(404, "학교 이메일 인증이 되지 않은 사용자입니다."),
 
     /* 409 : CONFLICT : Resource의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(409, "데이터가 이미 존재합니다."),

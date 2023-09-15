@@ -8,4 +8,7 @@ public class EmailRequestDto {
 
     @NotEmpty
     private String email;
+
+    @NotEmpty
+    private String oauthProvider;
 }

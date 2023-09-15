@@ -23,7 +23,7 @@ import java.util.Random;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmailService{
+public class EmailService implements EmailUtils{
 
     private final JavaMailSender javaMailSender;
     private final EmailMessageRepository emailMessageRepository;
@@ -61,6 +61,7 @@ public class EmailService{
         if (!(emailMessage.getCode().equals(codeRequestDto.getCode()))) {
             throw CodeNotMatchedException.EXCEPTION;
         }
+        emailMessage.changeStateTrue();
     }
 
     // 인증번호 및 임시 비밀번호 생성 메서드
@@ -99,6 +100,8 @@ public class EmailService{
             return emailMessageRepository.save(EmailMessage.builder()
                     .email(emailRequestDto.getEmail())
                     .code(code)
+                    .oauthProvider(emailRequestDto.getOauthProvider())
+                    .isApproved(false)
                     .build());
         }
     }
@@ -140,6 +143,13 @@ public class EmailService{
     //11시 55분전에 만든 emailMessage 가져오기
     private List<EmailMessage>  retrieveEmailMessage() {
         return emailMessageRepository.findByLastModifyDateLessThan(LocalDateTime.now().minusMinutes(5));
+    }
+
+    //oauthProvider와 schEmail로 EmailMessage찾기
+    @Override
+    public EmailMessage findEmailMessageOauthAndEmail(String oauthProvider, String schEmail) {
+        return emailMessageRepository.findByOauthProviderAndEmail(oauthProvider,schEmail)
+                .orElseThrow(() -> EmailMessageNotFoundException.EXCEPTION);
     }
 
 }
