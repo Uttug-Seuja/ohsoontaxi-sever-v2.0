@@ -12,4 +12,7 @@ public class CodeRequestDto {
 
     @NotEmpty
     private String code;
+
+    @NotNull
+    private String oauthProvider;
 }
