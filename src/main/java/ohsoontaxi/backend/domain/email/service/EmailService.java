@@ -17,7 +17,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -38,14 +38,12 @@ public class EmailService implements EmailUtils{
 
         checkEmailAddress(emailRequestDto.getEmail());
 
-        String authNum = createCode();
-
-        EmailMessage emailMessage = createEmailMessage(emailRequestDto, authNum);
+        String code = createEmailMessage(emailRequestDto);
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-            mimeMessageHelper.setTo(emailMessage.getEmail()); // 메일 수신자
+            mimeMessageHelper.setTo(emailRequestDto.getEmail()); // 메일 수신자
             mimeMessageHelper.setSubject(subject); // 메일 제목
-            mimeMessageHelper.setText(setContext(authNum), true); // 메일 본문 내용, HTML 여부
+            mimeMessageHelper.setText(setContext(code), true); // 메일 본문 내용, HTML 여부
             javaMailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
@@ -56,9 +54,12 @@ public class EmailService implements EmailUtils{
     //code 맞는지 확인
     @Transactional
     public void checkCodeCorrect(CodeRequestDto codeRequestDto){
-        EmailMessage emailMessage = findEmailMessage(codeRequestDto.getEmail());
+        EmailMessage emailMessage = findEmailMessageOauthAndEmail(codeRequestDto.getOauthProvider(), codeRequestDto.getEmail());
+        if(emailMessage.getIsApproved()){
+            throw DuplicatedEmailException.EXCEPTION;
+        }
         checkCodeValid(emailMessage.getLastModifyDate());
-        if (!(emailMessage.getCode().equals(codeRequestDto.getCode()))) {
+        if(!(emailMessage.getCode().equals(codeRequestDto.getCode()))) {
             throw CodeNotMatchedException.EXCEPTION;
         }
         emailMessage.changeStateTrue();
@@ -88,34 +89,6 @@ public class EmailService implements EmailUtils{
         return templateEngine.process("email", context);
     }
 
-    //email 메세지 저장하기
-    private EmailMessage createEmailMessage(EmailRequestDto emailRequestDto, String code){
-        Boolean bool = checkReceivedEmail(emailRequestDto.getEmail());
-
-        if(bool){
-            EmailMessage emailMessage = findEmailMessage(emailRequestDto.getEmail());
-            emailMessage.changeCode(code);
-            return emailMessage;
-        } else{
-            return emailMessageRepository.save(EmailMessage.builder()
-                    .email(emailRequestDto.getEmail())
-                    .code(code)
-                    .oauthProvider(emailRequestDto.getOauthProvider())
-                    .isApproved(false)
-                    .build());
-        }
-    }
-
-    //해당 email이 있는지 확인
-    private Boolean checkReceivedEmail(String email){
-        return emailMessageRepository.existsByEmail(email);
-    }
-
-    //email로 EmailMessage 찾기
-    private EmailMessage findEmailMessage(String email){
-        return emailMessageRepository.findByEmail(email).orElseThrow(() -> EmailMessageNotFoundException.EXCEPTION);
-    }
-
     //넘어온 email이 sch형식이 맞는지 확인
     private void checkEmailAddress(String email){
         String ext = email.substring(email.lastIndexOf("@") + 1);
@@ -131,25 +104,35 @@ public class EmailService implements EmailUtils{
         }
     }
 
-    //11시 55분 전에 만든 email은 삭제
-    @Transactional
-    public void deleteEmailMessages(){
-        List<EmailMessage> emailMessages = retrieveEmailMessage();
-        emailMessages.forEach(
-                emailMessage ->
-                        emailMessageRepository.delete(emailMessage));
-    }
-
-    //11시 55분전에 만든 emailMessage 가져오기
-    private List<EmailMessage>  retrieveEmailMessage() {
-        return emailMessageRepository.findByLastModifyDateLessThan(LocalDateTime.now().minusMinutes(5));
-    }
-
-    //oauthProvider와 schEmail로 EmailMessage찾기
     @Override
     public EmailMessage findEmailMessageOauthAndEmail(String oauthProvider, String schEmail) {
         return emailMessageRepository.findByOauthProviderAndEmail(oauthProvider,schEmail)
                 .orElseThrow(() -> EmailMessageNotFoundException.EXCEPTION);
+    }
+
+    private String createEmailMessage(EmailRequestDto emailRequestDto) {
+        Optional<EmailMessage> optionalEmailMessage =
+                emailMessageRepository.findByOauthProviderAndEmail(emailRequestDto.getOauthProvider(), emailRequestDto.getEmail());
+
+        return optionalEmailMessage.map(emailMessage -> {
+            if (emailMessage.getIsApproved()) {
+                throw DuplicatedEmailException.EXCEPTION;
+            } else {
+                String code = createCode();
+                emailMessage.changeCode(code);
+                return code;
+            }
+        }).orElseGet(() -> {
+            String code = createCode();
+            emailMessageRepository.save(
+                    EmailMessage.builder()
+                            .email(emailRequestDto.getEmail())
+                            .code(code)
+                            .oauthProvider(emailRequestDto.getOauthProvider())
+                            .isApproved(false)
+                            .build());
+            return code;
+        });
     }
 
 }
