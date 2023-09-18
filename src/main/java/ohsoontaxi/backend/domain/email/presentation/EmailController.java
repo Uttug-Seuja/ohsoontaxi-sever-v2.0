@@ -25,7 +25,7 @@ public class EmailController {
     @Operation(summary = "학교 Email로 인증 코드 보내기")
     @PostMapping
     public void sendJoinMail(@Valid @RequestBody EmailRequestDto emailRequestDto) {
-        emailService.sendMail(emailRequestDto, "email");
+        emailService.sendMail(emailRequestDto);
     }
 
     @SecurityRequirements
