@@ -32,7 +32,7 @@ public class EmailService implements EmailUtils{
 
     //email 보내기
     @Transactional
-    public void sendMail(EmailRequestDto emailRequestDto, String type) {
+    public void sendMail(EmailRequestDto emailRequestDto) {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
@@ -45,7 +45,7 @@ public class EmailService implements EmailUtils{
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
             mimeMessageHelper.setTo(emailMessage.getEmail()); // 메일 수신자
             mimeMessageHelper.setSubject(subject); // 메일 제목
-            mimeMessageHelper.setText(setContext(authNum, type), true); // 메일 본문 내용, HTML 여부
+            mimeMessageHelper.setText(setContext(authNum), true); // 메일 본문 내용, HTML 여부
             javaMailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
@@ -82,10 +82,10 @@ public class EmailService implements EmailUtils{
     }
 
     // thymeleaf를 통한 html 적용
-    private String setContext(String code, String type) {
+    private String setContext(String code) {
         Context context = new Context();
         context.setVariable("code", code);
-        return templateEngine.process(type, context);
+        return templateEngine.process("email", context);
     }
 
     //email 메세지 저장하기
