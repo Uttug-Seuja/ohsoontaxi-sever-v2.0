@@ -1,10 +1,8 @@
 package ohsoontaxi.backend.domain.user.presentation;
 
-import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import ohsoontaxi.backend.domain.user.presentation.dto.request.ChangeProfileRequest;
-import ohsoontaxi.backend.domain.user.presentation.dto.response.DeployTestDto;
 import ohsoontaxi.backend.domain.user.presentation.dto.response.UserProfileResponse;
 import ohsoontaxi.backend.domain.user.service.UserService;
 
@@ -34,9 +32,7 @@ public class UserController {
 
 
     @PostMapping("/save")
-    public DeployTestDto initUser(){
-
-        return new DeployTestDto();
-
+    public void saveUser(){
+        userService.saveUser();
     }
  }
