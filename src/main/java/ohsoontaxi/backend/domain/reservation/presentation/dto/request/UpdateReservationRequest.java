@@ -1,6 +1,8 @@
 package ohsoontaxi.backend.domain.reservation.presentation.dto.request;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -21,14 +23,17 @@ import java.util.List;
 @NoArgsConstructor
 public class UpdateReservationRequest {
 
-    @NotNull
+    @NotBlank
     @Size(min = 1, max = 18)
     private String title;
 
+    @NotBlank
     private String startPoint;
 
+    @NotBlank
     private String destination;
 
+    @Future
     private LocalDateTime departureDate;
 
     private Double startLatitude;
