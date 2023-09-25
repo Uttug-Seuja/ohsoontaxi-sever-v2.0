@@ -8,6 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UploadImageResponse {
 
-    @NotEmpty
     private final String imageUrl;
 }
