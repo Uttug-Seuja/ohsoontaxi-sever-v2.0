@@ -1,5 +1,6 @@
 package ohsoontaxi.backend.domain.credential.presentation.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -10,15 +11,15 @@ import ohsoontaxi.backend.global.common.user.Gender;
 @NoArgsConstructor
 public class RegisterRequest {
 
-    @NotEmpty
+    @NotBlank
     private String name;
 
-    @NotEmpty
+    @NotNull
     private Gender gender;
 
-    @NotEmpty
+    @NotNull
     private String profilePath;
 
-    @NotEmpty
+    @NotBlank
     private String shcEmail;
 }

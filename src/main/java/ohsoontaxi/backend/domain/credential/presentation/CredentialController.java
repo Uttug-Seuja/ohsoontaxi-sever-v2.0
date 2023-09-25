@@ -1,5 +1,6 @@
 package ohsoontaxi.backend.domain.credential.presentation;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ohsoontaxi.backend.domain.credential.presentation.dto.request.LoginRequestDto;
@@ -43,7 +44,7 @@ public class CredentialController {
     public AuthTokensResponse registerUser(
             @RequestParam("idToken") String token,
             @RequestParam("provider") OauthProvider oauthProvider,
-            @RequestBody RegisterRequest registerRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
+            @Valid @RequestBody RegisterRequest registerRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
         return credentialService.registerUserByOCIDToken(token, registerRequest, oauthProvider);
     }
 
@@ -58,7 +59,7 @@ public class CredentialController {
     //토큰 리프레쉬
     @PostMapping("/refresh")
     public AuthTokensResponse refreshingToken(
-            @RequestBody TokenRefreshRequest tokenRefreshRequest) {
+            @Valid @RequestBody TokenRefreshRequest tokenRefreshRequest) {
 
         return credentialService.tokenRefresh(tokenRefreshRequest.getRefreshToken());
     }

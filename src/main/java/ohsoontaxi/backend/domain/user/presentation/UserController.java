@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @PatchMapping("/profile")
-    public UserProfileResponse changeProfilePath(@RequestBody @Valid ChangeProfileRequest changeProfileRequest){
+    public UserProfileResponse changeProfilePath(@Valid @RequestBody ChangeProfileRequest changeProfileRequest){
         return userService.changeProfilePath(changeProfileRequest);
     }
 
