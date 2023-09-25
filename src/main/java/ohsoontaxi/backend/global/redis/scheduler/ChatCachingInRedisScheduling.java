@@ -27,7 +27,8 @@ public class ChatCachingInRedisScheduling {
     private final RedisTemplate<String, ChatMessageSaveDto> chatRedisTemplate;
 
     //@Scheduled(cron = "0 0 2 * * *")
-    @Scheduled(cron = "0 0/2 * * * *")
+    //@Scheduled(cron = "0 0/2 * * * *")
+    @Scheduled(cron = "0 0 0 1 * *")
     @Transactional
     public void chatCaching() {
         log.info("[Scheduling] redis chat caching start");
