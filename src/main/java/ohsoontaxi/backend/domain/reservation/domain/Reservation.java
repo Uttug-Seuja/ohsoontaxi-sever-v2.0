@@ -154,7 +154,6 @@ public class Reservation extends BaseEntity {
         }
 
     }
-
     public void checkReservationGender(){
 
         if(!(user.getGender().equals(gender) || gender.equals(Gender.ALL))){
