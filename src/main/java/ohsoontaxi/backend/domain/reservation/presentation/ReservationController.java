@@ -133,7 +133,6 @@ public class ReservationController {
         return reservationService.getRecommendWord();
     }
 
-
     @Operation(summary = "채팅방 조회")
     @GetMapping("/chat/room")
     public List<ChatRoomBriefInfoDto> getChatRoom(){
