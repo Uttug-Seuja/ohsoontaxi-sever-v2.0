@@ -140,4 +140,9 @@ public class ReservationController {
         return reservationService.getChatRoom();
     }
 
+    @GetMapping("/")
+    public void healthCheck(){
+
+    }
+
 }

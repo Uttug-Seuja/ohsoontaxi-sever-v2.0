@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/credentials/**","/swagger-ui/**", "/v3/api-docs/**", "/api/v1/email/**", "/api/v1/asset/save",
-                        "/api/v1/user/save", "/api/v1/asset/random", "/stomp/chat", "/user/save").permitAll()
+                        "/api/v1/user/save", "/api/v1/asset/random", "/stomp/chat", "/user/save","/api/v1/reservation/").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic().disable()
