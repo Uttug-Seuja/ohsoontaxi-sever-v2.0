@@ -36,7 +36,6 @@ public class ReservationController {
         return reservationService.createReservation(createReservationRequest);
     }
 
-
     @Operation(summary = "방 삭제")
     @DeleteMapping("/{id}")
     public void deleteGroup(@Parameter(description = "방 Id", in = PATH)
@@ -62,7 +61,6 @@ public class ReservationController {
             @PathVariable("id") Long reservationId) {
         return reservationService.getReservationDetailById(reservationId);
     }
-
 
     @Operation(summary = "방 리스트 조회")
     @GetMapping("/list")
