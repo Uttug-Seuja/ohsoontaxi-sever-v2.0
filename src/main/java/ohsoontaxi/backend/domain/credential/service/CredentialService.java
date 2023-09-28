@@ -161,6 +161,7 @@ public class CredentialService {
     public void logoutUser() {
         User user = userUtils.getUserFromSecurityContext();
         refreshTokenRedisEntityRepository.deleteById(user.getId().toString());
+        user.logout();
     }
 
     private void checkEmailApproved(String oauthProvider, String schEmail) {
