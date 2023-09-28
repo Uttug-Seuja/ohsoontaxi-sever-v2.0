@@ -3,20 +3,19 @@ package ohsoontaxi.backend.domain.notification.presentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import ohsoontaxi.backend.domain.notification.presentation.dto.request.RegisterFcmTokenRequest;
 import ohsoontaxi.backend.domain.notification.presentation.dto.response.QueryNotificationListResponseElement;
 import ohsoontaxi.backend.domain.notification.service.NotificationService;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
 
+@Tag(name = "알림", description = "알림 관련 API")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/notification")
