@@ -77,4 +77,6 @@ management:
     web:
       exposure:
         include: health, info, metrics, prometheus
+  server:
+    port: ${PROMETHEUS_PORT}
 
