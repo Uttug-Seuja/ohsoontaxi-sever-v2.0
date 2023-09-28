@@ -1,5 +1,9 @@
 package ohsoontaxi.backend.domain.credential.presentation;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+@Tag(name = "로그인", description = "로그인 관련 API")
 @RestController
 @RequestMapping("/api/v1/credentials")
 @RequiredArgsConstructor
@@ -30,8 +35,12 @@ public class CredentialController {
         return result;
     }
 
-    //id token 검증
+    @Operation(summary = "Id Token 검증")
     @GetMapping("/oauth/valid/register")
+    @Parameters({
+            @Parameter(name = "idToken", description = "idToken", required = true),
+            @Parameter(name = "provider", description = "idToken 제공자", required = true)
+    })
     public AvailableRegisterResponse valid(
             @RequestParam("idToken") String token,
             @RequestParam("provider") OauthProvider oauthProvider) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -39,8 +48,12 @@ public class CredentialController {
         return credentialService.getUserAvailableRegister(token, oauthProvider);
     }
 
-    //회원가입
+    @Operation(summary = "회원 가입")
     @PostMapping("/register")
+    @Parameters({
+            @Parameter(name = "idToken", description = "idToken", required = true),
+            @Parameter(name = "provider", description = "idToken 제공자", required = true)
+    })
     public AuthTokensResponse registerUser(
             @RequestParam("idToken") String token,
             @RequestParam("provider") OauthProvider oauthProvider,
@@ -48,7 +61,11 @@ public class CredentialController {
         return credentialService.registerUserByOCIDToken(token, registerRequest, oauthProvider);
     }
 
-    //로그인
+    @Operation(summary = "로그인")
+    @Parameters({
+            @Parameter(name = "idToken", description = "idToken", required = true),
+            @Parameter(name = "provider", description = "idToken 제공자", required = true)
+    })
     @PostMapping("/login")
     public AuthTokensResponse loginUser(
             @RequestParam("idToken") String token,
@@ -56,7 +73,7 @@ public class CredentialController {
         return credentialService.loginUserByOCIDToken(token, oauthProvider);
     }
 
-    //토큰 리프레쉬
+    @Operation(summary = "토큰 리프레쉬")
     @PostMapping("/refresh")
     public AuthTokensResponse refreshingToken(
             @Valid @RequestBody TokenRefreshRequest tokenRefreshRequest) {
@@ -64,7 +81,7 @@ public class CredentialController {
         return credentialService.tokenRefresh(tokenRefreshRequest.getRefreshToken());
     }
 
-    //로그아웃
+    @Operation(summary = "로그 아웃")
     @PostMapping("/logout")
     public void logout() {
         credentialService.logoutUser();
