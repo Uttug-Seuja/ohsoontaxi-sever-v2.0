@@ -69,4 +69,12 @@ springdoc:
     display-request-duration: true
   paths-to-match: /**
 
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
 
