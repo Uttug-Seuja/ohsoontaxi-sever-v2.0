@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(OhSoonException.class)
-    public ResponseEntity<ErrorResponse> bookMarkExceptionHandler(
+    public ResponseEntity<ErrorResponse> ohSoonTaxiExceptionHandler(
             OhSoonException e, HttpServletRequest request) {
 
         ErrorCode code = e.getErrorCode();
