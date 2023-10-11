@@ -21,5 +21,5 @@ public class RegisterRequest {
     private String profilePath;
 
     @NotBlank
-    private String shcEmail;
+    private String schEmail;
 }

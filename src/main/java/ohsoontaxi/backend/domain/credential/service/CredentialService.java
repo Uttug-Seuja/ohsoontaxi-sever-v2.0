@@ -83,9 +83,9 @@ public class CredentialService {
         OauthStrategy oauthStrategy = oauthFactory.getOauthstrategy(oauthProvider);
         OIDCDecodePayload oidcDecodePayload = oauthStrategy.getOIDCDecodePayload(token);
 
-        checkEmailApproved(oauthProvider.getValue(), registerUserRequest.getShcEmail());
+        checkEmailApproved(oauthProvider.getValue(), registerUserRequest.getSchEmail());
 
-        String email = checkNullEmail(oidcDecodePayload.getEmail(), registerUserRequest.getShcEmail());
+        String email = checkNullEmail(oidcDecodePayload.getEmail(), registerUserRequest.getSchEmail());
 
         Temperature temperature = temperatureUtils.createTemperature();
 
