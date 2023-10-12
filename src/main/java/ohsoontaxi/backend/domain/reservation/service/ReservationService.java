@@ -229,6 +229,7 @@ public class ReservationService implements ReservationUtils {
 
 
 
+    @Transactional
     public List<ChatRoomBriefInfoDto> getChatRoom(){
 
         Long currentUserId = SecurityUtils.getCurrentUserId();
