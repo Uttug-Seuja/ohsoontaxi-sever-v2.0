@@ -6,6 +6,8 @@ import ohsoontaxi.backend.domain.report.presentation.dto.request.CreateReportReq
 import ohsoontaxi.backend.domain.report.presentation.dto.request.UpdateProcessingStatusRequest;
 import ohsoontaxi.backend.domain.report.presentation.dto.response.ReportResponse;
 import ohsoontaxi.backend.domain.report.service.ReportService;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +25,7 @@ public class ReportController {
     }
 
     @PatchMapping("/process/{reportId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void updateProcessingStatus(
             @PathVariable("reportId") Long reportId,
             @Valid @RequestBody UpdateProcessingStatusRequest request) {
@@ -30,6 +33,7 @@ public class ReportController {
     }
 
     @GetMapping("/{reportId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ReportResponse getReport(@PathVariable("reportId") Long reportId) {
         return reportService.getReport(reportId);
     }
