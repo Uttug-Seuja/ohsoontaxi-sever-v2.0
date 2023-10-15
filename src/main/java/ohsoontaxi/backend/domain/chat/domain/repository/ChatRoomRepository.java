@@ -69,8 +69,6 @@ public class ChatRoomRepository {
         //채팅방 - 세션ID - 유저 아이디
         opsHashEnterRoom.put(CHAT_ROOM_ID_ + roomId, sessionId, email);
 
-        //opsHashEnterRoom.put("email","userId",SESSION_ID);
-
     }
 
 
@@ -82,7 +80,6 @@ public class ChatRoomRepository {
         return roomId;
     }
 
-    // TODO: 2023/08/21 방 퇴장시 세션id를 받지 않기
     public String disconnectWebsocketTest(String participationId,String roomId) {
         String sessionId = opsHashEnterRoom.get(SESSION_ID, participationId);
         opsHashEnterRoom.delete(CHAT_ROOM_ID_ + roomId, sessionId);
@@ -90,20 +87,16 @@ public class ChatRoomRepository {
         return roomId;
     }
 
-
-    //채팅 unsubscribe 할떄 ,
     public String leaveChatRoom(String sessionId) {
         String roomId = opsHashEnterRoom.get(SESSION_ID, sessionId);
         opsHashEnterRoom.delete(CHAT_ROOM_ID_ + roomId, sessionId);
         return roomId;
     }
 
-    // TODO: 2023/08/21 방 퇴장시 세션id를 받지 않기
     public void leaveChatRoomTest(String participationId,String roomId) {
         String sessionId = opsHashEnterRoom.get(SESSION_ID, participationId);
         opsHashEnterRoom.delete(CHAT_ROOM_ID_ + roomId, sessionId);
 
     }
-
 
 }

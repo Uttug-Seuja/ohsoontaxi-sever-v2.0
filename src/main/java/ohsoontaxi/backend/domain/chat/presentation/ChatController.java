@@ -29,7 +29,6 @@ public class ChatController {
     private final JwtTokenProvider jwtTokenProvider;
     private final ParticipationUtils participationUtils;
 
-
 //    @MessageMapping("/chat/message")
 //    public void message(ChatMessageDto chatMessageDto, @Header("Authorization") String rawToken){
 //
@@ -62,8 +61,6 @@ public class ChatController {
 
         String token = jwtTokenProvider.resolveTokenWeb(chatMessageRequest.getAccessToken());
 
-        log.info("token={}",token);
-
         jwtTokenProvider.validateToken(token);
 
         String userId = jwtTokenProvider.getUserId(token);
@@ -82,7 +79,6 @@ public class ChatController {
                 .userId(participation.getUser().getId())
                 .participationId(participation.getId())
                 .build();
-
 
         redisPublisher.publish(channelTopic,message);
         chatRedisCacheService.addChat(message);

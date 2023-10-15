@@ -12,5 +12,4 @@ public interface ReservationRepositoryCustom {
     Slice<Reservation> searchBySlice(String word, Pageable pageable);
 
 
-
 }
