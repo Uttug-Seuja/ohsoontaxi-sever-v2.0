@@ -23,7 +23,6 @@ public class ChatDataController {
     @PostMapping("/{reservationId}")
     public ChatResponse getChatting(@PathVariable Long reservationId, @RequestBody(required = false) ChatPagingRequest chatPagingRequest){
 
-        //Cursor 존재하지 않을 경우,현재시간을 기준으로 paging
         if(chatPagingRequest ==null|| chatPagingRequest.getCursor()==null || chatPagingRequest.getCursor().equals("")){
             chatPagingRequest = ChatPagingRequest.builder()
                     .cursor( LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS")))

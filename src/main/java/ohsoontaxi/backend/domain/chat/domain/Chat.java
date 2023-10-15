@@ -39,7 +39,6 @@ public class Chat implements Serializable {
 
     private String createdAt;
 
-
     public static Chat of(ChatMessageSaveDto chatMessageSaveDto, Reservation reservation){
 
         return Chat.builder()

@@ -13,13 +13,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ChatRepository extends JpaRepository<Chat,Long> {
-
     Slice<Chat> findAllByCreatedAtBeforeAndReservationIdOrderByCreatedAtDesc(String cursorCreatedAt, Long reservationId, Pageable pageable);
-
     List<Chat> findAllByCreatedAtAfterOrderByCreatedAtDesc(String cursorCreatedAt);
-
     List<Chat> findAllByReservationIsNotNullAndCreatedAtAfterOrderByCreatedAtDesc(String cursorCreatedAt);
-
     @Modifying(flushAutomatically = true)
     @Query("update Chat c set c.reservation = null where c.reservation.id = :reservationId")
     void updateReservationNull(@Param("reservationId") Long reservationId);
