@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ohsoontaxi.backend.domain.credential.presentation.dto.request.LoginRequestDto;
 import ohsoontaxi.backend.domain.credential.presentation.dto.request.RegisterRequest;
 import ohsoontaxi.backend.domain.credential.presentation.dto.request.TokenRefreshRequest;
 import ohsoontaxi.backend.domain.credential.presentation.dto.response.AccessTokenDto;

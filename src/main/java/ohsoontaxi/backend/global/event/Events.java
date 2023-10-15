@@ -8,7 +8,6 @@ public class Events {
     private static ThreadLocal<ApplicationEventPublisher> publisherLocal = new ThreadLocal<>();
 
     public static void raise(DomainEvent event) {
-        log.info("get 호출");
         if (event == null) return;
 
         if (publisherLocal.get() != null) {
@@ -17,7 +16,6 @@ public class Events {
     }
 
     static void setPublisher(ApplicationEventPublisher publisher) {
-        log.info("set");
         publisherLocal.set(publisher);
     }
 

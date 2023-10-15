@@ -21,7 +21,6 @@ public class EventPublisherAspect implements ApplicationEventPublisherAware {
 
         Boolean appliedValue = appliedLocal.get();
         boolean nested = false;
-        log.info("appliedValue1 = {}", appliedValue);
         if (appliedValue != null && appliedValue) {
             nested = true;
         } else {
@@ -31,14 +30,12 @@ public class EventPublisherAspect implements ApplicationEventPublisherAware {
 
         if (!nested) Events.setPublisher(publisher);
 
-        log.info("nested = {}", nested);
         try {
             return joinPoint.proceed();
         } finally {
             if (!nested) {
                 Events.reset();
                 appliedLocal.remove();
-                log.info("appliedValue2 = {}", appliedLocal.get());
             }
         }
     }

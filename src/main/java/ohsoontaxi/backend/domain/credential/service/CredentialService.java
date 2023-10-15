@@ -70,10 +70,9 @@ public class CredentialService {
     }
 
     public AvailableRegisterResponse getUserAvailableRegister(String token, OauthProvider oauthProvider) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        log.info("service token = {}",token);
-        OauthStrategy oauthstrategy = oauthFactory.getOauthstrategy(oauthProvider); //provider에 맞는 strategy 꺼내기
-        OIDCDecodePayload oidcDecodePayload = oauthstrategy.getOIDCDecodePayload(token); //공개 키 가져와서 idtoken 검증
-        Boolean isRegistered = !checkUserCanRegister(oidcDecodePayload, oauthProvider); //공개 키로 회원가입 유저인지 확인(true 이미 회원가입한 회원)
+        OauthStrategy oauthstrategy = oauthFactory.getOauthstrategy(oauthProvider);
+        OIDCDecodePayload oidcDecodePayload = oauthstrategy.getOIDCDecodePayload(token);
+        Boolean isRegistered = !checkUserCanRegister(oidcDecodePayload, oauthProvider);
         return new AvailableRegisterResponse(isRegistered);
     }
 
