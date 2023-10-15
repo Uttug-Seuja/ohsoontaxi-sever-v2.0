@@ -26,8 +26,12 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        #default_batch_fetch_size: 100
         format_sql: ture
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
 
 aws:
   access-key: ${AWS_ACCESS_KEY}
