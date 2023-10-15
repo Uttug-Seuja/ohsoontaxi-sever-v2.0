@@ -19,7 +19,6 @@ public class DeviceTokenServiceEventHandler {
             classes = DeviceTokenEvent.class,
             phase = TransactionPhase.BEFORE_COMMIT)
     public void deleteFcmToken(DeviceTokenEvent event) {
-        log.info("listner 호출");
         deviceTokenRepository.deleteByUser(event.getUser());
     }
 }

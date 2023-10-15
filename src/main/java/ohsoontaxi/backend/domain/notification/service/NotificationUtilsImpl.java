@@ -46,19 +46,14 @@ public class NotificationUtilsImpl implements NotificationUtils{
                                        ContentMessage contentMessage) {
         List<DeviceToken> deviceTokens = notificationRepository.findTokenByReservationIdNeUserId(
                 reservation.getId(), user.getId());
-        for(DeviceToken deviceToken : deviceTokens) {
-            log.info(deviceToken.getDeviceId());
-        }
         List<String> tokens = getFcmTokens(deviceTokens);
 
         String title = getTitle(titleMessage);
-        log.info(title);
 
         String content = user.getName() +
                 contentMessage.getContent1() +
                 reservation.getTitle() +
                 contentMessage.getContent2();
-        log.info(content);
 
         recordNotification(
                 deviceTokens,
@@ -81,15 +76,12 @@ public class NotificationUtilsImpl implements NotificationUtils{
         List<DeviceToken> deviceTokens = notificationRepository.findTokenByReservationId(
                 reservation.getId());
         List<String> tokens = getFcmTokens(deviceTokens);
-        log.info(tokens.get(0).toString());
 
         String title = getTitle(titleMessage);
-        log.info(title);
 
         String content = contentMessage.getContent1() +
                 reservation.getTitle() +
                 contentMessage.getContent2();
-        log.info(content);
 
         recordNotification(
                 deviceTokens,

@@ -26,7 +26,6 @@ public class JwtOIDCProvider {
     public String getKidFromUnsignedTokenHeader(String token, String iss, String aud) {
 
         String kid = (String) getUnsignedTokenClaims(token, iss, aud).getHeader().get(KID);
-        log.info("kid = {}",kid);
         return kid;
     }
 
@@ -37,7 +36,6 @@ public class JwtOIDCProvider {
                     .requireIssuer(iss)
                     .build()
                     .parseClaimsJwt(getUnsignedToken(token));
-            log.info("headerClaimsJwt = {}", headerClaimsJwt);
             return headerClaimsJwt;
 
         } catch (ExpiredJwtException e) {
@@ -52,7 +50,6 @@ public class JwtOIDCProvider {
         String[] splitToken = token.split("\\.");
         if (splitToken.length != 3) throw InvalidTokenException.EXCEPTION;
         String unsignedToken = splitToken[0] + "." + splitToken[1] + ".";
-        log.info("unsignedToken = {}",unsignedToken);
         return unsignedToken;
     }
 

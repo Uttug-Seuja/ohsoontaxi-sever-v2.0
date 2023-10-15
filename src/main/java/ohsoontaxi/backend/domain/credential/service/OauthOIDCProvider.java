@@ -21,16 +21,13 @@ public class OauthOIDCProvider {
 
     public OIDCDecodePayload getPayloadFromIdToken(
             String token, String iss, String aud, OIDCPublicKeysResponse oidcPublicKeysResponse) {
-        log.info("provider token = {}",token);
         String kid = getKidFromUnsignedIdToken(token, iss, aud);
-        log.info("provider kid = {}",kid);
 
         OIDCPublicKeyDto oidcPublicKeyDto =
                 oidcPublicKeysResponse.getKeys().stream()
                         .filter(o -> o.getKid().equals(kid))
                         .findFirst()
                         .orElseThrow();
-        log.info("oidcPublicKeyDto={}",oidcPublicKeyDto);
 
         return (OIDCDecodePayload)
                 jwtOIDCProvider.getOIDCTokenBody(
