@@ -44,14 +44,14 @@ public class TemperatureService implements TemperatureUtils{
         updateTemperatureImage(currentUserTemperature);
     }
 
-    private static double temperatureCalculation(Integer reportedNum, Integer participationNum) {
-        int penalty = reportedNum * (reportedNum + 1) / 2;
-        int bonus = 1 + participationNum / 10;
+    private static double temperatureCalculation(Integer reportedCount, Integer participationCount) {
+        int penalty = reportedCount * (reportedCount + 1) / 2;
+        int bonus = 1 + participationCount / 10;
 
-        double modifiedTemperature = BASE_TEMPERATURE - ((double) (penalty * reportedNum) / 10) + ((double) (bonus * participationNum) / 10);
-
-        return modifiedTemperature;
+        double modifiedTemperature = BASE_TEMPERATURE - (penalty * reportedCount / 10.0) + (bonus * participationCount / 10.0);
+        return Math.max(0, modifiedTemperature);
     }
+
 
     private static void updateTemperatureImage(Temperature temperature) {
         Double currentTemperature = temperature.getCurrentTemperature();
