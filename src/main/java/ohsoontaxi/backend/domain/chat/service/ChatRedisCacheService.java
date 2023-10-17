@@ -24,6 +24,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -71,6 +72,7 @@ public class ChatRedisCacheService {
 
 
     //chat_data 조회
+    @Transactional
     public ChatResponse getChatsFromRedis(Long reservationId, ChatPagingRequest chatPagingRequest) {
 
         Long currentUserId = SecurityUtils.getCurrentUserId();

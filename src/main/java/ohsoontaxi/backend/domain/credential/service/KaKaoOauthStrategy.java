@@ -18,9 +18,7 @@ public class KaKaoOauthStrategy implements OauthStrategy{
     private static final String ISSUER = "https://kauth.kakao.com";
 
     public OIDCDecodePayload getOIDCDecodePayload(String token) {
-        log.info("strategy token = {}",token);
         OIDCPublicKeysResponse oidcPublicKeysResponse = kakaoOauthClient.getKakaoOIDCOpenKeys(); //@feign을 이용해서 공개키 배열 가져오기(keys 리스트)
-        log.info("oidcPublicKeysResponse={}",oidcPublicKeysResponse);
         return oauthOIDCProvider.getPayloadFromIdToken(
                 token, ISSUER, oauthProperties.getKakaoAppId(), oidcPublicKeysResponse); //id token 검증
     }

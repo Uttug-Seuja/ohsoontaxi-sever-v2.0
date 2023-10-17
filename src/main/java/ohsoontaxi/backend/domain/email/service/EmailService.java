@@ -30,7 +30,6 @@ public class EmailService implements EmailUtils{
     private final SpringTemplateEngine templateEngine;
     private static final String subject = "[오순택] 이메일 인증을 위한 인증 코드 발송";
 
-    //email 보내기
     @Transactional
     public void sendMail(EmailRequestDto emailRequestDto) {
 
@@ -41,9 +40,9 @@ public class EmailService implements EmailUtils{
         String code = createEmailMessage(emailRequestDto);
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-            mimeMessageHelper.setTo(emailRequestDto.getEmail()); // 메일 수신자
-            mimeMessageHelper.setSubject(subject); // 메일 제목
-            mimeMessageHelper.setText(setContext(code), true); // 메일 본문 내용, HTML 여부
+            mimeMessageHelper.setTo(emailRequestDto.getEmail());
+            mimeMessageHelper.setSubject(subject);
+            mimeMessageHelper.setText(setContext(code), true);
             javaMailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
@@ -51,7 +50,6 @@ public class EmailService implements EmailUtils{
         }
     }
 
-    //code 맞는지 확인
     @Transactional
     public void checkCodeCorrect(CodeRequestDto codeRequestDto){
         EmailMessage emailMessage = findEmailMessageOauthAndEmail(codeRequestDto.getOauthProvider(), codeRequestDto.getEmail());
@@ -65,7 +63,6 @@ public class EmailService implements EmailUtils{
         emailMessage.changeStateTrue();
     }
 
-    // 인증번호 및 임시 비밀번호 생성 메서드
     private String createCode() {
         Random random = new Random();
         StringBuffer key = new StringBuffer();
@@ -82,14 +79,12 @@ public class EmailService implements EmailUtils{
         return key.toString();
     }
 
-    // thymeleaf를 통한 html 적용
     private String setContext(String code) {
         Context context = new Context();
         context.setVariable("code", code);
         return templateEngine.process("email", context);
     }
 
-    //넘어온 email이 sch형식이 맞는지 확인
     private void checkEmailAddress(String email){
         String ext = email.substring(email.lastIndexOf("@") + 1);
         if (!(ext.equals("sch.ac.kr"))) {
@@ -97,7 +92,6 @@ public class EmailService implements EmailUtils{
         }
     }
 
-    //code 5분 넘었는지 확인
     private void checkCodeValid(LocalDateTime lastModifiedDate) {
         if (lastModifiedDate.plusMinutes(5).isBefore(LocalDateTime.now())){
             throw CodeExpiredException.EXCEPTION;

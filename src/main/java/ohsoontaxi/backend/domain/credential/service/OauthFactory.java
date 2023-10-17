@@ -15,7 +15,6 @@ public class OauthFactory {
 
     public OauthStrategy getOauthstrategy(OauthProvider oauthProvider) {
 
-        log.info("OauthFactory = {}",oauthProvider);
         return oauthStrategyMap.get(oauthProvider.getValue());
     }
 }

@@ -17,7 +17,6 @@ import static ohsoontaxi.backend.domain.reservation.domain.QReservation.*;
 public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-
     @Override
     public Slice<Reservation> keywordBySlice(String word,Pageable pageable) {
         List<Reservation> reservations = queryFactory
@@ -52,9 +51,6 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
         // 무한 스크롤 처리
         return new SliceImpl<>(reservations, pageable, hasNext(reservations,pageable));
     }
-
-
-
 
     // 무한 스크롤 방식 처리하는 메서드
     private boolean hasNext(List<Reservation> results,Pageable pageable) {
