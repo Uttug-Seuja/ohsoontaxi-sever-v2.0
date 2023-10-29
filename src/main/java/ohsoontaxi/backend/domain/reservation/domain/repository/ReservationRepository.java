@@ -14,23 +14,18 @@ import java.util.Optional;
 public interface ReservationRepository extends JpaRepository<Reservation, Long>,ReservationRepositoryCustom {
     @Override
     Optional<Reservation> findById(Long id);
-    Slice<Reservation> findSliceBy(Pageable pageable);
+
+    Slice<Reservation> findSliceByOrderByLastModifyDateDesc(Pageable pageable);
 
     List<Reservation> findTop5ByOrderByIdDesc();
 
     @Query("select distinct r from Reservation r"+
             " join fetch r.participations p"+
-            " where p.user.id = :userId order by r.createdDate desc")
+            " where p.user.id = :userId order by r.lastModifyDate desc")
     List<Reservation> findParticipatedReservation(@Param("userId") Long userId);
 
     @Query("select distinct r from Reservation r"+
-            " join fetch r.participations p"+
-            " where p.user.id = :userId order by r.createdDate desc")
-    Slice<Reservation> findParticipatedReservationTest(@Param("userId") Long userId);
-
-    @Query("select distinct r from Reservation r"+
-            " where r.user.id = :userId order by r.createdDate desc")
+            " where r.user.id = :userId order by r.lastModifyDate desc")
     List<Reservation> findReservedByMe(@Param("userId") Long userId);
-
 
 }

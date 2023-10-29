@@ -136,7 +136,7 @@ public class ReservationService implements ReservationUtils {
     public Slice<ReservationBriefInfoDto> findAllReservation(PageRequest pageRequest) {
 
         Slice<Reservation> sliceReservation =
-                reservationRepository.findSliceBy(pageRequest);
+                reservationRepository.findSliceByOrderByLastModifyDateDesc(pageRequest);
 
         return sliceReservation.map(reservation -> new ReservationBriefInfoDto(reservation.getReservationBaseInfoVo()));
     }
