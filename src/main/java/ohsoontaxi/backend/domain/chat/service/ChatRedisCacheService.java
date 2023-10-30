@@ -1,7 +1,6 @@
 package ohsoontaxi.backend.domain.chat.service;
 
 
-
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +41,6 @@ public class ChatRedisCacheService {
 
     private final ChatUtils chatUtils;
     public static final String NEW_CHAT = "NEW_CHAT";
-    public static final String OUT_USER = "탈퇴한 회원";
     public static final String USERNAME_PROFILE = "USERNAME_PROFILE";
 
     private final RedisTemplate<String, Object> redisTemplate;
@@ -95,8 +93,6 @@ public class ChatRedisCacheService {
         //마지막 chat_data cursor Rank 조회
         Long rank = zSetOperations.reverseRank(CHAT_SORTED_SET_ + reservationId,  cursorDto);
 
-        log.info("rank={}",rank);
-
         //Cursor 없을 경우 -> 최신채팅 조회
         if (rank == null)
             rank = 0L;
@@ -141,18 +137,12 @@ public class ChatRedisCacheService {
 
     public String findProfileById(String userId) {
 
-        log.info("userId={}",userId);
-
         String profile = (String) roomRedisTemplate.opsForHash().get(USERNAME_PROFILE, userId);
-
-        log.info("profile={}",profile);
 
         if (profile != null)
             return profile;
 
         User user = userUtils.getUserById(Long.valueOf(userId));
-
-        log.info("email={}",userId);
 
         roomRedisTemplate.opsForHash().put(USERNAME_PROFILE, userId, user.getProfilePath());
 
