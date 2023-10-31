@@ -137,11 +137,6 @@ public class Reservation extends BaseEntity {
 
     public void changeReservationStatus(){
 
-        if(departureDate.isBefore(LocalDateTime.now())){
-            reservationStatus = ReservationStatus.DEADLINE;
-            return;
-        }
-
         switch (currentNum){
             case 1, 2:
                 reservationStatus = ReservationStatus.POSSIBLE;
@@ -153,6 +148,10 @@ public class Reservation extends BaseEntity {
                 reservationStatus = ReservationStatus.DEADLINE;
         }
 
+    }
+
+    public void changeReservationStatusToDeadLine(){
+        reservationStatus = ReservationStatus.DEADLINE;
     }
     public void checkReservationGender(){
 

@@ -2,6 +2,7 @@ package ohsoontaxi.backend.domain.reservation.service;
 
 
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ohsoontaxi.backend.domain.asset.service.AssetUtils;
@@ -33,6 +34,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +59,7 @@ public class ReservationService implements ReservationUtils {
     private final RedisTemplate<String, String> roomRedisTemplate;
     private final NotificationReservationUtils notificationReservationUtils;
     private final NotificationUtils notificationUtils;
+    private final EntityManager entityManager;
 
 
     @PostConstruct
@@ -131,9 +134,13 @@ public class ReservationService implements ReservationUtils {
     }
 
 
-
-    // 가까운 순서대로 페이징 해서 가져오기
     public Slice<ReservationBriefInfoDto> findAllReservation(PageRequest pageRequest) {
+
+        List<Reservation> reservations = reservationRepository.findByDepartureDateBefore(LocalDateTime.now());
+
+        reservations.stream().forEach(r -> r.changeReservationStatusToDeadLine());
+
+        entityManager.flush();
 
         Slice<Reservation> sliceReservation =
                 reservationRepository.findSliceByOrderByLastModifyDateDesc(pageRequest);
