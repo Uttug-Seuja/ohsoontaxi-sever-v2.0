@@ -9,6 +9,7 @@ import ohsoontaxi.backend.domain.participation.domain.Participation;
 import ohsoontaxi.backend.domain.participation.exception.GenderException;
 import ohsoontaxi.backend.domain.reservation.domain.vo.ReservationBaseInfoVo;
 import ohsoontaxi.backend.domain.reservation.exception.NotHostException;
+import ohsoontaxi.backend.domain.reservation.exception.PastReservationDeleteException;
 import ohsoontaxi.backend.domain.reservation.service.dto.UpdateReservationDto;
 import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
@@ -127,6 +128,12 @@ public class Reservation extends BaseEntity {
         }
     }
 
+    public void validPastReservation(){
+        if(departureDate.isBefore(LocalDateTime.now())){
+            throw PastReservationDeleteException.EXCEPTION;
+        }
+    }
+
     public Boolean checkUserIsHost(Long id) {
         return user.getId().equals(id);
     }
@@ -134,6 +141,8 @@ public class Reservation extends BaseEntity {
     public void addCurrentNum(){this.currentNum++;}
 
     public void subtractCurrentNum(){this.currentNum--;}
+
+
 
     public void changeReservationStatus(){
 
