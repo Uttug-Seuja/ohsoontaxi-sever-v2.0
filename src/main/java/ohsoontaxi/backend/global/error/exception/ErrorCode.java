@@ -17,6 +17,7 @@ public enum ErrorCode {
     RESERVATION_STATUS_EXCEPTION(400, "마감인 게시글 입니다."),
     IS_HOST_EXCEPTION(400, "방장입니다."),
     NOTIFICATION_FCM_TOKEN_INVALID(400, "FCM Token이 유효하지 않습니다."),
+    PAST_RESERVATION_EXCEPTION(400, "시간이 지난 게시물은 삭제할 수 없습니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_TOKEN(401, "토큰이 유효하지 않습니다."),
@@ -32,6 +33,7 @@ public enum ErrorCode {
     NOTIFICATION_RESERVATION_NOT_FOUND(404, "해당 예약 알림을 찾을 수 없습니다."),
     NOTIFICATION_NOT_FOUND(404, "해당 알림을 찾을 수 없습니다."),
     NOTIFICATION_RECEIVER_NOT_FOUND(404, "해당 알림을 받은 사용자가 없습니다."),
+
 
     /* 403 */
     REGISTER_EXPIRED_TOKEN(403,"만료된 리프레쉬 토큰입니다."),

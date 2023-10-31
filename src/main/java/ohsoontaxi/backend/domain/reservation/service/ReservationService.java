@@ -92,6 +92,8 @@ public class ReservationService implements ReservationUtils {
 
         reservation.validUserIsHost(user.getId());
 
+        reservation.validPastReservation();
+
         notificationUtils.sendNotificationNoUser(user, reservation,
                 TitleMessage.RESERVATION_DELETE, ContentMessage.RESERVATION_DELETE);
 
@@ -176,7 +178,6 @@ public class ReservationService implements ReservationUtils {
         return reservations.map(reservation -> new KeywordDto(reservation.getReservationBaseInfoVo()));
     }
 
-
     public Slice<ReservationBriefInfoDto> search(String word, Pageable pageable){
 
         Slice<Reservation> reservations = reservationRepository.searchBySlice(word, pageable);
@@ -222,10 +223,6 @@ public class ReservationService implements ReservationUtils {
                 reservation.checkUserIsHost(currentUserId));
     }
 
-//    private ChatRoomBriefInfoDto getChatRoomResponse(Participation participation) {
-//        return new ChatRoomBriefInfoDto(
-//                participation.getReservation().getReservationBaseInfoVo(), participation);
-//    }
 
     @Override
     public Reservation queryReservation(Long id) {
