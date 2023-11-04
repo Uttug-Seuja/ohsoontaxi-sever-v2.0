@@ -18,11 +18,8 @@ public class FcmService {
         MulticastMessage multicast =
                 MulticastMessage.builder()
                         .addAllTokens(tokenList)
-                        .setNotification(
-                                Notification.builder()
-                                        .setTitle(title)
-                                        .setBody(content)
-                                        .build())
+                        .putData("title", title)
+                        .putData("content", content)
                         .setApnsConfig(
                                 ApnsConfig.builder()
                                         .setAps(Aps.builder().setSound("default").build())

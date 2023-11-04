@@ -66,25 +66,25 @@ public class UserService {
         Temperature temperature10 = temperatureUtils.createTemperature();
 
         User user1 = User.createUser("KAKAO", "123115123", "이훈일", "hunil9978@gmail.com",
-                "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7C51e20850-542c-4d73-9a35-7ae98375f5c6.jpeg", Gender.MAN, temperature1);
+                "https://ohsoonbucket.s3.ap-northeast-2.amazonaws.com/image/1%7C107648f1-9d4a-4f4b-bec6-69a7e911af9a.jpeg", Gender.MAN, temperature1);
         User user2 = User.createUser("KAKAO", "112398759", "김동근", "tpwnsdl@gmail.com",
-                "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7C51e20850-542c-4d73-9a35-7ae98375f5c6.jpeg", Gender.MAN, temperature2);
+                "https://ohsoonbucket.s3.ap-northeast-2.amazonaws.com/image/1%7C107648f1-9d4a-4f4b-bec6-69a7e911af9a.jpeg", Gender.MAN, temperature2);
         User user3 = User.createUser("GOOGLE", "903589085", "강구영", "90000@gmail.com",
-                "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7Cae97fa26-ede4-451e-8fa3-adaea0c24c9e.jpeg", Gender.MAN, temperature3);
+                "https://ohsoonbucket.s3.ap-northeast-2.amazonaws.com/image/1%7C1eec6834-8c60-464e-8c02-ae5d8116ba85.jpeg", Gender.MAN, temperature3);
         User user4 = User.createUser("KAKAO", "230984738", "방시혁", "gungungun@gmail.com",
-                "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7Cae97fa26-ede4-451e-8fa3-adaea0c24c9e.jpeg", Gender.MAN, temperature4);
+                "https://ohsoonbucket.s3.ap-northeast-2.amazonaws.com/image/1%7C1eec6834-8c60-464e-8c02-ae5d8116ba85.jpeg", Gender.MAN, temperature4);
         User user5 = User.createUser("GOOGLE", "123677655", "김찬우", "chanwoo99@gmail.com",
-                "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7Ca603afbc-cfc0-4d15-8c14-51b7c2cf674a.jpeg", Gender.MAN, temperature5);
+                "https://ohsoonbucket.s3.ap-northeast-2.amazonaws.com/image/1%7C46f4fcf7-744a-457c-8f64-7b7e159a49cd.jpeg", Gender.MAN, temperature5);
         User user6 = User.createUser("KAKAO", "123677655", "하재은", "jaeajea@gmail.com",
-                "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7Ca603afbc-cfc0-4d15-8c14-51b7c2cf674a.jpeg", Gender.WOMAN, temperature6);
+                "https://ohsoonbucket.s3.ap-northeast-2.amazonaws.com/image/1%7C46f4fcf7-744a-457c-8f64-7b7e159a49cd.jpeg", Gender.WOMAN, temperature6);
         User user7 = User.createUser("KAKAO", "123130394", "김은지", "enujiqqq@gmail.com",
-                "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7C737421e7-e595-4349-9ecb-d2363e821463.jpeg", Gender.WOMAN, temperature7);
+                "https://ohsoonbucket.s3.ap-northeast-2.amazonaws.com/image/1%7C9f644f39-1929-48fb-bee8-6319c95a53bc.jpeg", Gender.WOMAN, temperature7);
         User user8 = User.createUser("GOOGLE", "123130394", "김미자", "mijada@gmail.com",
-                "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7C737421e7-e595-4349-9ecb-d2363e821463.jpeg", Gender.WOMAN, temperature8);
+                "https://ohsoonbucket.s3.ap-northeast-2.amazonaws.com/image/1%7C9f644f39-1929-48fb-bee8-6319c95a53bc.jpeg", Gender.WOMAN, temperature8);
         User user9 = User.createUser("KAKAO", "123130394", "박미리", "parkmiri@gmail.com",
-                "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7C737421e7-e595-4349-9ecb-d2363e821463.jpeg", Gender.WOMAN, temperature9);
+                "https://ohsoonbucket.s3.ap-northeast-2.amazonaws.com/image/1%7Cd782da88-cc95-42b5-8233-416891e875a2.jpeg", Gender.WOMAN, temperature9);
         User user10 = User.createUser("GOOGLE", "123677655", "이영희", "younghee@gmail.com",
-                "https://ohsoontaxi.s3.ap-northeast-2.amazonaws.com/1%7Ca603afbc-cfc0-4d15-8c14-51b7c2cf674a.jpeg", Gender.WOMAN, temperature10);
+                "https://ohsoonbucket.s3.ap-northeast-2.amazonaws.com/image/1%7Cd782da88-cc95-42b5-8233-416891e875a2.jpeg", Gender.WOMAN, temperature10);
 
         em.persist(user1);
         em.persist(user2);
