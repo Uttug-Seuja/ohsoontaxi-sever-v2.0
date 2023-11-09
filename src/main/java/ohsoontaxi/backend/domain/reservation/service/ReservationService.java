@@ -59,7 +59,7 @@ public class ReservationService implements ReservationUtils {
     private final RedisTemplate<String, String> roomRedisTemplate;
     private final NotificationReservationUtils notificationReservationUtils;
     private final NotificationUtils notificationUtils;
-    private final EntityManager entityManager;
+    //private final EntityManager entityManager;
 
 
     @PostConstruct
@@ -136,13 +136,12 @@ public class ReservationService implements ReservationUtils {
     }
 
 
+    @Transactional
     public Slice<ReservationBriefInfoDto> findAllReservation(PageRequest pageRequest) {
 
         List<Reservation> reservations = reservationRepository.findByDepartureDateBefore(LocalDateTime.now());
 
         reservations.stream().forEach(r -> r.changeReservationStatusToDeadLine());
-
-        entityManager.flush();
 
         Slice<Reservation> sliceReservation =
                 reservationRepository.findSliceByOrderByLastModifyDateDesc(pageRequest);
