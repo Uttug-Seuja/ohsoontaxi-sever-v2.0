@@ -37,7 +37,7 @@ public class Temperature {
     public static Temperature createTemperature() {
         return builder()
                 .currentTemperature(36.5)
-                .temperatureImage("image")
+                .temperatureImage("https://ohsoonbucket.s3.ap-northeast-2.amazonaws.com/image/1%7Cb34fae75-7946-4e5c-8176-5f7a63dcc120.png")
                 .reportedNum(0)
                 .participationNum(0)
                 .build();
