@@ -1,4 +1,6 @@
 # ohsoontaxi-sever-v2.0
+---
+![image1](https://github.com/Uttug-Seuja/ohsoontaxi-sever-v2.0/assets/104710245/3d5839e8-da30-4fda-bc8c-cf41152717a2)
 
 
 **##커밋 메세지**  
