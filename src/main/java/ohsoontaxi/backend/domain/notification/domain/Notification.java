@@ -7,7 +7,6 @@ import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.global.database.BaseEntity;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,8 +25,6 @@ public class Notification extends BaseEntity {
     private String title;
 
     private String content;
-
-    private LocalDateTime reservedAt;
 
     @JoinColumn(name = "reservation_id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -72,25 +69,4 @@ public class Notification extends BaseEntity {
                 .createdDate(getCreatedDate())
                 .build();
     }
-
-    public static Notification of(
-            String title,
-            String content,
-            LocalDateTime reservedAt,
-            Reservation reservation) {
-        return Notification.builder()
-                .title(title)
-                .content(content)
-                .reservedAt(reservedAt)
-                .reservation(reservation)
-                .build();
-    }
-
-    public void addReceiver(DeviceToken deviceToken) {
-        this.receivers.add(new NotificationReceiver(
-                this,
-                User.of(deviceToken.getUserId()),
-                deviceToken.getToken()));
-    }
-
 }
