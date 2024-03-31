@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ohsoontaxi.backend.domain.credential.event.LogoutUserEvent;
 import ohsoontaxi.backend.domain.notification.event.DeviceTokenEvent;
 import ohsoontaxi.backend.domain.temperature.domain.Temperature;
 import ohsoontaxi.backend.domain.user.domain.vo.UserInfoVO;
@@ -97,16 +96,7 @@ public class User extends BaseEntity {
     }
 
     public void logout() {
-        LogoutUserEvent logoutUserEvent = LogoutUserEvent.builder().userId(id).build();
-        Events.raise(logoutUserEvent);
-
-        handleDeleteDeviceToken();
-    }
-
-    private void handleDeleteDeviceToken() {
         DeviceTokenEvent deviceTokenEvent = new DeviceTokenEvent(User.of(id));
         Events.raise(deviceTokenEvent);
     }
-
-
 }
