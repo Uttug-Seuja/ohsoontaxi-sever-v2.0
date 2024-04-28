@@ -39,10 +39,22 @@ public class CredentialController {
         return new OauthLoginLinkResponse(credentialService.getOauthLink(OauthProvider.KAKAO));
     }
 
+    @Operation(summary = "카카오 accessToken, idToken 받기 (서버 테스트용)")
+    @GetMapping("/oauth/kakao")
+    public AfterOauthResponse kakaoAuth(OauthCodeRequest oauthCodeRequest) {
+        return credentialService.getTokenToCode(OauthProvider.KAKAO, oauthCodeRequest.getCode());
+    }
+
     @Operation(summary = "구글 인가 코드 받기 (서버 테스트용)")
     @GetMapping("/oauth/link/google")
     public OauthLoginLinkResponse getGoogleOauthLink() {
         return new OauthLoginLinkResponse(credentialService.getOauthLink(OauthProvider.GOOGLE));
+    }
+
+    @Operation(summary = "구글 accessToken, idToken 받기 (서버 테스트용)")
+    @GetMapping("/oauth/google")
+    public AfterOauthResponse googleAuth(OauthCodeRequest oauthCodeRequest) {
+        return credentialService.getTokenToCode(OauthProvider.GOOGLE, oauthCodeRequest.getCode());
     }
 
     @Operation(summary = "Id Token 검증")

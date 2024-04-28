@@ -51,6 +51,12 @@ public class CredentialService {
         return oauthStrategy.getOauthLink();
     }
 
+    public AfterOauthResponse getTokenToCode(OauthProvider oauthProvider, String code) {
+        OauthStrategy oauthStrategy = oauthFactory.getOauthstrategy(oauthProvider);
+        OauthTokenInfoDto oauthToken = oauthStrategy.getOauthToken(code);
+        return new AfterOauthResponse(oauthToken.getIdToken(),oauthToken.getAccessToken());
+    }
+
     public AvailableRegisterResponse getUserAvailableRegister(String token, OauthProvider oauthProvider) throws NoSuchAlgorithmException, InvalidKeySpecException {
         OauthStrategy oauthstrategy = oauthFactory.getOauthstrategy(oauthProvider);
         OIDCDecodePayload oidcDecodePayload = oauthstrategy.getOIDCDecodePayload(token);
