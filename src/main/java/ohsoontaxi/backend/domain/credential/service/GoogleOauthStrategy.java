@@ -35,6 +35,23 @@ public class GoogleOauthStrategy implements OauthStrategy{
     }
 
     @Override
+    public OauthTokenInfoDto getOauthToken(String code) {
+        String decodedCode = URLDecoder.decode(code, StandardCharsets.UTF_8);
+
+        OauthTokenResponse oauthTokenResponse = googleAuthClient
+                .googleAuth(
+                        decodedCode,
+                        oauthProperties.getGoogleAppId(),
+                        oauthProperties.getGoogleClientSecret(),
+                        oauthProperties.getGoogleRedirectUrl());
+
+        return OauthTokenInfoDto.builder()
+                .idToken(oauthTokenResponse.getIdToken())
+                .accessToken(oauthTokenResponse.getAccessToken())
+                .build();
+    }
+
+    @Override
     public OIDCDecodePayload getOIDCDecodePayload(String token) {
         OIDCPublicKeysResponse oidcPublicKeysResponse = googleAuthClient.getGoogleOIDCOpenKeys();
         return oauthOIDCProvider.getPayloadFromIdToken(
