@@ -6,9 +6,7 @@ import ohsoontaxi.backend.domain.credential.domain.RefreshTokenRedisEntity;
 import ohsoontaxi.backend.domain.credential.domain.repository.RefreshTokenRedisEntityRepository;
 import ohsoontaxi.backend.domain.credential.exception.RefreshTokenExpiredException;
 import ohsoontaxi.backend.domain.credential.presentation.dto.request.RegisterRequest;
-import ohsoontaxi.backend.domain.credential.presentation.dto.response.AccessTokenDto;
-import ohsoontaxi.backend.domain.credential.presentation.dto.response.AuthTokensResponse;
-import ohsoontaxi.backend.domain.credential.presentation.dto.response.AvailableRegisterResponse;
+import ohsoontaxi.backend.domain.credential.presentation.dto.response.*;
 import ohsoontaxi.backend.domain.email.domain.EmailMessage;
 import ohsoontaxi.backend.domain.email.exception.NotEmailApprovedException;
 import ohsoontaxi.backend.domain.email.service.EmailUtils;
@@ -48,25 +46,15 @@ public class CredentialService {
         return new AccessTokenDto(accessToken);
     }
 
-    private String generateRefreshToken(Long userId) {
-        String refreshToken = jwtTokenProvider.generateRefreshToken(userId);
-        Long tokenExpiredAt = jwtTokenProvider.getRefreshTokenTTlSecond();
-        RefreshTokenRedisEntity build =
-                RefreshTokenRedisEntity.builder()
-                        .id(userId.toString())
-                        .ttl(tokenExpiredAt)
-                        .refreshToken(refreshToken)
-                        .build();
-        refreshTokenRedisEntityRepository.save(build);
-        return refreshToken;
+    public String getOauthLink(OauthProvider oauthProvider) {
+        OauthStrategy oauthStrategy = oauthFactory.getOauthstrategy(oauthProvider);
+        return oauthStrategy.getOauthLink();
     }
 
-    private Boolean checkUserCanRegister(
-            OIDCDecodePayload oidcDecodePayload, OauthProvider oauthProvider) {
-        Optional<User> user =
-                userRepository.findByOauthIdAndOauthProvider(
-                        oidcDecodePayload.getSub(), oauthProvider.getValue());
-        return user.isEmpty();
+    public AfterOauthResponse getTokenToCode(OauthProvider oauthProvider, String code) {
+        OauthStrategy oauthStrategy = oauthFactory.getOauthstrategy(oauthProvider);
+        OauthTokenInfoDto oauthToken = oauthStrategy.getOauthToken(code);
+        return new AfterOauthResponse(oauthToken.getIdToken(),oauthToken.getAccessToken());
     }
 
     public AvailableRegisterResponse getUserAvailableRegister(String token, OauthProvider oauthProvider) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -174,5 +162,25 @@ public class CredentialService {
         return email != null ? email : schEmail;
     }
 
+    private String generateRefreshToken(Long userId) {
+        String refreshToken = jwtTokenProvider.generateRefreshToken(userId);
+        Long tokenExpiredAt = jwtTokenProvider.getRefreshTokenTTlSecond();
+        RefreshTokenRedisEntity build =
+                RefreshTokenRedisEntity.builder()
+                        .id(userId.toString())
+                        .ttl(tokenExpiredAt)
+                        .refreshToken(refreshToken)
+                        .build();
+        refreshTokenRedisEntityRepository.save(build);
+        return refreshToken;
+    }
+
+    private Boolean checkUserCanRegister(
+            OIDCDecodePayload oidcDecodePayload, OauthProvider oauthProvider) {
+        Optional<User> user =
+                userRepository.findByOauthIdAndOauthProvider(
+                        oidcDecodePayload.getSub(), oauthProvider.getValue());
+        return user.isEmpty();
+    }
 }
 
