@@ -7,11 +7,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ohsoontaxi.backend.domain.credential.presentation.dto.request.OauthCodeRequest;
 import ohsoontaxi.backend.domain.credential.presentation.dto.request.RegisterRequest;
 import ohsoontaxi.backend.domain.credential.presentation.dto.request.TokenRefreshRequest;
-import ohsoontaxi.backend.domain.credential.presentation.dto.response.AccessTokenDto;
-import ohsoontaxi.backend.domain.credential.presentation.dto.response.AuthTokensResponse;
-import ohsoontaxi.backend.domain.credential.presentation.dto.response.AvailableRegisterResponse;
+import ohsoontaxi.backend.domain.credential.presentation.dto.response.*;
 import ohsoontaxi.backend.domain.credential.service.CredentialService;
 import ohsoontaxi.backend.domain.credential.service.OauthProvider;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +31,18 @@ public class CredentialController {
     public AccessTokenDto login(@PathVariable("userId") Long userId){
         AccessTokenDto result = credentialService.login(userId);
         return result;
+    }
+
+    @Operation(summary = "카카오 인가 코드 받기 (서버 테스트용)")
+    @GetMapping("/oauth/link/kakao")
+    public OauthLoginLinkResponse getKakaoOauthLink() {
+        return new OauthLoginLinkResponse(credentialService.getOauthLink(OauthProvider.KAKAO));
+    }
+
+    @Operation(summary = "구글 인가 코드 받기 (서버 테스트용)")
+    @GetMapping("/oauth/link/google")
+    public OauthLoginLinkResponse getGoogleOauthLink() {
+        return new OauthLoginLinkResponse(credentialService.getOauthLink(OauthProvider.GOOGLE));
     }
 
     @Operation(summary = "Id Token 검증")
