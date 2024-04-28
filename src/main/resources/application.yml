@@ -56,9 +56,15 @@ auth:
 oauth:
   kakao:
     app-id: ${KAKAO_APP_ID}
+    client-id: ${KAKAO_CLIENT_ID}
+    redirect-url: ${KAKAO_REDIRECT_URL}
+    base-url: ${KAKAO_BASE_URL}
 
   google:
     app-id: ${GOOGLE_APP_ID}
+    redirect-url: ${GOOGLE_REDIRECT_URL}
+    base-url: ${GOOGLE_BASE_URL}
+    client-secret : ${GOOGLE_CLIENT_SECRET}
 
 fcm:
   value: firebase_service_key.json
