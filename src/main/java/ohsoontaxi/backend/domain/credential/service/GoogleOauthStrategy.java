@@ -24,6 +24,7 @@ public class GoogleOauthStrategy implements OauthStrategy{
             "/o/oauth2/v2/auth?response_type=code&client_id=%s&scope=%s&redirect_uri=%s";
     private static final String scope = "https://www.googleapis.com/auth/userinfo.email";
 
+    @Override
     public String getOauthLink() {
         return oauthProperties.getGoogleBaseUrl()
                 + String.format(

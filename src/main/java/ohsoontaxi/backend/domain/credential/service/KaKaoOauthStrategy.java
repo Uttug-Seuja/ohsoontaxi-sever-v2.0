@@ -20,6 +20,7 @@ public class KaKaoOauthStrategy implements OauthStrategy{
     private static final String ISSUER = "https://kauth.kakao.com";
     private static final String QUERY_STRING = "/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code";
 
+    @Override
     public String getOauthLink() {
         return oauthProperties.getKakaoBaseUrl()
                 + String.format(
