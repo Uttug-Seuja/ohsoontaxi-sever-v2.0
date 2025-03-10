@@ -6,14 +6,11 @@ import com.google.firebase.messaging.MessagingErrorCode;
 import com.google.firebase.messaging.SendResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ohsoontaxi.backend.domain.notification.domain.ContentMessage;
 import ohsoontaxi.backend.domain.notification.domain.DeviceToken;
 import ohsoontaxi.backend.domain.notification.domain.Notification;
-import ohsoontaxi.backend.domain.notification.domain.TitleMessage;
 import ohsoontaxi.backend.domain.notification.domain.repository.DeviceTokenRepository;
 import ohsoontaxi.backend.domain.notification.domain.repository.NotificationRepository;
 import ohsoontaxi.backend.domain.notification.exception.FcmTokenInvalidException;
-import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.user.domain.User;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +25,7 @@ import java.util.stream.IntStream;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class NotificationUtilsImpl implements NotificationUtils{
+public class NotificationUtilsImpl implements NotificationUtils {
 
     private final NotificationRepository notificationRepository;
     private final FcmService fcmService;
@@ -36,84 +33,41 @@ public class NotificationUtilsImpl implements NotificationUtils{
 
     @Override
     @Transactional
-    public void changeReservationNull(Long reservationId) {
-        notificationRepository.changeReservationNull(reservationId);
-    }
-
-    @Override
-    @Transactional
-    public void sendNotificationNoUser(User user, Reservation reservation, TitleMessage titleMessage,
-                                       ContentMessage contentMessage) {
-        List<DeviceToken> deviceTokens = notificationRepository.findTokenByReservationIdNeUserId(
-                reservation.getId(), user.getId());
+    public void sendNotification(List<DeviceToken> deviceTokens, Long reservationId,
+                                 String titleMessage, String contentMessage) {
         List<String> tokens = getFcmTokens(deviceTokens);
 
-        String title = getTitle(titleMessage);
-
-        String content = user.getName() +
-                contentMessage.getContent1() +
-                reservation.getTitle() +
-                contentMessage.getContent2();
-
-        recordNotification(
-                deviceTokens,
-                title,
-                content,
-                reservation);
+        recordNotification(deviceTokens, titleMessage, contentMessage, reservationId);
 
         if (tokens.isEmpty()) {
             return;
         }
+
         ApiFuture<BatchResponse> batchResponseApiFuture =
-                fcmService.sendGroupMessageAsync(tokens, title, content);
+                fcmService.sendGroupMessageAsync(tokens, titleMessage, contentMessage);
         checkFcmResponse(deviceTokens, tokens, batchResponseApiFuture);
     }
-
-    @Override
-    @Transactional
-    public void sendNotificationAll(Reservation reservation, TitleMessage titleMessage,
-                                    ContentMessage contentMessage) {
-        List<DeviceToken> deviceTokens = notificationRepository.findTokenByReservationId(
-                reservation.getId());
-        List<String> tokens = getFcmTokens(deviceTokens);
-
-        String title = getTitle(titleMessage);
-
-        String content = contentMessage.getContent1() +
-                reservation.getTitle() +
-                contentMessage.getContent2();
-
-        recordNotification(
-                deviceTokens,
-                title,
-                content,
-                reservation);
-
-        if (tokens.isEmpty()) {
-            return;
-        }
-        ApiFuture<BatchResponse> batchResponseApiFuture =
-                fcmService.sendGroupMessageAsync(tokens, title, content);
-        checkFcmResponse(deviceTokens, tokens, batchResponseApiFuture);
-    }
-
 
     private List<String> getFcmTokens(List<DeviceToken> deviceTokens) {
         return deviceTokens.stream().map(DeviceToken::getToken).collect(Collectors.toList());
     }
 
-    private String getTitle(TitleMessage titleMessage) {
-        return titleMessage.getTitle();
+    public List<DeviceToken> getDeviceTokens(User user, Long reservationId) {
+        if(user == null) {
+            return notificationRepository.findTokensByReservationId(reservationId, null);
+        } else {
+            return notificationRepository.findTokensByReservationId(reservationId, user.getId());
+        }
     }
 
     private void recordNotification(
             List<DeviceToken> deviceTokens,
             String title,
             String content,
-            Reservation reservation) {
+            Long reservationId) {
         Notification notification =
                 Notification.makeNotificationWithReceivers(
-                        deviceTokens, title, content, reservation);
+                        deviceTokens, title, content, reservationId);
         notificationRepository.save(notification);
     }
 
@@ -162,8 +116,8 @@ public class NotificationUtilsImpl implements NotificationUtils{
                                         errorToken);
                             });
         } catch (InterruptedException | ExecutionException e) {
+            log.error(e.getMessage());
             throw FcmTokenInvalidException.EXCEPTION;
         }
     }
-
 }

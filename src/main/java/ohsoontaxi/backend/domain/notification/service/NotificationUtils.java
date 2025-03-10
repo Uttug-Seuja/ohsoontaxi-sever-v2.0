@@ -1,19 +1,15 @@
 package ohsoontaxi.backend.domain.notification.service;
 
-import ohsoontaxi.backend.domain.notification.domain.ContentMessage;
-import ohsoontaxi.backend.domain.notification.domain.TitleMessage;
-import ohsoontaxi.backend.domain.reservation.domain.Reservation;
+import ohsoontaxi.backend.domain.notification.domain.DeviceToken;
 import ohsoontaxi.backend.domain.user.domain.User;
 
+import java.util.List;
+
 public interface NotificationUtils {
-    void changeReservationNull(Long reservationId);
-    void sendNotificationNoUser(
-            User user,
-            Reservation reservation,
-            TitleMessage titleMessage,
-            ContentMessage contentMessage);
-    void sendNotificationAll(
-            Reservation reservation,
-            TitleMessage titleMessage,
-            ContentMessage contentMessage);
+    void sendNotification(List<DeviceToken> deviceTokens,
+                          Long reservationId,
+                          String titleMessage,
+                          String contentMessage);
+
+    List<DeviceToken> getDeviceTokens(User user, Long reservationId);
 }

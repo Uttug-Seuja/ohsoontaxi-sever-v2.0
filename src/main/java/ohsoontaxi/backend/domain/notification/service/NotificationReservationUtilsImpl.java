@@ -6,7 +6,6 @@ import ohsoontaxi.backend.domain.notification.domain.*;
 import ohsoontaxi.backend.domain.notification.domain.repository.NotificationReservationRepository;
 import ohsoontaxi.backend.domain.notification.exception.NotificationReservationAlreadyExistException;
 import ohsoontaxi.backend.domain.notification.exception.NotificationReservationNotFoundException;
-import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @RequiredArgsConstructor
 @Component
@@ -25,42 +25,43 @@ public class NotificationReservationUtilsImpl implements NotificationReservation
 
     @Transactional
     @Override
-    public void recordNotificationReservation(Reservation reservation) {
-        NotificationReservation notificationReservation =
-                notificationReservationRepository.findByReservation(reservation)
-                        .orElse(null);
-
-        if(notificationReservation != null) {
-            throw NotificationReservationAlreadyExistException.EXCEPTION;
-        }
+    public void recordNotificationReservation(Long reservationId,
+                                              LocalDateTime departureDate,
+                                              String content) {
+        notificationReservationRepository.findByReservationId(reservationId)
+                .ifPresent(notification -> {
+                    throw NotificationReservationAlreadyExistException.EXCEPTION;
+                });
 
         notificationReservationRepository.save(
-                NotificationReservation.of(
-                        reservation.getDepartureDate().truncatedTo(ChronoUnit.MINUTES).minusMinutes(10),
-                        reservation));
+                ohsoontaxi.backend.domain.notification.domain.NotificationReservation.of(
+                        TitleMessage.TIME.getTitle(),
+                        content,
+                        departureDate.truncatedTo(ChronoUnit.MINUTES).minusMinutes(10),
+                        reservationId));
     }
 
     @Transactional
     @Override
     public void processScheduledReservation() {
-        List<NotificationReservation> notificationReservations = retrieveReservation();
-
+        List<ohsoontaxi.backend.domain.notification.domain.NotificationReservation> notificationReservations = retrieveReservation();
         if (notificationReservations.isEmpty()) {
             return;
         }
 
         deleteNotificationReservations(
-                notificationReservations.stream().map(NotificationReservation::getId).collect(Collectors.toList()));
+                notificationReservations.stream().map(ohsoontaxi.backend.domain.notification.domain.NotificationReservation::getId).collect(Collectors.toList()));
 
         notificationReservations.forEach(
                 notificationReservation ->
-                        notificationUtils.sendNotificationAll(
-                                notificationReservation.getReservation(),
-                                TitleMessage.TIME,
-                                ContentMessage.TIME));
+                        notificationUtils.sendNotification(
+                                null,
+                                notificationReservation.getReservationId(),
+                                notificationReservation.getTitle(),
+                                notificationReservation.getContent()));
     }
 
-    private List<NotificationReservation> retrieveReservation() {
+    private List<ohsoontaxi.backend.domain.notification.domain.NotificationReservation> retrieveReservation() {
         return notificationReservationRepository.findBySendAt(
                 LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
     }
@@ -71,20 +72,20 @@ public class NotificationReservationUtilsImpl implements NotificationReservation
 
     @Transactional
     @Override
-    public void changeSendAtNotificationReservation(Reservation reservation) {
-        NotificationReservation notificationReservation = queryNotificationReservationByReservation(reservation);
-        notificationReservation.changeSendAt(reservation.getDepartureDate());
+    public void changeSendAtNotificationReservation(Long reservationId, LocalDateTime departureDate) {
+        ohsoontaxi.backend.domain.notification.domain.NotificationReservation notificationReservation = queryNotificationReservationByReservation(reservationId);
+        notificationReservation.changeSendAt(departureDate);
     }
 
     @Transactional
     @Override
-    public void deleteNotificationReservation(Reservation reservation) {
-        NotificationReservation notificationReservation = queryNotificationReservationByReservation(reservation);
+    public void deleteNotificationReservation(Long reservationId) {
+        ohsoontaxi.backend.domain.notification.domain.NotificationReservation notificationReservation = queryNotificationReservationByReservation(reservationId);
         notificationReservationRepository.delete(notificationReservation);
     }
 
-    private NotificationReservation queryNotificationReservationByReservation(Reservation reservation) {
-        return notificationReservationRepository.findByReservation(reservation)
+    private ohsoontaxi.backend.domain.notification.domain.NotificationReservation queryNotificationReservationByReservation(Long reservationId) {
+        return notificationReservationRepository.findByReservationId(reservationId)
                 .orElseThrow(() -> NotificationReservationNotFoundException.EXCEPTION);
     }
 }

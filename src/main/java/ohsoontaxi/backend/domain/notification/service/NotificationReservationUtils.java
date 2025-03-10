@@ -1,11 +1,10 @@
 package ohsoontaxi.backend.domain.notification.service;
 
-import ohsoontaxi.backend.domain.reservation.domain.Reservation;
+import java.time.LocalDateTime;
 
 public interface NotificationReservationUtils {
-
-    void recordNotificationReservation(Reservation reservation);
+    void recordNotificationReservation(Long reservationId, LocalDateTime departureDate, String content);
     void processScheduledReservation();
-    void changeSendAtNotificationReservation(Reservation reservation);
-    void deleteNotificationReservation(Reservation reservation);
+    void changeSendAtNotificationReservation(Long reservationId, LocalDateTime departureDate);
+    void deleteNotificationReservation(Long reservationId);
 }
