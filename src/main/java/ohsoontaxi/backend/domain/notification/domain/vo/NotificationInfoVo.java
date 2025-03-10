@@ -8,12 +8,8 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 public class NotificationInfoVo {
-
     private final Long notificationId;
-
     private final String title;
-
     private final String content;
-
     private final LocalDateTime createdDate;
 }

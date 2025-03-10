@@ -2,7 +2,6 @@ package ohsoontaxi.backend.domain.notification.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.global.database.BaseEntity;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -21,18 +20,24 @@ public class NotificationReservation extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String title;
+
+    private String content;
+
     private LocalDateTime sendAt;
 
-    @JoinColumn(name = "reservation_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Reservation reservation;
+    private Long reservationId;
 
     public static NotificationReservation of(
+            String title,
+            String content,
             LocalDateTime sendAt,
-            Reservation reservation) {
+            Long reservationId) {
         return NotificationReservation.builder()
+                .title(title)
+                .content(content)
                 .sendAt(sendAt)
-                .reservation(reservation)
+                .reservationId(reservationId)
                 .build();
     }
 
