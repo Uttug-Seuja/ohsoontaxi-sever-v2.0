@@ -4,10 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import ohsoontaxi.backend.domain.notification.domain.ContentMessage;
+import ohsoontaxi.backend.domain.notification.domain.DeviceToken;
 import ohsoontaxi.backend.domain.notification.domain.TitleMessage;
 import ohsoontaxi.backend.domain.notification.service.NotificationUtils;
 import ohsoontaxi.backend.domain.participation.domain.Participation;
 import ohsoontaxi.backend.domain.participation.domain.repository.ParticipationRepository;
+import ohsoontaxi.backend.domain.participation.event.ParticipatedEvent;
+import ohsoontaxi.backend.domain.participation.event.ParticipationCanceledEvent;
+import ohsoontaxi.backend.domain.participation.event.ParticipationClosedEvent;
 import ohsoontaxi.backend.domain.participation.exception.*;
 import ohsoontaxi.backend.domain.participation.presentation.dto.request.CreateParticipationRequest;
 import ohsoontaxi.backend.domain.participation.presentation.dto.request.UpdateSeatPositionRequest;
@@ -19,12 +23,15 @@ import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.global.common.participation.SeatPosition;
 import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
 import ohsoontaxi.backend.global.common.user.Gender;
+import ohsoontaxi.backend.global.event.Events;
 import ohsoontaxi.backend.global.utils.user.UserUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+import static ohsoontaxi.backend.global.utils.notification.NotificationUtils.*;
 
 @Slf4j
 @Service
@@ -53,8 +60,13 @@ public class ParticipationService implements ParticipationUtils{
 
         currentUser.getTemperature().addParticipationNum();
 
-        notificationUtils.sendNotificationNoUser(currentUser, currentReservation,
-                TitleMessage.PARTICIPATION, ContentMessage.PARTICIPATION);
+        List<DeviceToken> deviceTokens = notificationUtils.getDeviceTokens(currentUser, currentReservation.getId());
+        Events.raise(new ParticipatedEvent(
+                deviceTokens,
+                currentReservation.getId(),
+                TitleMessage.PARTICIPATION.getTitle(),
+                makeContent(currentUser, ContentMessage.PARTICIPATION, currentReservation)));
+
         checkDeadLine(currentReservation);
 
         temperatureUtils.temperaturePatch(currentUser.getId());
@@ -87,8 +99,12 @@ public class ParticipationService implements ParticipationUtils{
 
         currentUser.getTemperature().subParticipationNum();
 
-        notificationUtils.sendNotificationNoUser(currentUser, currentReservation,
-                TitleMessage.PARTICIPATION_CANCEL, ContentMessage.PARTICIPATION_CANCEL);
+        List<DeviceToken> deviceTokens = notificationUtils.getDeviceTokens(currentUser, currentReservation.getId());
+        Events.raise(new ParticipationCanceledEvent(
+                deviceTokens,
+                currentReservation.getId(),
+                TitleMessage.PARTICIPATION_CANCEL.getTitle(),
+                makeContent(currentUser, ContentMessage.PARTICIPATION_CANCEL, currentReservation)));
 
         participationRepository.delete(currentParticipation);
 
@@ -179,7 +195,12 @@ public class ParticipationService implements ParticipationUtils{
 
     private void checkDeadLine(Reservation reservation) {
         if(reservation.getCurrentNum() >= 4) {
-            notificationUtils.sendNotificationAll(reservation,TitleMessage.DEADLINE, ContentMessage.DEADLINE);
+            List<DeviceToken> deviceTokens = notificationUtils.getDeviceTokens(null, reservation.getId());
+            Events.raise(new ParticipationClosedEvent(
+                    deviceTokens,
+                    reservation.getId(),
+                    TitleMessage.DEADLINE.getTitle(),
+                    makeContent(null, ContentMessage.DEADLINE, reservation)));
         }
     }
 }

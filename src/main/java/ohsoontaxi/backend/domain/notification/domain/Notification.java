@@ -3,7 +3,6 @@ package ohsoontaxi.backend.domain.notification.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import ohsoontaxi.backend.domain.notification.domain.vo.NotificationInfoVo;
-import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.global.database.BaseEntity;
 
@@ -26,9 +25,7 @@ public class Notification extends BaseEntity {
 
     private String content;
 
-    @JoinColumn(name = "reservation_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Reservation reservation;
+    private Long reservationId;
 
     @Builder.Default
     @OneToMany(mappedBy = "notification", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -50,12 +47,12 @@ public class Notification extends BaseEntity {
             List<DeviceToken> deviceTokens,
             String title,
             String content,
-            Reservation reservation) {
+            Long reservationId) {
         Notification notification =
                 Notification.builder()
                         .title(title)
                         .content(content)
-                        .reservation(reservation)
+                        .reservationId(reservationId)
                         .build();
         notification.addReceivers(deviceTokens);
         return notification;
@@ -67,6 +64,17 @@ public class Notification extends BaseEntity {
                 .title(title)
                 .content(content)
                 .createdDate(getCreatedDate())
+                .build();
+    }
+
+    public static Notification of(
+            String title,
+            String content,
+            Long reservationId) {
+        return Notification.builder()
+                .title(title)
+                .content(content)
+                .reservationId(reservationId)
                 .build();
     }
 }

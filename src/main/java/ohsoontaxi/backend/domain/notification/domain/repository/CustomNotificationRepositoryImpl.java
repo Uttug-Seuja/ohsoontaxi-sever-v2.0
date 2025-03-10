@@ -4,9 +4,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import ohsoontaxi.backend.domain.notification.domain.DeviceToken;
 import ohsoontaxi.backend.domain.notification.domain.Notification;
-import ohsoontaxi.backend.domain.notification.domain.QDeviceToken;
-import ohsoontaxi.backend.domain.notification.domain.QNotificationReceiver;
-import ohsoontaxi.backend.domain.participation.domain.QParticipation;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -21,7 +18,7 @@ import static ohsoontaxi.backend.domain.participation.domain.QParticipation.part
 
 @RequiredArgsConstructor
 @Repository
-public class CustomNotificationRepositoryImpl implements CustomNotificationRepository{
+public class CustomNotificationRepositoryImpl implements ohsoontaxi.backend.domain.notification.domain.repository.CustomNotificationRepository {
 
     private final JPAQueryFactory queryFactory;
 
@@ -35,7 +32,7 @@ public class CustomNotificationRepositoryImpl implements CustomNotificationRepos
     }
 
     @Override
-    public List<DeviceToken> findTokenByReservationIdNeUserId(Long reservationId, Long userId) {
+    public List<DeviceToken> findTokensByReservationId(Long reservationId, Long userId) {
         return queryFactory
                 .select(deviceToken)
                 .from(deviceToken)
@@ -43,19 +40,7 @@ public class CustomNotificationRepositoryImpl implements CustomNotificationRepos
                 .on(deviceToken.user.id.eq(participation.user.id))
                 .where(
                         participation.reservation.id.eq(reservationId),
-                        deviceToken.user.id.ne(userId))
-                .fetch();
-    }
-
-    @Override
-    public List<DeviceToken> findTokenByReservationId(Long reservationId) {
-        return queryFactory
-                .select(deviceToken)
-                .from(deviceToken)
-                .leftJoin(participation)
-                .on(deviceToken.user.id.eq(participation.user.id))
-                .where(
-                        participation.reservation.id.eq(reservationId))
+                        userId != null ? deviceToken.user.id.ne(userId) : null)
                 .fetch();
     }
 

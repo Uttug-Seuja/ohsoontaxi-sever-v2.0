@@ -10,11 +10,14 @@ import ohsoontaxi.backend.domain.chat.domain.repository.ChatRepository;
 import ohsoontaxi.backend.domain.chat.presentation.dto.request.ChatMessageSaveDto;
 import ohsoontaxi.backend.domain.chat.presentation.dto.response.ChatPagingResponseDto;
 import ohsoontaxi.backend.domain.notification.domain.ContentMessage;
+import ohsoontaxi.backend.domain.notification.domain.DeviceToken;
 import ohsoontaxi.backend.domain.notification.domain.TitleMessage;
 import ohsoontaxi.backend.domain.notification.service.NotificationReservationUtils;
 import ohsoontaxi.backend.domain.notification.service.NotificationUtils;
 import ohsoontaxi.backend.domain.reservation.domain.Reservation;
 import ohsoontaxi.backend.domain.reservation.domain.repository.ReservationRepository;
+import ohsoontaxi.backend.domain.reservation.event.ReservationDeletedEvent;
+import ohsoontaxi.backend.domain.reservation.event.ReservationUpdatedEvent;
 import ohsoontaxi.backend.domain.reservation.exception.ReservationNotFoundException;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.request.CreateReservationRequest;
 import ohsoontaxi.backend.domain.reservation.presentation.dto.request.UpdateReservationRequest;
@@ -24,6 +27,7 @@ import ohsoontaxi.backend.domain.reservation.presentation.dto.response.Reservati
 import ohsoontaxi.backend.domain.reservation.presentation.dto.response.ReservationResponse;
 import ohsoontaxi.backend.domain.user.domain.User;
 import ohsoontaxi.backend.global.common.reservation.ReservationStatus;
+import ohsoontaxi.backend.global.event.Events;
 import ohsoontaxi.backend.global.utils.security.SecurityUtils;
 import ohsoontaxi.backend.global.utils.user.UserUtils;
 import org.springframework.data.domain.PageRequest;
@@ -43,6 +47,7 @@ import java.util.stream.Collectors;
 
 import static ohsoontaxi.backend.domain.chat.domain.repository.ChatRoomRepository.CHAT_SORTED_SET_;
 import static ohsoontaxi.backend.domain.chat.service.ChatRedisCacheService.USERNAME_PROFILE;
+import static ohsoontaxi.backend.global.utils.notification.NotificationUtils.*;
 
 @Service
 @RequiredArgsConstructor
@@ -59,8 +64,7 @@ public class ReservationService implements ReservationUtils {
     private final RedisTemplate<String, String> roomRedisTemplate;
     private final NotificationReservationUtils notificationReservationUtils;
     private final NotificationUtils notificationUtils;
-    //private final EntityManager entityManager;
-
+    private final EntityManager entityManager;
 
     @PostConstruct
     private void init() {
@@ -78,28 +82,28 @@ public class ReservationService implements ReservationUtils {
 
         reservationRepository.save(reservation);
 
-        notificationReservationUtils.recordNotificationReservation(reservation);
+        notificationReservationUtils.recordNotificationReservation(reservation.getId(), reservation.getDepartureDate(),
+                makeContent(user, ContentMessage.TIME, reservation));
 
         return getReservationResponse(reservation, user.getId());
     }
 
     @Transactional
     public void deleteReservation(Long reservationId){
-
         User user = userUtils.getUserFromSecurityContext();
-
         Reservation reservation = queryReservation(reservationId);
 
         reservation.validUserIsHost(user.getId());
 
         reservation.validPastReservation();
 
-        notificationUtils.sendNotificationNoUser(user, reservation,
-                TitleMessage.RESERVATION_DELETE, ContentMessage.RESERVATION_DELETE);
-
-        notificationUtils.changeReservationNull(reservationId);
-
-        notificationReservationUtils.deleteNotificationReservation(reservation);
+        List<DeviceToken> deviceTokens = notificationUtils.getDeviceTokens(user, reservationId);
+        Events.raise(new ReservationDeletedEvent(
+                deviceTokens,
+                reservation.getId(),
+                TitleMessage.RESERVATION_DELETE.getTitle(),
+                makeContent(null, ContentMessage.RESERVATION_DELETE, reservation)));
+        notificationReservationUtils.deleteNotificationReservation(reservation.getId());
 
         chatRepository.updateReservationNull(reservationId);
 
@@ -118,30 +122,31 @@ public class ReservationService implements ReservationUtils {
 
     @Transactional
     public ReservationResponse updateReservation(Long reservationId, UpdateReservationRequest updateReservationRequest) {
-
-        Long currentUserId = SecurityUtils.getCurrentUserId();
-
+        User user = userUtils.getUserFromSecurityContext();
         Reservation reservation = queryReservation(reservationId);
 
-        reservation.validUserIsHost(currentUserId);
+        reservation.validUserIsHost(user.getId());
 
         reservation.updateReservation(updateReservationRequest.toUpdateReservationDto());
 
-        notificationReservationUtils.changeSendAtNotificationReservation(reservation);
+        notificationReservationUtils.changeSendAtNotificationReservation(reservation.getId(), reservation.getDepartureDate());
+        List<DeviceToken> deviceTokens = notificationUtils.getDeviceTokens(user, reservationId);
+        Events.raise(new ReservationUpdatedEvent(
+                deviceTokens,
+                reservation.getId(),
+                TitleMessage.RESERVATION_MODIFY.getTitle(),
+                makeContent(null, ContentMessage.RESERVATION_MODIFY, reservation)));
 
-        notificationUtils.sendNotificationNoUser(userUtils.getUserById(currentUserId), reservation,
-                TitleMessage.RESERVATION_MODIFY, ContentMessage.RESERVATION_MODIFY);
-
-        return getReservationResponse(reservation,currentUserId);
+        return getReservationResponse(reservation, user.getId());
     }
 
-
-    @Transactional
     public Slice<ReservationBriefInfoDto> findAllReservation(PageRequest pageRequest) {
 
         List<Reservation> reservations = reservationRepository.findByDepartureDateBefore(LocalDateTime.now());
 
         reservations.stream().forEach(r -> r.changeReservationStatusToDeadLine());
+
+        entityManager.flush();
 
         Slice<Reservation> sliceReservation =
                 reservationRepository.findSliceByOrderByLastModifyDateDesc(pageRequest);
