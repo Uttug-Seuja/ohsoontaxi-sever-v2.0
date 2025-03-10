@@ -8,8 +8,6 @@ import org.springframework.data.domain.Slice;
 import java.util.List;
 
 public interface CustomNotificationRepository {
-
-    List<DeviceToken> findTokenByReservationIdNeUserId(Long reservationId, Long userId);
-    List<DeviceToken> findTokenByReservationId(Long reservationId);
+    List<DeviceToken> findTokensByReservationId(Long reservationId, Long userId);
     Slice<Notification> findSliceByUserId(Long receiverId, Pageable pageable);
 }
