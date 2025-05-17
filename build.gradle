@@ -24,12 +24,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	//property
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+	//mysql
+	implementation 'com.mysql:mysql-connector-j:8.0.33'
 
 	//security
 	implementation 'org.springframework.boot:spring-boot-starter-security'

@@ -1,9 +1,9 @@
 spring:
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://${MARIADB_HOST}/${DB_NAME}
-    username: ${MARIADB_USERNAME}
-    password: ${MARIADB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER_NAME}
+    password: ${DB_PASSWORD}
   data:
     redis:
       host: ${REDIS_HOST}
@@ -67,7 +67,7 @@ oauth:
     client-secret : ${GOOGLE_CLIENT_SECRET}
 
 fcm:
-  value: firebase_service_key.json
+  value: ${FIREBASE_KEY_PATH}
 
 logging.level:
   org.hibernate.SQL: debug
